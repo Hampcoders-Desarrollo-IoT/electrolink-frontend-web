@@ -1,5 +1,5 @@
-import en from './locales/en.json';
-import es from './locales/es.json';
+import en from '../i18n/en.json';
+import es from '../i18n/es.json';
 import {createI18n} from "vue-i18n";
 
 const i18n = createI18n({
