@@ -2,9 +2,9 @@
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import { Drawer as PvDrawer } from "primevue";
-import FooterContent from "./footer-content.vue";
-import LanguageSwitcher from "./language-switcher.vue";
-import AuthenticationSection from "../../../iam/presentation/components/authentication-section.vue";
+import FooterContent from "../components/footer-content.vue";
+import LanguageSwitcher from "../components/language-switcher.vue";
+import AuthenticationSection from "@/features/iam/presentation/components/authentication-section.vue";
 
 const { t } = useI18n();
 
