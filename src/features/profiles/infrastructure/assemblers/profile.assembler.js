@@ -1,6 +1,6 @@
-import { Profile } from '../domain/profile.entity.js';
-import { Technician } from '../domain/technician.entity.js';
-import { Homeowner } from '../domain/homeowner.entity.js';
+import { Profile } from '../../domain/entities/profile.entity.js';
+import { Technician } from '../../domain/entities/technician.entity.js';
+import { Homeowner } from '../../domain/entities/homeowner.entity.js';
 
 export class ProfileAssembler {
     static toEntityFromResource(resource) {

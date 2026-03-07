@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { ProfilesApi } from '../infrastructure/profiles-api.js';
-import { ProfileAssembler } from '../infrastructure/profile.assembler.js';
+import { ProfilesApi } from '../infrastructure/services/profiles-api.service.js';
+import { ProfileAssembler } from '../infrastructure/assemblers/profile.assembler.js';
 import useIamStore from '../../iam/application/iam.store.js';
 
 const profilesApi = new ProfilesApi();
@@ -96,7 +96,7 @@ export const useProfilesStore = defineStore('profilesV2', () => {
         };
 
         if (formData.role === 'HOMEOWNER') {
-            const { CompleteProfileAsHomeownerCommand } = await import('../domain/complete-profile-homeowner.command.js');
+            const { CompleteProfileAsHomeownerCommand } = await import('../domain/commands/complete-profile-homeowner.command.js');
             const command = new CompleteProfileAsHomeownerCommand({
                 ...formData,
                 email,
@@ -105,7 +105,7 @@ export const useProfilesStore = defineStore('profilesV2', () => {
             });
             return await completeProfileAsHomeowner(command, { push: () => true }); // Dummy router since V2 caller handles it
         } else {
-            const { CompleteProfileAsTechnicianCommand } = await import('../domain/complete-profile-technician.command.js');
+            const { CompleteProfileAsTechnicianCommand } = await import('../domain/commands/complete-profile-technician.command.js');
             const command = new CompleteProfileAsTechnicianCommand({
                 ...formData,
                 email,

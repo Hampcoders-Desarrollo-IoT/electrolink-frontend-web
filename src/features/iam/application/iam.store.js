@@ -4,7 +4,7 @@ import {computed, ref} from "vue";
 import {SignInAssembler} from "../infrastructure/assembler/sign-in.assembler.js";
 import {UserAssembler} from "../infrastructure/assembler/user.assembler.js";
 import {SignUpAssembler} from "../infrastructure/assembler/sign-up.assembler.js";
-import {ProfilesApi} from "../../profiles/infrastructure/profiles-api.js";
+import {ProfilesApi} from "../../profiles/infrastructure/services/profiles-api.service.js";
 
 import {useProfilesStore} from "../../profiles/application/profiles.store.js";
 

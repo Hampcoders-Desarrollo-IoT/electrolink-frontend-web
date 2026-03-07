@@ -1,5 +1,5 @@
-import { BaseApi } from '../../../shared/infrastructure/apis/base-api.js';
-import { BaseEndpoint } from '../../../shared/infrastructure/apis/base-endpoint.js';
+import { BaseApi } from '../../../../shared/infrastructure/apis/base-api.js';
+import { BaseEndpoint } from '../../../../shared/infrastructure/apis/base-endpoint.js';
 
 const completeProfileAsTechnicianPath = import.meta.env.VITE_COMPLETE_PROFILE_AS_TECHNICIAN;
 const completeProfileAsHomeownerPath = import.meta.env.VITE_COMPLETE_PROFILE_AS_HOMEOWNER;
