@@ -1,6 +1,7 @@
 export class SignUpCommand {
-    constructor({username, password}) {
-        this.username = username;
+    constructor({email, password,passwordConfirmation}) {
+        this.email = email;
         this.password = password;
+        this.passwordConfirmation = passwordConfirmation;
     }
 }

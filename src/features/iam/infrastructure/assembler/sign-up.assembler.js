@@ -2,7 +2,7 @@ import {SignUpResource} from "../resources/sign-up.resource.js";
 
 export class SignUpAssembler {
     static toResourceFromResponse(response) {
-        if (response.status !== 200) {
+        if (response.status !== 200 && response.status !== 201) {
             console.error(`${response.status}, ${response.statusText}`);
             return null;
         }

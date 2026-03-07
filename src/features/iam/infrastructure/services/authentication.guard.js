@@ -1,4 +1,5 @@
 import useIamStore from "../../application/iam.store.js";
+import { profileCompletionGuard } from "../../../profiles/infrastructure/services/profile-completion.guard.js";
 
 export const authenticationGuard = (to, from, next) => {
     const store = useIamStore();
@@ -6,5 +7,7 @@ export const authenticationGuard = (to, from, next) => {
     const publicRoutes = ['/iam/sign-in', '/iam/sign-up', '/about', '/page-not-found'];
     const routeRequiresToBeAuthenticated = !publicRoutes.includes(to.path);
     if (isAnonymous && routeRequiresToBeAuthenticated) return next({ name: 'iam-sign-in'});
-    else next();
+    
+    // If authenticated, check for profile completion
+    profileCompletionGuard(to, from, next);
 }

@@ -1,5 +1,7 @@
 export class SignUpResource {
-    constructor({message}) {
-        this.message = message;
+    constructor({userId, email, token}) {
+        this.userId = userId;
+        this.email = email;
+        this.token = token;
     }
 }
