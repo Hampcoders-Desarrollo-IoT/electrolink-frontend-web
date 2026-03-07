@@ -1,11 +1,26 @@
+/* ==============================
+   ElectroLink — Global Styles
+   ============================== */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* ElectroLink Color Palette */
+  --el-primary: #2e3a59;
+  --el-bg-soft: #e8eef6;
+  --el-gray: #6b7280;
+  --el-warm-gray: #a9b1ba;
+  --el-celeste: #b5d5f5;
+  --el-accent: #ffe492;
+  --el-custom: #1978e5;
+  --el-success: #10b981;
+  --el-danger: #ef4444;
+
+  /* Typography */
+  font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--el-primary);
+  background-color: var(--el-bg-soft);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,67 +28,109 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: flex-start;
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+a {
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  color: var(--el-custom);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
+a:hover {
+  color: var(--el-primary);
+  text-decoration: underline;
 }
 
 #app {
-  /**max-width: 1280px;**/
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  width: 100%;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Utility Classes */
+.el-glass-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(46, 58, 89, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+}
+
+.el-shadow {
+  box-shadow:
+    0 10px 25px -5px rgba(46, 58, 89, 0.1),
+    0 8px 10px -6px rgba(46, 58, 89, 0.1);
+}
+
+.el-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid rgba(169, 177, 186, 0.2);
+}
+
+/* ==============================
+   PrimeVue Global Overrides
+   ============================== */
+
+/* Select & MultiSelect Overlays */
+.p-select-overlay,
+.p-multiselect-overlay,
+.p-select-list-container,
+.p-multiselect-list-container {
+  background-color: white !important;
+  border-radius: 12px !important;
+  padding: 0.5rem !important;
+  border: 1px solid rgba(169, 177, 186, 0.2) !important;
+  box-shadow: 0 10px 25px -5px rgba(46, 58, 89, 0.1) !important;
+  z-index: 9999 !important;
+}
+
+.p-select-option,
+.p-multiselect-option {
+  padding: 0.75rem 1rem !important;
+  border-radius: 8px !important;
+  color: var(--el-primary) !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+/* Hover & Focus States */
+.p-select-option:not(.p-highlight):not(.p-disabled).p-focus,
+.p-multiselect-option:not(.p-highlight):not(.p-disabled).p-focus {
+  background-color: rgba(232, 238, 246, 0.5) !important;
+  color: var(--el-primary) !important;
+}
+
+/* Selected State */
+.p-select-option.p-highlight,
+.p-multiselect-option.p-highlight {
+  background-color: rgba(46, 58, 89, 0.05) !important;
+  color: var(--el-primary) !important;
+  font-weight: 700 !important;
+}
+
+/* MultiSelect Checkbox refinement */
+.p-multiselect-option .p-checkbox {
+  margin-right: 0.5rem;
+}
+
+.p-multiselect-option .p-checkbox-box {
+  border-radius: 4px !important;
+  border: 1px solid rgba(169, 177, 186, 0.5) !important;
 }

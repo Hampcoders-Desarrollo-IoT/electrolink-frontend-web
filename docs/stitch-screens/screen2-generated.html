@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroLink - Sign In</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            el: {
+              primary: '#2e3a59',    // Deep Graphite
+              bgSoft: '#e8eef7',     // Soft Blue-Gray
+              warmGray: '#a9b1ba',   // Warm Gray
+              celeste: '#b5d5f5',    // Celeste
+              accent: '#ffe492',     // Yellow Accent
+              custom: '#1978e5'      // Theme Custom Color
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            'custom': '8px', // Based on ROUND_EIGHT
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-overrides">
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #e8eef7; /* el-bgSoft */
+    }
+    .login-container {
+      min-height: 100vh;
+    }
+    .custom-shadow {
+      box-shadow: 0 10px 25px -5px rgba(46, 58, 89, 0.1), 0 8px 10px -6px rgba(46, 58, 89, 0.1);
+    }
+    /* Simple styling to mimic PrimeVue components without the library */
+    .role-btn-active {
+      border-color: #2e3a59;
+      background-color: #2e3a59;
+      color: white;
+    }
+  </style>
+</head>
+<body class="antialiased text-el-primary">
+<!-- BEGIN: MainContainer -->
+<main class="login-container flex flex-col md:flex-row w-full overflow-hidden">
+<!-- BEGIN: LeftSection (Visual/Image) -->
+<section class="hidden md:flex md:w-1/2 lg:w-3/5 bg-el-primary relative items-center justify-center p-12 overflow-hidden">
+<!-- Background Abstract Shapes -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-el-celeste opacity-10 rounded-full -mr-20 -mt-20"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-el-accent opacity-10 rounded-full -ml-32 -mb-32"></div>
+<div class="relative z-10 max-w-lg text-center">
+<!-- Placeholder for ElectroLink Branding/Image -->
+<img alt="Industrial Technology" class="rounded-custom shadow-2xl mb-8 border-4 border-el-celeste/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOjrBnW7S6PgKrzrMWkQf4Yuh9UqrBbwGmHq9wK1yz-vm_LLDOo59P__H9TnuOAYk2ZBenyXYOr-4386laa3GFRF0Z8x96GY_QCU3tCAMM0lL_wBNAlEDCbHIuPMbF-rRewHH15Cyu32aIDjzR-omCnxHS42FQFwZdY2fccKKmz9zZgL-PBzveyjANqB8UjLaPbBxhBJ7Qxg30YviXS6z91SUH8gRSGmlND3N3FMCSBPpgbRKK_g9lwYkWof2iywowLqDLJ5kMh8la"/>
+<h1 class="text-4xl font-bold text-white mb-4">Empowering the Grid</h1>
+<p class="text-el-celeste text-lg font-medium">Manage assets, track maintenance, and connect your electrical infrastructure in one seamless interface.</p>
+</div>
+</section>
+<!-- END: LeftSection -->
+<!-- BEGIN: RightSection (Login Form) -->
+<section class="w-full md:w-1/2 lg:w-2/5 flex items-center justify-center bg-white p-6 sm:p-12 lg:p-20">
+<div class="w-full max-w-md">
+<!-- Logo/Header -->
+<div class="mb-10 text-center md:text-left">
+<div class="inline-flex items-center justify-center w-12 h-12 bg-el-primary rounded-custom mb-4">
+<svg class="w-8 h-8 text-el-accent" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h2 class="text-3xl font-bold tracking-tight text-el-primary">Welcome back</h2>
+<p class="text-el-warmGray mt-2">Please enter your details to sign in.</p>
+</div>
+<!-- Login Form -->
+<form action="#" class="space-y-6" method="POST">
+<!-- Role Selection (PrimeVue SelectButton Style) -->
+<div data-purpose="role-selector">
+<label class="block text-sm font-semibold text-el-primary mb-3">I am a...</label>
+<div class="grid grid-cols-2 gap-0 border border-el-warmGray/30 rounded-custom overflow-hidden">
+<button class="py-2.5 px-4 text-sm font-medium transition-colors role-btn-active" type="button">
+                Technician
+              </button>
+<button class="py-2.5 px-4 text-sm font-medium transition-colors bg-white text-el-warmGray hover:text-el-primary hover:bg-el-bgSoft" type="button">
+                Owner
+              </button>
+</div>
+</div>
+<!-- Email Input -->
+<div data-purpose="email-field">
+<label class="block text-sm font-semibold text-el-primary mb-1.5" for="email">Email Address</label>
+<input class="w-full px-4 py-3 rounded-custom border border-el-warmGray/30 focus:ring-2 focus:ring-el-custom focus:border-el-custom outline-none transition-all placeholder:text-el-warmGray/60" id="email" name="email" placeholder="name@electrolink.com" required="" type="email"/>
+</div>
+<!-- Password Input -->
+<div data-purpose="password-field">
+<div class="flex justify-between items-center mb-1.5">
+<label class="block text-sm font-semibold text-el-primary" for="password">Password</label>
+<a class="text-sm font-semibold text-el-custom hover:underline" href="#">Forgot password?</a>
+</div>
+<div class="relative">
+<input class="w-full px-4 py-3 rounded-custom border border-el-warmGray/30 focus:ring-2 focus:ring-el-custom focus:border-el-custom outline-none transition-all placeholder:text-el-warmGray/60" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<!-- Simple password visibility toggle placeholder -->
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-el-warmGray hover:text-el-primary" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center">
+<input class="h-4 w-4 text-el-custom focus:ring-el-custom border-el-warmGray/30 rounded" id="remember-me" name="remember-me" type="checkbox"/>
+<label class="ml-2 block text-sm text-el-primary" for="remember-me">
+              Remember this device
+            </label>
+</div>
+<!-- Sign In Button -->
+<button class="w-full py-3.5 bg-el-primary text-white font-bold rounded-custom hover:bg-opacity-90 active:scale-[0.98] transition-all flex justify-center items-center gap-2 custom-shadow" type="submit">
+            Sign In
+            <svg class="w-5 h-5 text-el-accent" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</form>
+<!-- Footer Note -->
+<p class="mt-10 text-center text-sm text-el-warmGray">
+          New to the platform? <a class="font-bold text-el-primary hover:underline" href="#">Request access</a>
+</p>
+</div>
+</section>
+<!-- END: RightSection -->
+</main>
+<!-- END: MainContainer -->
+<!-- JavaScript for Role Toggle Interactivity -->
+<script data-purpose="role-toggle-logic">
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('[data-purpose="role-selector"] button');
+      
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => {
+            b.classList.remove('role-btn-active');
+            b.classList.add('bg-white', 'text-el-warmGray');
+          });
+          btn.classList.add('role-btn-active');
+          btn.classList.remove('bg-white', 'text-el-warmGray');
+        });
+      });
+    });
+  </script>
+</body></html>

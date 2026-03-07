@@ -3,7 +3,8 @@ import Layout from "@/shared/presentation/layouts/layout.vue";
 </script>
 
 <template>
-  <layout />
+  <!-- <layout /> -->
+  <router-view />
 </template>
 
 <style scoped></style>

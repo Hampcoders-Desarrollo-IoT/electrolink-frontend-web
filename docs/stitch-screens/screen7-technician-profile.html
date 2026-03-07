@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#392d58",
+                        "background-light": "#E8EEF7",
+                        "background-dark": "#18161c",
+                        "warm-gray": "#A9B1BA",
+                        "text-main": "#2E3A59",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Technician Profile Completion</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-warm-gray/30 bg-white/80 backdrop-blur-md px-6 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary text-white rounded-lg">
+<span class="material-symbols-outlined">engineering</span>
+</div>
+<h2 class="text-text-main text-lg font-extrabold leading-tight tracking-tight">Technician Portal</h2>
+</div>
+<div class="flex flex-1 justify-end gap-4 items-center">
+<button class="p-2 text-text-main hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="Professional portrait of a male technician profile" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDbjpj71c2T1yPqPrBy2HUbmizk3Zxu1-v4nsM36qiGUJUQRH_O5ZuKNIPGiGrSqcaq7A2tbPMGuYD7hmvb0OovhPo7D8WlJ79cbkvtq5oQWeT_gi0hwbdXvkxDX-Y_xPyNknvCCtMiGnksdOJNEVW8P5gZcEY3fohNZb3wqJW48VZbDPZgMtcOPxmRLH6VXSMZu3VVx7dRqg1AaDcJCDiMIJZjPEI4FyKbkqObhqfk8kfJCzSmSjy1j0Iq5BCfa2tLHWR9HzxLmeKR");'></div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-10 px-4 md:px-0">
+<div class="layout-content-container flex flex-col max-w-[800px] w-full gap-6">
+<!-- Progress Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-warm-gray/20">
+<div class="flex flex-col gap-4">
+<div class="flex gap-6 justify-between items-end">
+<div>
+<h1 class="text-2xl font-bold text-text-main dark:text-slate-100">Complete Your Profile</h1>
+<p class="text-warm-gray text-sm mt-1">Please provide your professional details to start receiving jobs.</p>
+</div>
+<div class="text-right">
+<p class="text-primary text-base font-bold leading-normal">Step 1 of 2</p>
+<p class="text-warm-gray text-sm font-medium leading-normal">50% Complete</p>
+</div>
+</div>
+<div class="w-full bg-warm-gray/20 rounded-full h-2.5">
+<div class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 50%;"></div>
+</div>
+</div>
+</div>
+<!-- Main Form Sections -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-warm-gray/20 overflow-hidden">
+<!-- Section 1: Personal Information -->
+<div class="p-6 border-b border-warm-gray/10">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">person</span>
+<h3 class="text-lg font-bold text-text-main dark:text-slate-100 uppercase tracking-wider text-sm">Section 1: Personal Information</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-main">First Name</label>
+<input class="w-full rounded-lg border border-warm-gray/40 bg-slate-50 p-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="John" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-main">Last Name</label>
+<input class="w-full rounded-lg border border-warm-gray/40 bg-slate-50 p-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="Doe" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-main">DNI / ID Number</label>
+<input class="w-full rounded-lg border border-warm-gray/40 bg-slate-50 p-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="12345678X" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-main">Phone Number</label>
+<input class="w-full rounded-lg border border-warm-gray/40 bg-slate-50 p-3 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+</div>
+</div>
+<!-- Section 2: Professional Details -->
+<div class="p-6 border-b border-warm-gray/10 bg-slate-50/50">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">handyman</span>
+<h3 class="text-lg font-bold text-text-main dark:text-slate-100 uppercase tracking-wider text-sm">Section 2: Professional Details</h3>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-main">Specialties</label>
+<div class="relative">
+<div class="flex flex-wrap gap-2 w-full rounded-lg border border-warm-gray/40 bg-white p-3 min-h-[50px] items-center">
+<span class="bg-primary/10 text-primary px-2 py-1 rounded text-xs font-bold flex items-center gap-1">Plumbing <span class="material-symbols-outlined text-xs">close</span></span>
+<span class="bg-primary/10 text-primary px-2 py-1 rounded text-xs font-bold flex items-center gap-1">Electrical <span class="material-symbols-outlined text-xs">close</span></span>
+<span class="text-warm-gray text-sm ml-2 italic">Select more...</span>
+</div>
+<span class="material-symbols-outlined absolute right-3 top-3 text-warm-gray">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-main">Years of Experience</label>
+<select class="w-full rounded-lg border border-warm-gray/40 bg-white p-3 focus:ring-2 focus:ring-primary outline-none">
+<option>Select experience</option>
+<option>0-2 years</option>
+<option>3-5 years</option>
+<option>5-10 years</option>
+<option>10+ years</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-main">Professional Certifications</label>
+<div class="border-2 border-dashed border-warm-gray/40 rounded-xl p-8 flex flex-col items-center justify-center bg-white hover:bg-slate-50 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-warm-gray group-hover:text-primary mb-2">cloud_upload</span>
+<p class="text-sm text-text-main font-medium">Click to upload or drag and drop</p>
+<p class="text-xs text-warm-gray mt-1">PDF, PNG, JPG (max. 10MB)</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Coverage Zone -->
+<div class="p-6">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">map</span>
+<h3 class="text-lg font-bold text-text-main dark:text-slate-100 uppercase tracking-wider text-sm">Section 3: Coverage Zone</h3>
+</div>
+<div class="relative w-full h-64 rounded-xl overflow-hidden border border-warm-gray/30">
+<div class="absolute inset-0 bg-slate-200 flex items-center justify-center bg-cover bg-center" data-alt="Map view showing service coverage area" data-location="Madrid" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC_8BKlxCAKRzbbxO_PhVZlRtufzJYIBtc-yEimtbmaoRTRuOp6GBW95A5QFn6CAwai4P1huIc0LTbWq7NR90gXTcBDsXjDeg04kEyjgMZ_LJpUveP-J-T8F4-PRLMEr4QonS6n78RZtSWG4xTYWj7m9b8vBw1VdS1JkS6vo-TVEbgWXr1XtwDsXA10AhSHAqW3eku70cQINlyG572WI6OtMPzTLmn4n7W61wUzCPgoAaJtB7HmWm1rxpyLkCoAFChAX_miIGxEf8rR')">
+<div class="absolute inset-0 bg-primary/10"></div>
+<div class="relative bg-white/90 p-4 rounded-lg shadow-xl text-center backdrop-blur-sm border border-white">
+<span class="material-symbols-outlined text-primary text-3xl mb-1">location_on</span>
+<p class="text-sm font-bold text-primary">Coverage Area Map</p>
+<p class="text-xs text-text-main">Define the radius of your services</p>
+</div>
+</div>
+</div>
+<p class="text-xs text-warm-gray mt-3 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">info</span>
+                                Drag the circle to define your service radius (max 50km).
+                            </p>
+</div>
+<!-- Footer Actions -->
+<div class="p-6 bg-slate-50 border-t border-warm-gray/10 flex flex-col sm:flex-row justify-end gap-3">
+<button class="px-6 py-3 rounded-lg border border-warm-gray text-text-main font-bold hover:bg-warm-gray/10 transition-colors flex items-center justify-center gap-2 order-2 sm:order-1">
+<span class="material-symbols-outlined text-lg">drafts</span>
+                                Save Draft
+                            </button>
+<button class="px-8 py-3 rounded-lg bg-primary text-white font-bold hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 order-1 sm:order-2">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+                                Complete Profile
+                            </button>
+</div>
+</div>
+<p class="text-center text-warm-gray text-xs pb-10">
+                        By completing your profile, you agree to our Terms of Service and Privacy Policy.
+                    </p>
+</div>
+</main>
+</div>
+</div>
+</body></html>

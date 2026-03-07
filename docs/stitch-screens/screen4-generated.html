@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroLink - Password Recovery</title>
+<!-- BEGIN: External Resources -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- END: External Resources -->
+<!-- BEGIN: Tailwind Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'el-primary': '#2e3a59',
+            'el-bg-soft': '#e8eef7',
+            'custom-accent': '#1978e5',
+          },
+          borderRadius: {
+            'round-eight': '8px',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+<!-- END: Tailwind Configuration -->
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="layout-styling">
+    body {
+      background-color: #e8eef7; /* --el-bg-soft */
+      font-family: 'Inter', sans-serif;
+    }
+    .auth-card {
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+<!-- BEGIN: Recover Password Screen -->
+<main class="auth-card bg-white p-8 rounded-round-eight" data-purpose="recovery-form-container" id="recover-screen">
+<div class="text-center mb-8">
+<!-- Logo Placeholder -->
+<div class="inline-flex items-center justify-center w-12 h-12 bg-el-primary rounded-lg mb-4">
+<svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h1 class="text-2xl font-bold text-el-primary">Recover Password</h1>
+<p class="text-slate-500 mt-2 text-sm">Enter your email and we'll send you a link to reset your password.</p>
+</div>
+<form class="space-y-6" id="recovery-form">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-slate-700" for="email">Email Address</label>
+<input class="block w-full px-4 py-3 rounded-round-eight border-slate-300 shadow-sm focus:ring-custom-accent focus:border-custom-accent text-sm" id="email" name="email" placeholder="name@company.com" required="" type="email"/>
+</div>
+<button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-round-eight shadow-sm text-sm font-semibold text-white bg-custom-accent hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom-accent transition-colors duration-200" type="submit">
+        Send Recovery Link
+      </button>
+</form>
+<div class="mt-6 text-center">
+<a class="text-sm font-medium text-custom-accent hover:text-blue-700 transition-colors" href="#">
+        Back to Sign In
+      </a>
+</div>
+</main>
+<!-- END: Recover Password Screen -->
+<!-- BEGIN: Success Screen -->
+<main class="auth-card bg-white p-8 rounded-round-eight hidden" data-purpose="success-message-container" id="success-screen">
+<div class="text-center">
+<!-- Success Icon -->
+<div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6">
+<svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<h1 class="text-2xl font-bold text-el-primary mb-3">Email Sent!</h1>
+<p class="text-slate-500 mb-8 text-sm leading-relaxed">
+        We've sent a password recovery link to your email address. Please check your inbox and follow the instructions.
+      </p>
+<button class="w-full flex justify-center py-3 px-4 border border-el-primary rounded-round-eight shadow-sm text-sm font-semibold text-el-primary bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-el-primary transition-colors duration-200" id="btn-return" type="button">
+        Return to Login
+      </button>
+<div class="mt-8 pt-6 border-t border-slate-100">
+<p class="text-xs text-slate-400">
+          Didn't receive the email? <a class="text-custom-accent hover:underline font-medium" href="#">Click to resend</a>
+</p>
+</div>
+</div>
+</main>
+<!-- END: Success Screen -->
+<!-- BEGIN: Interaction Script -->
+<script data-purpose="screen-switcher">
+    // This script handles the transition between the recovery form and the success state
+    const recoveryForm = document.getElementById('recovery-form');
+    const recoverScreen = document.getElementById('recover-screen');
+    const successScreen = document.getElementById('success-screen');
+    const returnBtn = document.getElementById('btn-return');
+
+    recoveryForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Simulate API call and transition
+      recoverScreen.classList.add('hidden');
+      successScreen.classList.remove('hidden');
+    });
+
+    returnBtn.addEventListener('click', function() {
+      // Simulate returning to login (in this demo, it just goes back to recovery)
+      successScreen.classList.add('hidden');
+      recoverScreen.classList.remove('hidden');
+    });
+  </script>
+<!-- END: Interaction Script -->
+</body></html>

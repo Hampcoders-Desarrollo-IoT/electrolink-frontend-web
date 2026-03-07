@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroLink - Profile Management</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              navy: '#2e3a59',
+              light: '#e8eef7',
+              accent: '#b5d5f5',
+              primary: '#1978e5',
+            }
+          },
+          borderRadius: {
+            'custom': '8px',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-overrides">
+    body {
+      background-color: #f8fafc;
+      color: #2e3a59;
+    }
+    .card-shadow {
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+  </style>
+</head>
+<body class="font-sans antialiased">
+<!-- BEGIN: MainLayout -->
+<div class="min-h-screen flex flex-col md:flex-row">
+<!-- BEGIN: Sidebar -->
+<aside class="w-full md:w-64 bg-brand-navy text-white flex flex-col p-6 space-y-8" data-purpose="navigation-sidebar">
+<div class="flex items-center space-x-3 px-2">
+<div class="w-8 h-8 bg-brand-primary rounded-custom flex items-center justify-center font-bold">E</div>
+<span class="text-xl font-bold tracking-tight">ElectroLink</span>
+</div>
+<nav class="flex-grow space-y-2">
+<a class="flex items-center space-x-3 px-4 py-2 bg-brand-primary/20 text-brand-accent rounded-custom border-l-4 border-brand-primary" href="#">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>My Profile</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2 hover:bg-white/10 rounded-custom transition-colors" href="#">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Projects</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2 hover:bg-white/10 rounded-custom transition-colors" href="#">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Settings</span>
+</a>
+</nav>
+<!-- BEGIN: Account Actions -->
+<div class="pt-6 border-t border-white/10 mt-auto" data-purpose="account-danger-zone">
+<button class="w-full flex items-center space-x-3 px-4 py-2 text-red-400 hover:bg-red-500/10 rounded-custom transition-colors group">
+<svg class="h-5 w-5 group-hover:animate-pulse" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span>Deactivate Account</span>
+</button>
+</div>
+<!-- END: Account Actions -->
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-grow flex flex-col overflow-y-auto">
+<!-- BEGIN: Header -->
+<header class="bg-white border-b border-brand-light px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4" data-purpose="profile-header">
+<div class="flex items-center space-x-4">
+<div class="relative">
+<img alt="Profile Avatar" class="w-20 h-20 rounded-full border-4 border-brand-light object-cover" id="user-avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjUhkreTgGfgji1OGKPVGQ1asBf-hk8DcsJRnfgdP4vc7wDHmxOohOmwz1RTSaFaSxCV7Wsu0erDY1ChKaO88a-9ErQpM8MZzIuqefV9uBpjXkTMkMC0LRMSHo7L4-VUErHG0ZIRnPz-kva-_GcXocSPqrm2pmTtvcYcAirAxphgcRf1QFeHRUaCMbIZTDWPjujzCJfvNH7HgkNzkb6iFeLzb_1j1yspldyfgPy3bKXgZpLMJCNqd3XR5cO0mfwnJ86kq3Jxr3ZOIm"/>
+<span class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
+</div>
+<div>
+<h1 class="text-2xl font-bold text-brand-navy">Alex Thompson</h1>
+<p class="text-gray-500 font-medium">Senior Field Technician</p>
+</div>
+</div>
+<button class="px-6 py-2 bg-brand-primary text-white font-semibold rounded-custom hover:opacity-90 transition-opacity flex items-center space-x-2" data-purpose="edit-profile-btn">
+<svg class="h-4 w-4" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+</svg>
+<span>Edit Profile</span>
+</button>
+</header>
+<!-- END: Header -->
+<!-- BEGIN: DashboardBody -->
+<div class="p-8 space-y-8 max-w-6xl mx-auto w-full">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- BEGIN: PersonalDataSection -->
+<section class="bg-white p-6 rounded-custom border border-brand-light card-shadow" data-purpose="personal-info">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-bold flex items-center text-brand-navy">
+<span class="p-2 bg-brand-light rounded-custom mr-3 text-brand-primary">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" fill-rule="evenodd"></path></svg>
+</span>
+                Personal Data
+              </h2>
+</div>
+<div class="space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</label>
+<p class="text-brand-navy font-medium">Alex Thompson</p>
+</div>
+<div>
+<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Email Address</label>
+<p class="text-brand-navy font-medium">alex.t@electrolink.com</p>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number</label>
+<p class="text-brand-navy font-medium">+1 (555) 012-3456</p>
+</div>
+<div>
+<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Office Location</label>
+<p class="text-brand-navy font-medium">Regional HQ - Austin, TX</p>
+</div>
+</div>
+</section>
+<!-- END: PersonalDataSection -->
+<!-- BEGIN: ProfessionalProfileSection -->
+<section class="bg-white p-6 rounded-custom border border-brand-light card-shadow" data-purpose="professional-info">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-bold flex items-center text-brand-navy">
+<span class="p-2 bg-brand-light rounded-custom mr-3 text-brand-primary">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" fill-rule="evenodd"></path><path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"></path></svg>
+</span>
+                Professional Profile
+              </h2>
+<span class="text-xs bg-brand-accent text-brand-navy px-2 py-1 rounded-full font-bold">TECH VIEW</span>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Primary Certifications</label>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-3 py-1 bg-brand-light text-brand-primary text-xs font-semibold rounded-custom">Certified Electrician (L4)</span>
+<span class="px-3 py-1 bg-brand-light text-brand-primary text-xs font-semibold rounded-custom">Solar Installation Pro</span>
+<span class="px-3 py-1 bg-brand-light text-brand-primary text-xs font-semibold rounded-custom">OSHA Safety</span>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Years of Experience</label>
+<p class="text-brand-navy font-medium">8 Years</p>
+</div>
+<div>
+<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Assigned Vehicle</label>
+<p class="text-brand-navy font-medium">Van #402 - TX 492-XPT</p>
+</div>
+</div>
+</section>
+<!-- END: ProfessionalProfileSection -->
+</div>
+<!-- BEGIN: PreferencesSection -->
+<section class="bg-white p-6 rounded-custom border border-brand-light card-shadow" data-purpose="preferences">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-bold flex items-center text-brand-navy">
+<span class="p-2 bg-brand-light rounded-custom mr-3 text-brand-primary">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"></path></svg>
+</span>
+              Account Preferences
+            </h2>
+<span class="text-xs bg-brand-navy text-brand-accent px-2 py-1 rounded-full font-bold">OWNER VIEW</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="flex flex-col space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">Email Notifications</span>
+<input checked="" class="h-4 w-4 text-brand-primary focus:ring-brand-primary border-gray-300 rounded" type="checkbox"/>
+</div>
+<p class="text-xs text-gray-500">Receive daily project digests and urgent alerts via email.</p>
+</div>
+<div class="flex flex-col space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">SMS Alerts</span>
+<input class="h-4 w-4 text-brand-primary focus:ring-brand-primary border-gray-300 rounded" type="checkbox"/>
+</div>
+<p class="text-xs text-gray-500">Get text messages for immediate schedule changes.</p>
+</div>
+<div class="flex flex-col space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium">High Contrast Mode</span>
+<input class="h-4 w-4 text-brand-primary focus:ring-brand-primary border-gray-300 rounded" type="checkbox"/>
+</div>
+<p class="text-xs text-gray-500">Enable high contrast UI for better outdoor visibility.</p>
+</div>
+</div>
+</section>
+<!-- END: PreferencesSection -->
+</div>
+<!-- END: DashboardBody -->
+<footer class="mt-auto p-8 text-center text-xs text-gray-400">
+        © 2023 ElectroLink Systems Inc. All rights reserved.
+      </footer>
+</main>
+<!-- END: MainContent -->
+</div>
+<!-- END: MainLayout -->
+</body></html>
