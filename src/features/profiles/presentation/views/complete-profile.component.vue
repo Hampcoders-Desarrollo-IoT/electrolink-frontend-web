@@ -60,7 +60,7 @@ const saveProfile = async () => {
     // Handle role-specific command creation inside the store or helper
     const success = await profilesStore.createProfileV2(payload);
     if (success) {
-      router.push('/dashboard');
+      router.push('/profiles/management');
     }
   } catch (error) {
     console.error('Error creating profile:', error);

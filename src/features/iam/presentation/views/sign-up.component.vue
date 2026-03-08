@@ -43,36 +43,6 @@ function goToSignIn() {
 
         <!-- Registration Form -->
         <form @submit.prevent="performSignUp" class="register-form">
-          <!-- Role Selection -->
-          <div class="field">
-            <label class="field-label">Select your role</label>
-            <div class="role-grid">
-              <!-- Homeowner Option -->
-              <label class="role-option" :class="{ 'role-active': selectedRole === 'owner' }">
-                <pv-radio-button
-                  v-model="selectedRole"
-                  inputId="role-owner"
-                  value="owner"
-                  class="role-radio-hidden"
-                />
-                <i class="pi pi-home" style="font-size: 1.25rem; margin-bottom: 0.25rem"></i>
-                <span class="role-label">Homeowner</span>
-              </label>
-
-              <!-- Technician Option -->
-              <label class="role-option" :class="{ 'role-active': selectedRole === 'technician' }">
-                <pv-radio-button
-                  v-model="selectedRole"
-                  inputId="role-technician"
-                  value="technician"
-                  class="role-radio-hidden"
-                />
-                <i class="pi pi-wrench" style="font-size: 1.25rem; margin-bottom: 0.25rem"></i>
-                <span class="role-label">Technician</span>
-              </label>
-            </div>
-          </div>
-
           <!-- Email Field -->
           <div class="field">
             <label class="field-label" for="reg-email">Email Address</label>
