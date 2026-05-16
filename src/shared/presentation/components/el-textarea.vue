@@ -2,6 +2,7 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
+  id: String,
   modelValue: String,
   placeholder: String,
   label: String,
@@ -23,12 +24,13 @@ const emit = defineEmits(['update:modelValue']);
 
 <template>
   <div class="el-textarea-group">
-    <label v-if="label" class="el-textarea-label">
+    <label v-if="label" :for="id" class="el-textarea-label">
       {{ label }}
       <span v-if="required" class="required-mark">*</span>
     </label>
     
     <pv-textarea
+      :id="id"
       :modelValue="modelValue"
       @update:modelValue="emit('update:modelValue', $event)"
       :placeholder="placeholder"

@@ -1,19 +1,31 @@
 <script setup>
+import { computed } from 'vue';
 import ElInputText from '../../../../shared/presentation/components/el-input-text.vue';
 import ElMultiSelect from '../../../../shared/presentation/components/el-multi-select.vue';
 import ElTextarea from '../../../../shared/presentation/components/el-textarea.vue';
+import ElMap from '../../../../shared/presentation/components/el-map.vue';
 import SpecialtiesSelector from './specialties-selector.component.vue';
 
 const props = defineProps({
   specialties: Array,
   experienceYears: Number,
-  aboutMe: String
+  aboutMe: String,
+  centerLatitude: Number,
+  centerLongitude: Number,
+  radiusKm: Number,
+  errors: {
+    type: Object,
+    default: () => ({})
+  }
 });
 
 const emit = defineEmits([
   'update:specialties',
   'update:experienceYears',
-  'update:aboutMe'
+  'update:aboutMe',
+  'update:centerLatitude',
+  'update:centerLongitude',
+  'update:radiusKm'
 ]);
 
 const specialtyOptions = [
@@ -24,6 +36,21 @@ const specialtyOptions = [
   { label: 'Upgrade', value: 4 },
   { label: 'Battery Systems', value: 5 }
 ];
+
+const circleData = computed(() => {
+  if (props.centerLatitude && props.centerLongitude && props.radiusKm) {
+    return {
+      center: [props.centerLatitude, props.centerLongitude],
+      radiusKm: props.radiusKm
+    };
+  }
+  return null;
+});
+
+const onMapClick = (coords) => {
+  emit('update:centerLatitude', coords.lat);
+  emit('update:centerLongitude', coords.lng);
+};
 </script>
 
 <template>
@@ -50,6 +77,55 @@ const specialtyOptions = [
           placeholder="e.g. 5"
           type="number"
         />
+      </div>
+    </div>
+
+    <div class="data-group">
+      <div class="group-header">
+        <i class="pi pi-map-marker" style="color: var(--el-custom)"></i>
+        <h4 class="group-label">Service Area</h4>
+      </div>
+      
+      <div class="map-container" style="height: 300px; margin-bottom: 1rem; border-radius: 8px; overflow: hidden;">
+        <el-map
+          :center="[centerLatitude || -12.0464, centerLongitude || -77.0428]"
+          :zoom="10"
+          :clickable="true"
+          :circle="circleData"
+          @map-click="onMapClick"
+        />
+      </div>
+
+      <div class="form-grid">
+        <el-input-text
+          :modelValue="centerLatitude"
+          @update:modelValue="emit('update:centerLatitude', Number($event))"
+          label="Latitude"
+          readonly
+          :error="errors.centerLatitude ? $t(errors.centerLatitude) : ''"
+        />
+        <el-input-text
+          :modelValue="centerLongitude"
+          @update:modelValue="emit('update:centerLongitude', Number($event))"
+          label="Longitude"
+          readonly
+          :error="errors.centerLongitude ? $t(errors.centerLongitude) : ''"
+        />
+      </div>
+
+      <div class="slider-group" style="margin-top: 1rem;">
+        <label class="el-input-label">Service Radius: {{ radiusKm }} km</label>
+        <input
+          type="range"
+          min="1"
+          max="100"
+          :value="radiusKm"
+          @input="emit('update:radiusKm', Number($event.target.value))"
+          class="el-slider"
+          style="width: 100%;"
+        />
+        <small v-if="errors.radiusKm" class="el-input-error-msg">{{ $t(errors.radiusKm) }}</small>
+
       </div>
     </div>
 
@@ -100,6 +176,23 @@ const specialtyOptions = [
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
+}
+
+.el-input-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2E3A59;
+}
+
+.el-input-error-msg {
+  color: var(--el-danger);
+  font-size: 0.75rem;
+  margin-top: 0.125rem;
+  font-weight: 500;
+}
+
+.el-slider {
+  accent-color: var(--el-custom);
 }
 
 @media (min-width: 768px) {

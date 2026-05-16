@@ -12,11 +12,11 @@
   },
   "about": {
     "title": "Acerca de Nosotros",
-    "content": "ACME Learning Center es una plataforma educativa empresarial, parte de ACME Corporation."
+    "content": "Electrolink es una plataforma empresarial de administración de información eléctrica."
   },
   "home": {
     "title": "Bienvenido",
-    "content": "Bienvenido a ACME Learning Center, tu punto de entrada para la educación de calidad."
+    "content": "Bienvenido a Electrolink, tu punto de entrada para la gestión de información eléctrica."
   },
   "page-not-found": {
     "title": "Página No Encontrada",
@@ -60,5 +60,12 @@
   },
   "errors": {
     "occurred": "Ocurrieron errores"
+  },
+  "profiles": {
+    "errors": {
+      "invalid_latitude": "Latitud inválida (debe estar entre -90 y 90)",
+      "invalid_longitude": "Longitud inválida (debe estar entre -180 y 180)",
+      "invalid_radius": "El radio debe estar entre 0 y 100 km"
+    }
   }
 }

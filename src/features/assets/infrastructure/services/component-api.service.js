@@ -1,25 +1,37 @@
 import { BaseApi } from '@/shared/infrastructure/apis/base-api.js';
 import { BaseEndpoint } from '@/shared/infrastructure/apis/base-endpoint.js';
 
-const componentsEndpointPath = import.meta.env.VITE_COMPONENTS_ENDPOINT_PATH;
+const techniciansEndpointPath = import.meta.env.VITE_TECHNICIANS_ENDPOINT_PATH;
 
 export class ComponentApiService extends BaseApi {
-    #componentsEndpoint;
+    #techniciansEndpoint;
 
     constructor() {
         super();
-        this.#componentsEndpoint = new BaseEndpoint(this, componentsEndpointPath);
+        this.#techniciansEndpoint = new BaseEndpoint(this, techniciansEndpointPath);
     }
 
-    getAll() {
-        return this.#componentsEndpoint.getAll();
+    #getComponentsEndpoint(technicianId) {
+        return new BaseEndpoint(this, `${techniciansEndpointPath}/${technicianId}/components`);
     }
 
-    getById(id) {
-        return this.#componentsEndpoint.getById(id);
+    getAll(technicianId) {
+        return this.#getComponentsEndpoint(technicianId).getAll();
     }
 
-    create(command) {
-        return this.#componentsEndpoint.create(command);
+    getById(technicianId, id) {
+        return this.#getComponentsEndpoint(technicianId).getById(id);
+    }
+
+    create(technicianId, command) {
+        return this.#getComponentsEndpoint(technicianId).create(command);
+    }
+
+    update(technicianId, id, command) {
+        return this.#getComponentsEndpoint(technicianId).update(id, command);
+    }
+
+    delete(technicianId, id) {
+        return this.#getComponentsEndpoint(technicianId).delete(id);
     }
 }

@@ -1,7 +1,5 @@
 import { Component } from '../../domain/entities/component.entity.js';
-import { ComponentType } from '../../domain/entities/component-type.entity.js';
 import { ComponentResource } from '../resources/component.resource.js';
-import { ComponentTypeResource } from '../resources/component-type.resource.js';
 
 export class ComponentAssembler {
     static toEntityFromResource(resource) {
@@ -11,7 +9,7 @@ export class ComponentAssembler {
             name: resource.name,
             description: resource.description,
             isActive: resource.isActive,
-            typeId: resource.componentTypeId
+            componentTypeId: resource.componentTypeId
         });
     }
 
@@ -22,43 +20,13 @@ export class ComponentAssembler {
             name: entity.name,
             description: entity.description,
             isActive: entity.isActive,
-            componentTypeId: entity.typeId
+            componentTypeId: entity.componentTypeId
         });
     }
 
-    static toTypeEntityFromResource(resource) {
-        if (!resource) return null;
-        return new ComponentType({
-            id: resource.componentTypeId,
-            name: resource.name,
-            description: resource.description
-        });
-    }
-
-    static toTypeResourceFromEntity(entity) {
-        if (!entity) return null;
-        return new ComponentTypeResource({
-            componentTypeId: entity.id,
-            name: entity.name,
-            description: entity.description
-        });
-    }
-
-    static toCreateCommandFromResource(resource) {
-        if (!resource) return null;
-        return {
-            name: resource.name,
-            description: resource.description,
-            isActive: resource.isActive,
-            componentTypeId: resource.componentTypeId
-        };
-    }
-
-    static toCreateTypeCommandFromResource(resource) {
-        if (!resource) return null;
-        return {
-            name: resource.name,
-            description: resource.description
-        };
+    static toEntityListFromResponse(response) {
+        if (!response || !response.data) return [];
+        const data = Array.isArray(response.data) ? response.data : [response.data];
+        return data.map(r => this.toEntityFromResource(r));
     }
 }

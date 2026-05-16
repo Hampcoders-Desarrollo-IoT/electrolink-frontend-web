@@ -1,14 +1,12 @@
-import useIamStore from "../../application/iam.store.js";
-
 export const iamInterceptor = (config) => {
-    const store = useIamStore();
+    const token = localStorage.getItem('token');
     
     // Skip adding token for authentication endpoints
     const isAuthRequest = config.url.includes('/authentication/sign-up') || 
                          config.url.includes('/authentication/sign-in');
 
-    if (store.isSignedIn && !isAuthRequest) {
-        config.headers.Authorization = `Bearer ${store.currentToken}`;
+    if (token && !isAuthRequest) {
+        config.headers.Authorization = `Bearer ${token}`;
         console.log(`[IAM Interceptor] Token attached to ${config.url}`);
     } else {
         console.log(`[IAM Interceptor] No token attached or skipped for ${config.url}`);

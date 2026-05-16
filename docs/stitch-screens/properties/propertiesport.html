@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroLink - Property Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="custom-styles">
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f4f8;
+      color: #1e293b;
+    }
+    .card-border {
+      border: 1px solid #e2e8f0;
+    }
+    .text-slate-primary { color: #1e293b; }
+    .text-slate-secondary { color: #64748b; }
+    
+    /* Custom Scrollbar for Map area if needed */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- BEGIN: Navigation -->
+<nav class="sticky top-0 z-10 px-8 py-4 flex items-center justify-between" style="background-color: #f0f4f8;">
+<!-- Logo -->
+<div class="flex items-center gap-2">
+<svg class="w-6 h-6 text-slate-primary" fill="currentColor" viewbox="0 0 24 24">
+<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+</svg>
+<span class="text-xl font-bold tracking-tight">ElectroLink</span>
+</div>
+<!-- Nav Links -->
+<div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-secondary">
+<a class="hover:text-slate-primary transition-colors" href="#">Dashboard</a>
+<a class="text-slate-primary border-b-4 border-slate-primary pb-1" href="#">Portfolio</a>
+<a class="hover:text-slate-primary transition-colors" href="#">Bills</a>
+<a class="hover:text-slate-primary transition-colors" href="#">Settings</a>
+</div>
+<!-- User Actions -->
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-secondary hover:text-slate-primary transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<div class="w-8 h-8 rounded-full bg-blue-300 border-2 border-blue-400 flex-shrink-0 cursor-pointer"></div>
+</div>
+</nav>
+<!-- END: Navigation -->
+<!-- BEGIN: Main Content -->
+<main class="flex-grow px-8 py-6 max-w-[1440px] mx-auto w-full flex flex-col gap-6">
+<!-- Page Header -->
+<header>
+<h1 class="text-3xl font-bold text-slate-primary mb-2">Property Portfolio</h1>
+<p class="text-slate-secondary">Manage your connected residential assets and utility endpoints.</p>
+</header>
+<!-- BEGIN: Summary Stats Section -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Total Properties Card -->
+<div class="bg-white rounded-xl p-6 card-border shadow-sm flex flex-col justify-between h-36 relative">
+<div class="flex justify-between items-start">
+<h2 class="text-sm font-medium text-slate-secondary">Total Properties</h2>
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m3-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<div class="text-4xl font-bold text-slate-primary mb-1">12</div>
+<div class="text-xs font-medium text-emerald-500">+2 from last month</div>
+</div>
+</div>
+<!-- Occupancy Rate Card -->
+<div class="bg-white rounded-xl p-6 card-border shadow-sm flex flex-col justify-between h-36 relative">
+<div class="flex justify-between items-start">
+<h2 class="text-sm font-medium text-slate-secondary">Occupancy Rate</h2>
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<div class="text-4xl font-bold text-slate-primary mb-3">83.3%</div>
+<div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-slate-800 rounded-full" style="width: 83.3%;"></div>
+</div>
+</div>
+</div>
+<!-- Monthly Revenue Card -->
+<div class="bg-white rounded-xl p-6 card-border shadow-sm flex flex-col justify-between h-36 relative">
+<div class="flex justify-between items-start">
+<h2 class="text-sm font-medium text-slate-secondary">Monthly Revenue</h2>
+<svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<div class="text-4xl font-bold text-slate-primary mb-1">$24,450</div>
+<div class="text-xs font-medium text-slate-500">Estimated gross yield</div>
+</div>
+</div>
+</section>
+<!-- END: Summary Stats Section -->
+<!-- BEGIN: Table Section -->
+<section class="bg-white rounded-xl card-border shadow-sm flex flex-col overflow-hidden">
+<!-- Table Header Area -->
+<div class="p-6 border-b border-slate-100 flex justify-between items-center">
+<h2 class="text-lg font-bold text-slate-primary">Property Entries</h2>
+<button class="bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium py-2 px-4 rounded-lg flex items-center gap-2 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+          Add Property
+        </button>
+</div>
+<!-- Table Structure -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/50 border-b border-slate-200 text-xs font-semibold text-slate-500 tracking-wider">
+<th class="px-6 py-4">NICKNAME &amp; ADDRESS</th>
+<th class="px-6 py-4">STATUS</th>
+<th class="px-6 py-4">TYPE</th>
+<th class="px-6 py-4 text-right">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<!-- Row 1 -->
+<tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold text-slate-primary">Main Residence</span>
+<span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800 text-[10px] font-bold tracking-wide uppercase">Primary</span>
+</div>
+<div class="text-slate-500 text-xs mt-0.5">123 Sunset Blvd, Los Angeles, CA</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#dbeafe] text-[#1e40af] text-xs font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></span> Occupied
+</span>
+</td>
+<td class="px-6 py-4 text-slate-600">Single Family Home</td>
+<td class="px-6 py-4 text-right"></td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-blue-50/30 border-b border-slate-100 hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-slate-200/50 flex items-center justify-center text-slate-600 shrink-0">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m3-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div class="font-bold text-slate-primary">The Heights Unit 402</div>
+<div class="text-slate-500 text-xs mt-0.5">888 Skyline Dr, San Francisco, CA</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#dbeafe] text-[#1e40af] text-xs font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></span> Occupied
+</span>
+</td>
+<td class="px-6 py-4 text-slate-600">Condo</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-4">
+<a class="text-blue-500 hover:text-blue-600 text-xs font-medium transition-colors" href="#">Set as Primary</a>
+<button class="text-red-400 hover:text-red-500 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+</div>
+<div>
+<div class="font-bold text-slate-primary">Willow Creek Rental</div>
+<div class="text-slate-500 text-xs mt-0.5">452 Willow Lane, Austin, TX</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f3e8d6] text-gray-700 text-xs font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Vacant
+</span>
+</td>
+<td class="px-6 py-4 text-slate-600">Single Family Home</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-4">
+<a class="text-blue-500 hover:text-blue-600 text-xs font-medium transition-colors" href="#">Set as Primary</a>
+<button class="text-red-400 hover:text-red-500 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 bg-slate-50/30">
+<div>Showing 3 of 12 properties</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded border border-slate-200 flex items-center justify-center hover:bg-slate-100 transition-colors disabled:opacity-50" disabled="">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="w-8 h-8 rounded border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50 transition-colors text-slate-800 font-medium">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+</section>
+<!-- END: Table Section -->
+<!-- BEGIN: Bottom Dashboards -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Efficiency Chart -->
+<div class="bg-white rounded-xl p-6 card-border shadow-sm flex flex-col">
+<div class="flex items-center gap-2 mb-6">
+<svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<h2 class="text-base font-bold text-slate-primary">Portfolio Efficiency</h2>
+</div>
+<!-- CSS Chart -->
+<div class="h-48 border border-slate-200 rounded-lg flex items-end justify-between px-6 pt-6 pb-0 mb-4 bg-white relative overflow-hidden">
+<div class="w-1/6 bg-blue-200 h-[40%] rounded-t-sm hover:opacity-90 transition-opacity"></div>
+<div class="w-1/6 bg-slate-500 h-[60%] rounded-t-sm hover:opacity-90 transition-opacity"></div>
+<div class="w-1/6 bg-slate-800 h-[90%] rounded-t-sm hover:opacity-90 transition-opacity"></div>
+<div class="w-1/6 bg-blue-100 h-[30%] rounded-t-sm hover:opacity-90 transition-opacity"></div>
+<div class="w-1/6 bg-slate-500 h-[50%] rounded-t-sm hover:opacity-90 transition-opacity"></div>
+</div>
+<p class="text-sm text-slate-600 leading-relaxed">
+          Based on your utility consumption patterns, your portfolio is performing 12% more efficiently than similar properties in your region.
+        </p>
+</div>
+<!-- Geographic Distribution -->
+<div class="bg-white rounded-xl p-6 card-border shadow-sm flex flex-col">
+<div class="flex items-center gap-2 mb-6">
+<svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<h2 class="text-base font-bold text-slate-primary">Geographic Distribution</h2>
+</div>
+<!-- Map Area -->
+<div class="relative h-48 rounded-lg overflow-hidden border border-slate-200 mb-4 bg-slate-100" style="background-color: #e2e8f0; background-image: linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px); background-size: 20px 20px;">
+<!-- Map Image Placeholder with blending -->
+<!-- Map Overlays -->
+<div class="absolute inset-0 bg-blue-50/50 mix-blend-multiply pointer-events-none"></div>
+<!-- Pins & Tooltip -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center">
+<div class="bg-white px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-md border border-slate-200 mb-2 whitespace-nowrap">
+               Current View: West Coast
+             </div>
+<!-- Center Pin -->
+<div class="relative">
+<div class="w-4 h-4 bg-slate-800 rounded-full border-2 border-white shadow-sm z-10 relative"></div>
+<div class="absolute inset-0 bg-slate-800 rounded-full animate-ping opacity-20"></div>
+</div>
+</div>
+<!-- Other Pins -->
+<div class="absolute top-[30%] left-[20%] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-sm opacity-80"></div>
+<div class="absolute top-[60%] left-[30%] w-4 h-4 bg-slate-800 rounded-full border-2 border-white shadow-sm opacity-80"></div>
+<div class="absolute top-[70%] left-[60%] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-sm opacity-80"></div>
+<div class="absolute top-[40%] right-[20%] w-4 h-4 bg-slate-600 rounded-full border-2 border-white shadow-sm opacity-80"></div>
+</div>
+<!-- Tags -->
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">California (8)</span>
+<span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">Texas (2)</span>
+<span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">Florida (1)</span>
+<span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">New York (1)</span>
+</div>
+</div>
+</section>
+<!-- END: Bottom Dashboards -->
+</main>
+<!-- END: Main Content -->
+<!-- BEGIN: Footer -->
+<footer class="mt-auto border-t border-slate-200 bg-[#f0f4f8] py-6 px-8 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 max-w-[1440px] mx-auto w-full">
+<div class="flex items-center gap-2 mb-4 md:mb-0">
+<svg class="w-4 h-4 text-slate-700" fill="currentColor" viewbox="0 0 24 24">
+<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+</svg>
+<span class="font-bold text-slate-700 text-sm">ElectroLink</span>
+</div>
+<div class="mb-4 md:mb-0">
+      © 2024 ElectroLink Owner Portal. All rights reserved.
+    </div>
+<div class="flex items-center gap-4">
+<a class="hover:text-slate-800 transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-slate-800 transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-slate-800 transition-colors" href="#">Help Center</a>
+</div>
+</footer>
+<!-- END: Footer -->
+</body></html>

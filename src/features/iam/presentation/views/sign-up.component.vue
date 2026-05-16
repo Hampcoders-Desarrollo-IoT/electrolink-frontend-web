@@ -44,47 +44,35 @@ function goToSignIn() {
         <!-- Registration Form -->
         <form @submit.prevent="performSignUp" class="register-form">
           <!-- Email Field -->
-          <div class="field">
-            <label class="field-label" for="reg-email">Email Address</label>
-            <pv-input-text
-              id="reg-email"
-              v-model="form.email"
-              placeholder="name@example.com"
-              type="email"
-              class="w-full"
-            />
-          </div>
+          <el-input-text
+            id="reg-email"
+            v-model="form.email"
+            label="Email Address"
+            placeholder="name@example.com"
+            type="email"
+          />
 
           <!-- Password Field -->
-          <div class="field">
-            <label class="field-label" for="reg-password">Password</label>
-            <pv-password
-              id="reg-password"
-              v-model="form.password"
-              placeholder="••••••••"
-              toggleMask
-              class="w-full"
-              inputClass="w-full"
-            />
-          </div>
+          <el-input-text
+            id="reg-password"
+            v-model="form.password"
+            label="Password"
+            placeholder="••••••••"
+            type="password"
+          />
 
           <!-- Confirm Password Field -->
-          <div class="field">
-            <label class="field-label" for="reg-confirm">Confirm Password</label>
-            <pv-password
-              id="reg-confirm"
-              v-model="form.passwordConfirmation"
-              placeholder="••••••••"
-              :feedback="false"
-              toggleMask
-              class="w-full"
-              inputClass="w-full"
-            />
-          </div>
+          <el-input-text
+            id="reg-confirm"
+            v-model="form.passwordConfirmation"
+            label="Confirm Password"
+            placeholder="••••••••"
+            type="password"
+          />
 
           <!-- Terms and Conditions -->
           <div class="terms-row">
-            <pv-checkbox
+            <el-checkbox
               v-model="acceptTerms"
               :binary="true"
               inputId="terms"
@@ -98,7 +86,7 @@ function goToSignIn() {
           </div>
 
           <!-- Submit Button -->
-          <pv-button
+          <el-button
             type="submit"
             label="Create Account"
             class="submit-btn w-full"

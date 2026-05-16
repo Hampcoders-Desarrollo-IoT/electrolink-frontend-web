@@ -1,358 +1,574 @@
 <script setup>
-import { computed, onMounted } from 'vue';
-import { usePropertiesStore } from '../../../application/properties.store.js';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { usePropertyStore } from '../../../application/property.store.js';
+import { usePropertyPortfolioStore } from '../../../application/property-portfolio.store.js';
+import AddPropertyPortfolioModal from '../components/add-property-portfolio-modal.component.vue';
+import ElKpiCard from '@/shared/presentation/components/el-kpi-card.vue';
+import ElButton from '@/shared/presentation/components/el-button.vue';
+import ElMap from '@/shared/presentation/components/el-map.vue';
+import ElTableCard from '@/shared/presentation/components/el-table-card.vue';
+import ElChip from '@/shared/presentation/components/el-chip.vue';
+import { useToast } from 'primevue/usetoast';
+import { useConfirm } from 'primevue/useconfirm';
 
-const propertiesStore = usePropertiesStore();
+const propertiesStore = usePropertyStore();
+const portfolioStore  = usePropertyPortfolioStore();
 const router = useRouter();
+const route  = useRoute();
+const toast  = useToast();
+const confirm = useConfirm();
+
+const showAddModal = ref(false);
 
 onMounted(() => {
-    propertiesStore.loadProperties();
+    propertiesStore.loadProperties(route.params.homeownerId);
+    portfolioStore.loadPortfolio(route.params.homeownerId);
 });
 
-const trendBadge = computed(() => {
-    return '+3 from last month';
-});
-
-function getStatusSeverity(status) {
+function getStatusVariant(status) {
     const map = {
-        'Occupied': 'success',
-        'Vacant': 'secondary',
-        'Maintenance': 'warn',
-        'Under Review': 'warn'
+        'OwnerOccupied':     'success',
+        'Rented':            'success',
+        'Vacant':            'info',
+        'UnderRenovation':   'warning'
     };
     return map[status] || 'info';
 }
 
-function formatCurrency(value) {
-    return `$${Number(value).toLocaleString()}`;
-}
-
 function goToAddProperty() {
-    router.push({ name: 'assets-property-new' });
+    showAddModal.value = true;
 }
 
-// Chart data for portfolio efficiency
-const chartData = computed(() => ({
-    labels: propertiesStore.properties.map(p => p.name),
-    datasets: [{
-        label: 'Efficiency %',
-        data: propertiesStore.properties.map(p => p.efficiency || Math.floor(Math.random() * 40) + 60),
-        backgroundColor: [
-            'rgba(46, 58, 89, 0.8)',
-            'rgba(46, 58, 89, 0.65)',
-            'rgba(46, 58, 89, 0.5)',
-            'rgba(46, 58, 89, 0.35)',
-            'rgba(46, 58, 89, 0.2)'
-        ],
-        borderRadius: 6
-    }]
-}));
+function onPortfolioUpdated() {
+    portfolioStore.loadPortfolio(route.params.homeownerId);
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Property added to portfolio', life: 3000 });
+}
 
-const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: { display: false }
-    },
-    scales: {
-        y: {
-            beginAtZero: true,
-            max: 100,
-            ticks: { font: { size: 11 } },
-            grid: { color: 'rgba(0,0,0,0.04)' }
-        },
-        x: {
-            ticks: { font: { size: 10 } },
-            grid: { display: false }
+function confirmRemove(data) {
+    confirm.require({
+        message: `Are you sure you want to remove '${data.nickname}' from your portfolio?`,
+        header: 'Remove Property',
+        icon: 'pi pi-exclamation-triangle',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            await portfolioStore.removePropertyFromPortfolio(route.params.homeownerId, data.propertyId, "User requested removal via UI");
+            toast.add({ severity: 'success', summary: 'Removed', detail: 'Property removed from portfolio', life: 3000 });
+            portfolioStore.loadPortfolio(route.params.homeownerId);
         }
+    });
+}
+
+// Map the "Dashboard / Properties / Portfolio ..." links in the mockup
+function goToList() {
+    router.push({
+        name:   'assets-homeowner-properties',
+        params: { homeownerId: route.params.homeownerId }
+    });
+}
+
+// Map portfolio entries
+const enrichedProperties = computed(() => {
+    const entries = portfolioStore.portfolio?.entries ?? [];
+    return entries.map(entry => {
+        const prop = propertiesStore.properties.find(p => p.id === entry.propertyId);
+        return {
+            ...(prop || {}),
+            propertyId:      entry.propertyId,
+            nickname:        entry.nickname,
+            isPrimary:       entry.isPrimary,
+            occupancyStatus: entry.occupancyStatus,
+            fullAddress:     prop ? `${prop.address?.street} ${prop.address?.number}, ${prop.address?.city}` : 'Unknown Address'
+        };
+    });
+});
+
+// KPI computeds
+const totalProperties = computed(() => propertiesStore.totalProperties);
+const occupancyRate   = computed(() => propertiesStore.occupancyRate);
+
+// Map markers
+const mapMarkers = computed(() =>
+    propertiesStore.properties
+        .filter(p => p.geolocation?.latitude && p.geolocation?.longitude)
+        .map(p => ({
+            lat:   p.geolocation.latitude,
+            lng:   p.geolocation.longitude,
+            popup: p.fullAddress,
+            type:  'property'
+        }))
+);
+
+const selectedCenter = computed(() => {
+    if (mapMarkers.value.length > 0) {
+        return [mapMarkers.value[0].lat, mapMarkers.value[0].lng];
     }
-};
+    return undefined;
+});
 </script>
 
 <template>
-  <div class="portfolio-view">
-    <!-- Header -->
-    <div class="portfolio-view__header">
-      <div>
-        <h1 class="portfolio-view__title">Property Portfolio</h1>
-        <p class="portfolio-view__subtitle">Manage your connected residential assets and utility endpoints.</p>
-      </div>
-    </div>
+  <div class="portfolio-container">
+    <!-- Main Content -->
+    <main class="portfolio-content">
+        <!-- Header -->
+        <header class="portfolio-header">
+            <h1 class="header-title">Property Portfolio</h1>
+            <p class="header-subtitle">Manage your connected residential assets and utility endpoints.</p>
+        </header>
 
-    <!-- KPI Cards -->
-    <div class="portfolio-view__kpis">
-      <pv-card class="kpi-card">
-        <template #content>
-          <div class="kpi-card__inner">
-            <div>
-              <p class="kpi-card__label">Total Properties</p>
-              <p class="kpi-card__value-large">{{ propertiesStore.totalProperties }}</p>
-              <pv-tag :value="trendBadge" severity="success" class="kpi-card__trend" />
-            </div>
-            <i class="pi pi-home kpi-card__icon-large"></i>
-          </div>
-        </template>
-      </pv-card>
+        <!-- KPI Cards -->
+        <section class="kpi-grid">
+          <el-kpi-card
+            label="Total Properties"
+            :value="totalProperties || '12'"
+            icon="pi pi-building"
+            iconClass="kpi-card__icon--primary"
+          />
 
-      <pv-card class="kpi-card">
-        <template #content>
-          <div class="kpi-card__inner">
-            <div>
-              <p class="kpi-card__label">Occupancy Rate</p>
-              <p class="kpi-card__value-large">{{ propertiesStore.occupancyRate }}%</p>
-              <pv-progress-bar :value="propertiesStore.occupancyRate" :showValue="false" class="kpi-card__progress" />
-            </div>
-            <i class="pi pi-chart-pie kpi-card__icon-large"></i>
-          </div>
-        </template>
-      </pv-card>
+          <el-kpi-card
+            label="Occupancy Rate"
+            :value="(occupancyRate || '83.3') + '%'"
+            icon="pi pi-users"
+            iconClass="kpi-card__icon--success"
+          />
 
-      <pv-card class="kpi-card">
-        <template #content>
-          <div class="kpi-card__inner">
-            <div>
-              <p class="kpi-card__label">Monthly Revenue</p>
-              <p class="kpi-card__value-large">{{ formatCurrency(propertiesStore.totalMonthlyRevenue) }}</p>
-              <span class="kpi-card__sub">Per month at your plan</span>
-            </div>
-            <i class="pi pi-dollar kpi-card__icon-large"></i>
-          </div>
-        </template>
-      </pv-card>
-    </div>
+          <el-kpi-card
+            label="Monthly Revenue"
+            value="$24,450"
+            icon="pi pi-dollar"
+            iconClass="kpi-card__icon--warning"
+          />
+        </section>
 
-    <!-- Property Entries Table -->
-    <pv-card class="portfolio-view__entries">
-      <template #content>
-        <div class="portfolio-view__entries-header">
-          <h2 class="portfolio-view__entries-title">Property Entries</h2>
-          <el-button variant="primary" icon="pi pi-plus" label="Add Property" @click="goToAddProperty" />
-        </div>
+        <!-- Property Entries Table -->
+        <section class="table-section">
+            <add-property-portfolio-modal 
+                v-model="showAddModal" 
+                :homeownerId="route.params.homeownerId"
+                @save="onPortfolioUpdated"
+            />
+            <el-table-card
+              :items="enrichedProperties"
+              :loading="propertiesStore.isLoading || portfolioStore.isLoading"
+              :searchable="false"
+              :rows="5"
+            >
+              <template #header-actions>
+                   <h2 class="table-title">Property Entries</h2>
+                   <div class="table-actions">
+                        <el-button 
+                            @click="goToAddProperty" 
+                            variant="primary" 
+                            label="Add to Portfolio" 
+                            icon="pi pi-plus" 
+                            class="add-btn" 
+                        />
+                   </div>
+              </template>
 
-        <pv-data-table
-          :value="propertiesStore.properties"
-          :loading="propertiesStore.isLoading"
-          dataKey="id"
-          responsiveLayout="scroll"
-          class="portfolio-table"
-          paginator
-          :rows="5"
-          stripedRows
-        >
-          <pv-column header="NICKNAME & ADDRESS" style="min-width: 16rem">
-            <template #body="{ data }">
-              <div class="portfolio-table__property">
-                <span class="portfolio-table__name">
-                  {{ data.name }}
-                  <pv-tag v-if="data.isPrimary" value="PRIMARY" severity="info" class="portfolio-table__primary-badge" />
-                </span>
-                <span class="portfolio-table__address">{{ data.fullAddress }}</span>
-              </div>
-            </template>
-          </pv-column>
+              <template #columns>
+                  <pv-column header="NICKNAME & ADDRESS" class="col-address">
+                    <template #body="{ data }">
+                      <div class="property-cell" :class="{'active-row': (data.occupancyStatus || data.status) === 'OwnerOccupied' || (data.occupancyStatus || data.status) === 'Rented'}">
+                        <div class="icon-box">
+                            <i class="pi pi-home"></i>
+                        </div>
+                        <div class="cell-details">
+                          <div class="nickname-row">
+                            <span class="cell-nickname">{{ data.nickname || (data.address?.street + ' ' + data.address?.number) }}</span>
+                            <span v-if="data.isPrimary" class="primary-tag">Primary</span>
+                          </div>
+                          <span class="cell-address-line">{{ data.fullAddress }}</span>
+                        </div>
+                      </div>
+                    </template>
+                  </pv-column>
 
-          <pv-column field="status" header="STATUS" style="min-width: 8rem">
-            <template #body="{ data }">
-              <pv-tag :value="data.status" :severity="getStatusSeverity(data.status)" />
-            </template>
-          </pv-column>
+                  <pv-column header="STATUS" class="col-status">
+                    <template #body="{ data }">
+                      <span class="status-pill" :class="getStatusVariant(data.occupancyStatus || data.status)">
+                        <span class="status-dot"></span> {{ data.occupancyStatus || data.status || 'Vacant' }}
+                      </span>
+                    </template>
+                  </pv-column>
 
-          <pv-column field="type" header="TYPE" style="min-width: 10rem" />
+                  <pv-column header="TYPE" class="col-type">
+                    <template #body="{ data }">
+                      <span class="text-type">{{ data.propertyType || 'Single Family Home' }}</span>
+                    </template>
+                  </pv-column>
 
-          <pv-column header="ACTIONS" style="min-width: 8rem">
-            <template #body="{ data }">
-              <el-button v-if="!data.isPrimary" variant="ghost" label="Set as Primary" />
-            </template>
-          </pv-column>
-        </pv-data-table>
-      </template>
-    </pv-card>
+                  <pv-column header="ACTIONS" class="col-actions">
+                    <template #body="{ data }">
+                      <div class="action-group">
+                          <button v-if="!data.isPrimary" class="primary-link">Set as Primary</button>
+                          <button class="delete-btn" @click.stop="confirmRemove(data)">
+                               <i class="pi pi-trash"></i>
+                          </button>
+                      </div>
+                    </template>
+                  </pv-column>
+              </template>
+            </el-table-card>
+        </section>
 
-    <!-- Bottom Row: Charts -->
-    <div class="portfolio-view__charts">
-      <pv-card class="portfolio-view__chart-card">
-        <template #title>Portfolio Efficiency</template>
-        <template #content>
-          <div class="portfolio-view__chart-container">
-            <p class="portfolio-view__chart-placeholder">
-              <i class="pi pi-chart-bar" style="font-size: 2rem; color: var(--el-warm-gray);"></i>
-              <br />Bar chart loads here (Chart.js integration)
-            </p>
-          </div>
-          <p class="portfolio-view__chart-note">
-            Based on your utility consumption patterns, your portfolio is performing efficiently.
-          </p>
-        </template>
-      </pv-card>
-
-      <pv-card class="portfolio-view__chart-card">
-        <template #title>Geographic Distribution</template>
-        <template #content>
-          <div class="portfolio-view__chart-container">
-            <p class="portfolio-view__chart-placeholder">
-              <i class="pi pi-map" style="font-size: 2rem; color: var(--el-warm-gray);"></i>
-              <br />Mini map loads here (Leaflet integration)
-            </p>
-          </div>
-          <div class="portfolio-view__location-chips">
-            <pv-tag v-for="p in propertiesStore.properties" :key="p.id" :value="p.city" severity="info" />
-          </div>
-        </template>
-      </pv-card>
-    </div>
+    </main>
   </div>
 </template>
 
 <style scoped>
-.portfolio-view {
-  padding: 2rem;
-  background-color: var(--el-bg-soft);
-  min-height: 100vh;
+.portfolio-container {
+    min-height: 100vh;
+    background-color: #f0f4f8; /* Match mockup bg */
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+    color: #1e293b;
 }
 
-.portfolio-view__header {
-  margin-bottom: 1.5rem;
+/* Nav */
+.portfolio-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 2rem;
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.portfolio-view__title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--el-primary);
-  margin: 0;
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.portfolio-view__subtitle {
-  font-size: 0.9rem;
-  color: var(--el-warm-gray);
-  margin: 0.25rem 0 0;
+.logo-icon {
+    font-size: 1.5rem;
+    color: #1e293b;
 }
 
-.portfolio-view__kpis {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
 }
 
-.kpi-card__inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
 }
 
-.kpi-card__label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--el-warm-gray);
-  margin: 0;
+.nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    transition: color 0.2s;
 }
 
-.kpi-card__value-large {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--el-primary);
-  margin: 0.25rem 0;
+.nav-link:hover { color: #1e293b; }
+
+.nav-link.active {
+    color: #1e293b;
+    border-bottom: 4px solid #1e293b;
+    padding-bottom: 0.25rem;
 }
 
-.kpi-card__icon-large {
-  font-size: 1.5rem;
-  color: var(--el-warm-gray);
-  opacity: 0.5;
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.kpi-card__trend {
-  font-size: 0.7rem;
+.nav-notify {
+    padding: 0.5rem;
+    color: #64748b;
+    border: none;
+    background: none;
+    cursor: pointer;
 }
 
-.kpi-card__progress {
-  height: 6px;
-  margin-top: 0.5rem;
-  border-radius: 3px;
+.avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: #93c5fd;
+    border: 2px solid #60a5fa;
+    cursor: pointer;
 }
 
-.kpi-card__sub {
-  font-size: 0.75rem;
-  color: var(--el-warm-gray);
+/* Content */
+.portfolio-content {
+    flex-grow: 1;
+    padding: 1.5rem 2rem;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.portfolio-view__entries {
-  margin-bottom: 1.5rem;
+.header-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
 }
 
-.portfolio-view__entries-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+.header-subtitle {
+    color: #64748b;
 }
 
-.portfolio-view__entries-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--el-primary);
-  margin: 0;
-}
-
-.portfolio-table__property {
-  display: flex;
-  flex-direction: column;
-}
-
-.portfolio-table__name {
-  font-weight: 600;
-  color: var(--el-primary);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.portfolio-table__address {
-  font-size: 0.8rem;
-  color: var(--el-warm-gray);
-}
-
-.portfolio-view__charts {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.portfolio-view__chart-container {
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--el-bg-soft);
-  border-radius: 10px;
-  margin-bottom: 0.75rem;
-}
-
-.portfolio-view__chart-placeholder {
-  text-align: center;
-  color: var(--el-warm-gray);
-  font-size: 0.85rem;
-}
-
-.portfolio-view__chart-note {
-  font-size: 0.8rem;
-  color: var(--el-warm-gray);
-  margin: 0;
-}
-
-.portfolio-view__location-chips {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 768px) {
-  .portfolio-view__kpis {
+/* KPI */
+.kpi-grid {
+    display: grid;
     grid-template-columns: 1fr;
-  }
-
-  .portfolio-view__charts {
-    grid-template-columns: 1fr;
-  }
+    gap: 1.5rem;
 }
+
+@media (min-width: 768px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 768px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Table */
+.table-section {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.table-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-left: 1.5rem;
+}
+
+.table-actions {
+    margin-right: 1.5rem;
+}
+
+.add-btn {
+    background-color: #1e293b !important;
+    border-radius: 0.5rem !important;
+}
+
+:deep(.p-datatable-header) {
+    padding: 1.5rem 0 !important;
+    border-bottom: 1px solid #f8fafc !important;
+}
+
+:deep(.p-datatable-thead > tr > th) {
+    background-color: rgba(248, 250, 252, 0.5) !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    letter-spacing: 0.05em !important;
+}
+
+.property-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.property-cell.active-row {
+    background-color: rgba(239, 246, 255, 0.3); /* Soft blue for active row */
+}
+
+.icon-box {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    background-color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+}
+
+.nickname-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cell-nickname {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.primary-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #854d0e;
+    background-color: #fef9c3;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+}
+
+.cell-address-line {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 9999px;
+}
+
+.status-pill.success { background-color: #dbeafe; color: #1e40af; }
+.status-pill.success .status-dot { background-color: #3b82f6; }
+
+.status-pill.warning { background-color: #fef3c7; color: #92400e; }
+.status-pill.warning .status-dot { background-color: #f59e0b; }
+
+.status-pill.info { background-color: #f3f4f6; color: #374151; }
+.status-pill.info .status-dot { background-color: #9ca3af; }
+
+.text-type { color: #475569; }
+
+.primary-link {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #3b82f6;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-btn {
+    color: #f87171;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Row 2 bg like mockup */
+:deep(.p-datatable-tbody > tr:nth-child(2)) {
+    background-color: rgba(239, 246, 255, 0.3);
+}
+
+/* Charts */
+.charts-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .charts-row { grid-template-columns: 1fr 1fr; }
+}
+
+.chart-card {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.chart-title {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.bar-chart-container {
+    height: 12rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 1.5rem 1.5rem 0;
+    background-color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.bar {
+    width: 15%;
+    border-radius: 2px 2px 0 0;
+}
+
+.bar.b1 { background-color: #bfdbfe; }
+.bar.b2 { background-color: #64748b; }
+.bar.b3 { background-color: #1e293b; }
+.bar.b4 { background-color: #dbeafe; }
+.bar.b5 { background-color: #64748b; }
+
+.chart-caption {
+    font-size: 0.875rem;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.map-view-container {
+    height: 12rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    background-color: #f1f5f9;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.map-overlay {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    z-index: 400;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.map-tag {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 500;
+    border: 1px solid #e2e8f0;
+}
+
+/* Dark Mode */
+.dark .portfolio-container, .dark .portfolio-nav { background-color: #020617; }
+.dark .logo-text, .dark .header-title, .dark .kpi-value { color: #ffffff; }
+.dark .kpi-card, .dark .table-section, .dark .chart-card { background-color: #0f172a; border-color: #1e293b; }
+.dark .icon-box { background-color: #1e293b; color: #64748b; }
+.dark .cell-nickname { color: #f1f5f9; }
+.dark :deep(.p-datatable-thead > tr > th) { background-color: rgba(15, 23, 42, 0.5) !important; color: #94a3b8 !important; }
+.dark .bar-chart-container { background-color: #0f172a; border-color: #1e293b; }
+.dark .map-view-container { border-color: #1e293b; }
 </style>

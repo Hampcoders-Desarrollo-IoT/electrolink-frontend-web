@@ -2,6 +2,7 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
+  id: String,
   modelValue: {
     type: Array,
     default: () => []
@@ -51,12 +52,14 @@ const onChange = (event) => {
 
 <template>
   <div class="el-multi-select-group">
-    <label v-if="label" class="el-multi-select-label">
+    <label v-if="label" :for="id" class="el-multi-select-label">
       {{ label }}
       <span v-if="required" class="required-mark">*</span>
     </label>
     
     <pv-multi-select
+      :id="id"
+      :inputId="id"
       :modelValue="modelValue"
       @update:modelValue="onChange"
       :options="options"

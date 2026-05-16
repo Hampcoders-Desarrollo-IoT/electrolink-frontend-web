@@ -2,6 +2,7 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
+  id: String,
   modelValue: Boolean,
   label: String,
   description: String,
@@ -34,6 +35,8 @@ const onChange = (value) => {
     @click="!disabled && onChange(!modelValue)"
   >
     <pv-checkbox
+      :id="id"
+      :inputId="id"
       :modelValue="modelValue"
       @update:modelValue="onChange"
       :disabled="disabled"
@@ -43,7 +46,7 @@ const onChange = (value) => {
     />
     
     <div class="el-checkbox-content">
-      <label v-if="label" class="el-checkbox-label">
+      <label v-if="label" :for="id" class="el-checkbox-label">
         {{ label }}
       </label>
       <span v-if="description" class="el-checkbox-description">

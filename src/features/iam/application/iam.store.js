@@ -36,12 +36,12 @@ const useIamStore = defineStore('iam', () => {
                     console.log(`User ${currentUsername.value} signed in successfully.`);
                     errors.value = [];
 
-                    // Check profile status
                     const profilesStore = useProfilesStore();
-                    profilesStore.fetchProfileStatus().then(statusResource => {
+                    profilesStore.fetchProfileStatus().then(async (statusResource) => {
                         if (statusResource && statusResource.status === 'Incomplete') {
                             router.push({ name: 'profiles-complete' });
                         } else {
+                            await profilesStore.loadProfile(currentUserId.value);
                             router.push({ name: 'home' });
                         }
                     }).catch(() => {
@@ -110,16 +110,19 @@ const useIamStore = defineStore('iam', () => {
         
         try {
             const response = await profilesApi.getMyProfile();
-            // Map profile/user data back to state
-            // Assuming currentUsername is email and currentUserId is userId
             if (response.data) {
+                // Map profile/user data back to state
                 currentUsername.value = response.data.email || 'User';
                 currentUserId.value = response.data.userId || response.data.id;
                 isSignedIn.value = true;
-                console.log(`Session validated for ${currentUsername.value}`);
+                console.log(`Session validated for ${currentUsername.value} (ID: ${currentUserId.value})`);
+
+                // Load full profile into profiles store
+                const profilesStore = useProfilesStore();
+                // We use 'me' to ensure we get the logged-in user profile
+                await profilesStore.loadProfile('me');
 
                 // Check profile status on validation
-                const profilesStore = useProfilesStore();
                 const statusResource = await profilesStore.fetchProfileStatus();
                 if (statusResource && statusResource.status === 'Incomplete') {
                     return 'INCOMPLETE';

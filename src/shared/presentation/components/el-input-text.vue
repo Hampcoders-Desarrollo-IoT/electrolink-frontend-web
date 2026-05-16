@@ -2,6 +2,7 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
+  id: String,
   modelValue: [String, Number],
   placeholder: String,
   label: String,
@@ -19,14 +20,14 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'blur', 'focus', 'change']);
 
-const onInput = (event) => {
-  emit('update:modelValue', event);
+const onInput = (value) => {
+  emit('update:modelValue', value);
 };
 </script>
 
 <template>
   <div class="el-input-group">
-    <label v-if="label" class="el-input-label">
+    <label v-if="label" :for="id" class="el-input-label">
       {{ label }}
       <span v-if="required" class="required-mark">*</span>
     </label>
@@ -35,6 +36,7 @@ const onInput = (event) => {
       <i v-if="icon" :class="[icon, 'el-input-icon']"></i>
       
       <pv-input-text
+        :id="id"
         :modelValue="modelValue"
         @update:modelValue="onInput"
         :placeholder="placeholder"

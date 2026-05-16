@@ -4,12 +4,12 @@ export class Component {
         name = '',
         description = '',
         isActive = true,
-        typeId = ''
+        componentTypeId = ''
     } = {}) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.isActive = isActive;
-        this.typeId = typeId;
+        this.componentTypeId = componentTypeId;
     }
 }

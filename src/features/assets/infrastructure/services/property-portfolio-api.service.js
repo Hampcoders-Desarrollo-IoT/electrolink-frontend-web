@@ -12,7 +12,7 @@ export class PropertyPortfolioApiService extends BaseApi {
     }
 
     #getPropertyPortfoliosEndpoint(homeownerId) {
-        return new BaseEndpoint(this, `${homeownersEndpointPath}/${homeownerId}/property-portfolios`);
+        return new BaseEndpoint(this, `${homeownersEndpointPath}/${homeownerId}/propertyportfolios`);
     }
 
     getAll(homeownerId) {
@@ -24,14 +24,16 @@ export class PropertyPortfolioApiService extends BaseApi {
     }
 
     create(homeownerId, command) {
-        return this.#getPropertyPortfoliosEndpoint(homeownerId).create(command);
+        const endpoint = new BaseEndpoint(this, `${homeownersEndpointPath}/${homeownerId}/propertyportfolios/properties`);
+        return endpoint.create(command);
     }
 
     update(homeownerId, id, data) {
         return this.#getPropertyPortfoliosEndpoint(homeownerId).update(id, data);
     }
 
-    delete(homeownerId, id) {
-        return this.#getPropertyPortfoliosEndpoint(homeownerId).delete(id);
+    delete(homeownerId, id, reason = '') {
+        const endpoint = new BaseEndpoint(this, `${homeownersEndpointPath}/${homeownerId}/propertyportfolios/properties`);
+        return endpoint.delete(`${id}?reason=${encodeURIComponent(reason)}`);
     }
 }

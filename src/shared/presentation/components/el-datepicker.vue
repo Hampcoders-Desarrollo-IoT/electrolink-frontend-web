@@ -2,6 +2,7 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
+  id: String,
   modelValue: [String, Date],
   placeholder: String,
   label: String,
@@ -23,12 +24,14 @@ const emit = defineEmits(['update:modelValue']);
 
 <template>
   <div class="el-datepicker-group">
-    <label v-if="label" class="el-datepicker-label">
+    <label v-if="label" :for="id" class="el-datepicker-label">
       {{ label }}
       <span v-if="required" class="required-mark">*</span>
     </label>
     
     <pv-datepicker
+      :id="id"
+      :inputId="id"
       :modelValue="modelValue"
       @update:modelValue="emit('update:modelValue', $event)"
       :placeholder="placeholder"

@@ -8,14 +8,28 @@ const about = () => import('./views/about.vue');
 const pageNotFound = () => import('./views/page-not-found.vue');
 
 
+import Layout from "./layouts/layout.vue";
+
 const routes = [
-    { path: "/home",                name: 'home',       component: Home,            meta: {title: 'Home'}},
-    { path: "/about",               name: 'about',      component: about,           meta: {title: 'About'}},
-    { path: '/iam',                 name: 'iam',        children: iamRoutes},
-    { path: '/profiles',             name: 'profiles',   children: profilesRoutes},
-    { path: '/assets',               name: 'assets',     children: assetsRoutes},
-    { path: "/",                    redirect: "/home"},
-    { path: "/:pathMatch(.*)*",     name: 'not-found',  component: pageNotFound,    meta: {title: 'Page Not Found'}}
+    {
+        path: "/",
+        component: Layout,
+        children: [
+            { path: "home", name: 'home', component: Home, meta: {title: 'Home'}},
+            { path: "about", name: 'about', component: about, meta: {title: 'About'}},
+            { path: 'assets', name: 'assets', children: assetsRoutes},
+            {
+                path: 'profiles',
+                children: [
+                    { path: 'management', name: 'profiles-management', component: () => import('@/features/profiles/presentation/views/profile-management.component.vue'), meta: {title: 'My Profile'}}
+                ]
+            }
+        ]
+    },
+    { path: '/iam', name: 'iam', children: iamRoutes},
+    { path: '/profiles/complete', name: 'profiles-complete', component: () => import('@/features/profiles/presentation/views/complete-profile.component.vue'), meta: {title: 'Complete Profile'}},
+    { path: "/", redirect: "/home"},
+    { path: "/:pathMatch(.*)*", name: 'not-found', component: pageNotFound, meta: {title: 'Page Not Found'}}
 ];
 
 const router = createRouter({

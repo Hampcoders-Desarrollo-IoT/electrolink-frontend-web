@@ -1,25 +1,45 @@
 import { BaseApi } from '@/shared/infrastructure/apis/base-api.js';
 import { BaseEndpoint } from '@/shared/infrastructure/apis/base-endpoint.js';
 
-const componentTypesEndpointPath = import.meta.env.VITE_COMPONENT_TYPES_ENDPOINT_PATH;
+const techniciansEndpointPath = import.meta.env.VITE_TECHNICIANS_ENDPOINT_PATH;
 
 export class ComponentTypeApiService extends BaseApi {
-    #componentTypesEndpoint;
+    #techniciansEndpoint;
 
     constructor() {
         super();
-        this.#componentTypesEndpoint = new BaseEndpoint(this, componentTypesEndpointPath);
+        this.#techniciansEndpoint = new BaseEndpoint(this, techniciansEndpointPath);
     }
 
-    getAll() {
-        return this.#componentTypesEndpoint.getAll();
+    #getComponentTypesEndpoint(technicianId) {
+        return new BaseEndpoint(this, `${techniciansEndpointPath}/${technicianId}/component-types`);
     }
 
-    getById(id) {
-        return this.#componentTypesEndpoint.getById(id);
+    getAll(technicianId) {
+        return this.#getComponentTypesEndpoint(technicianId).getAll();
     }
 
-    create(command) {
-        return this.#componentTypesEndpoint.create(command);
+    getById(technicianId, id) {
+        return this.#getComponentTypesEndpoint(technicianId).getById(id);
+    }
+
+    create(technicianId, command) {
+        return this.#getComponentTypesEndpoint(technicianId).create(command);
+    }
+
+    update(technicianId, id, command) {
+        return this.#getComponentTypesEndpoint(technicianId).update(id, command);
+    }
+
+    delete(technicianId, id) {
+        return this.#getComponentTypesEndpoint(technicianId).delete(id);
+    }
+
+    activate(technicianId, typeId) {
+        return this.http.patch(`${techniciansEndpointPath}/${technicianId}/component-types/${typeId}/activate`);
+    }
+
+    deactivate(technicianId, typeId) {
+        return this.http.patch(`${techniciansEndpointPath}/${technicianId}/component-types/${typeId}/deactivate`);
     }
 }

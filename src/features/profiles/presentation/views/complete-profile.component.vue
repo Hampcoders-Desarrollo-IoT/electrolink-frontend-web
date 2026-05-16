@@ -2,6 +2,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProfilesStore } from '../../application/profiles.store.js';
+import { validateServiceArea } from '../../domain/validators/service-area.validator.js';
 
 // Atomic Components
 import ElSwitcher from '../../../../shared/presentation/components/el-switcher.vue';
@@ -48,16 +49,32 @@ const formData = reactive({
   // Technician specific
   specialties: [],
   experienceYears: 0,
-  aboutMe: ''
+  aboutMe: '',
+  centerLatitude: -12.0464, // Default to Lima
+  centerLongitude: -77.0428,
+  radiusKm: 50
 });
 
 const isSubmitting = ref(false);
+const validationErrors = ref({});
 
 const saveProfile = async () => {
+  if (role.value === 'TECHNICIAN') {
+    const validation = validateServiceArea(
+      formData.centerLatitude,
+      formData.centerLongitude,
+      formData.radiusKm
+    );
+    if (!validation.valid) {
+      validationErrors.value = validation.errors;
+      return;
+    }
+  }
+  validationErrors.value = {};
+
   isSubmitting.value = true;
   try {
     const payload = { ...formData, role: role.value };
-    // Handle role-specific command creation inside the store or helper
     const success = await profilesStore.createProfileV2(payload);
     if (success) {
       router.push('/profiles/management');
@@ -76,8 +93,19 @@ onMounted(() => {
       role.value = qRole;
     }
   }
+
+  // Geolocation
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      formData.centerLatitude = position.coords.latitude;
+      formData.centerLongitude = position.coords.longitude;
+    }, (error) => {
+      console.warn('Geolocation failed or denied:', error.message);
+    });
+  }
 });
 </script>
+
 
 <template>
   <div class="complete-profile-view">
@@ -98,6 +126,7 @@ onMounted(() => {
             v-model:dateOfBirth="formData.dateOfBirth"
             v-model:phone="formData.phone"
             v-model:street="formData.street"
+            v-model:number="formData.number"
             v-model:district="formData.district"
             v-model:city="formData.city"
             v-model:country="formData.country"
@@ -132,7 +161,12 @@ onMounted(() => {
               v-model:specialties="formData.specialties"
               v-model:experienceYears="formData.experienceYears"
               v-model:aboutMe="formData.aboutMe"
+              v-model:centerLatitude="formData.centerLatitude"
+              v-model:centerLongitude="formData.centerLongitude"
+              v-model:radiusKm="formData.radiusKm"
+              :errors="validationErrors"
             />
+
           </div>
 
           <div class="actions-section">
@@ -155,12 +189,13 @@ onMounted(() => {
 .complete-profile-view {
   min-height: 100vh;
   background-color: var(--el-bg-soft);
-  padding: 2rem 1.5rem;
+  padding: 0;
 }
 
 .completion-container {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 1rem 1.5rem;
 }
 
 .completion-header {

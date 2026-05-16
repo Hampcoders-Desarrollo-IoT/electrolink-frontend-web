@@ -3,6 +3,7 @@ export class InventoryItem {
         id = '',
         technicianInventoryId = '',
         componentId = '',
+        componentName = '',
         quantityAvailable = 0,
         reservedQuantity = 0,
         alertThreshold = 0,
@@ -11,6 +12,7 @@ export class InventoryItem {
         this.id = id;
         this.technicianInventoryId = technicianInventoryId;
         this.componentId = componentId;
+        this.componentName = componentName;
         this.quantityAvailable = quantityAvailable;
         this.reservedQuantity = reservedQuantity;
         this.alertThreshold = alertThreshold;
@@ -21,7 +23,15 @@ export class InventoryItem {
         return this.quantityAvailable - this.reservedQuantity;
     }
 
+    get stock() {
+        return this.quantityAvailable;
+    }
+
     get isLowStock() {
-        return this.quantityAvailable <= this.alertThreshold;
+        return this.quantityAvailable <= this.alertThreshold && this.quantityAvailable > 0;
+    }
+
+    get isCriticalStock() {
+        return this.quantityAvailable <= (this.alertThreshold / 2) || this.quantityAvailable === 0;
     }
 }

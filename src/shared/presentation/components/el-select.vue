@@ -2,6 +2,7 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
+  id: String,
   modelValue: [String, Number, Object],
   options: {
     type: Array,
@@ -36,12 +37,14 @@ const onChange = (event) => {
 
 <template>
   <div class="el-select-group">
-    <label v-if="label" class="el-select-label">
+    <label v-if="label" :for="id" class="el-select-label">
       {{ label }}
       <span v-if="required" class="required-mark">*</span>
     </label>
     
     <pv-select
+      :id="id"
+      :inputId="id"
       :modelValue="modelValue"
       @update:modelValue="onChange"
       :options="options"

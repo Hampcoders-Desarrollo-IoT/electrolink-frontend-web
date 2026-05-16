@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ElectroLink - Property Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2E3A59",
+                        "accent": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                        "el-bg-soft": "#E8EEF7",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Public Sans", sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- TopNavBar Navigation -->
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-6 py-3 shrink-0">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary dark:text-accent">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+<h2 class="text-xl font-bold leading-tight tracking-tight">ElectroLink</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary dark:text-accent text-sm font-bold border-b-2 border-primary dark:border-accent py-1" href="#">Properties</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Assets</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Resources</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="w-64 pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary" placeholder="Search assets..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-9 w-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
+<img alt="Profile" data-alt="User profile avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALFbzDfC_Xl8wQvYoE-RI_17jwNiKo_krnwCj_NuXJdP5R2Q8TYvm7iwNCUDh_mA_gOs1zX1ldHEkLz1CCGuvT8gsf8u7UhEAUBOLN-BJ-rGVOfhI-QzANuMDcXXfPykBTSJzCl1A44qjKPPoDJ71CT9pzxngrtrgrioq6xSNJsTlNVH8bXNLcsS62ObxN3ML0knk4u47TNqpv5Fzz6n0hUx611JKUKVBmvMytzy10wK7RPWLBBTpdI2wSBYyz6aAAR_VF6HlgBmNm"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area: Split View -->
+<main class="flex flex-1 overflow-hidden">
+<!-- Left Panel: Property List (pv-card) -->
+<aside class="w-full md:w-[450px] lg:w-[500px] border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark flex flex-col shrink-0">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 space-y-4">
+<div class="flex items-center justify-between">
+<h1 class="text-2xl font-bold">Property Portfolio</h1>
+<button class="pv-button flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+                            Add Property
+                        </button>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+<button class="px-4 py-1.5 rounded-full bg-primary text-white text-xs font-semibold whitespace-nowrap">All Assets (12)</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold whitespace-nowrap hover:bg-slate-200 transition-colors">Occupied</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold whitespace-nowrap hover:bg-slate-200 transition-colors">Maintenance</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold whitespace-nowrap hover:bg-slate-200 transition-colors">Vacant</button>
+</div>
+</div>
+<!-- Scrollable List -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4 bg-el-bg-soft/30 dark:bg-background-dark">
+<!-- Property Card 1 -->
+<div class="pv-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer">
+<div class="flex p-4 gap-4">
+<div class="h-24 w-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Modern high-rise residential building exterior" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAFVfQw4eLi1vJIXJ5nU9nwBwSaSiIPXODn0AsuIZ7lDe3i_9aFCjDYLqa9m1JNj6v0ucPaOVogpuapi50pp4kGWuUu6HX715VwJh0M1k9uqHpMulnkl3CEamptKUGIhlUpGFwlnR9jciiKHc2-Vzhz88D4POGtfSLtsfiaaSB4d67Kn0VRpQQgT_voQrSOWQKB0Q5H9e-WN6nGKId1ZpS9pLM9mrz7iXfJg-pJysc84GgLqgeD8d9FUM2egkYxCvj7wJywZWO9TeGH');"></div>
+<div class="flex flex-col justify-between flex-1">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg text-primary dark:text-slate-100">Oakwood Residency</h3>
+<span class="pv-tag px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Occupied</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-base">location_on</span>
+                                        123 Silicon Valley, CA
+                                    </p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white dark:border-slate-900 bg-slate-300"></div>
+<div class="flex items-center justify-center w-6 h-6 rounded-full border-2 border-white dark:border-slate-900 bg-primary text-[8px] text-white">+3</div>
+</div>
+<span class="text-primary dark:text-accent font-bold text-sm">View Insights</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Property Card 2 -->
+<div class="pv-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer">
+<div class="flex p-4 gap-4">
+<div class="h-24 w-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Suburban office park with glass windows" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDRatuvzy8kJ3C3C5QS6xkQgyabh8aRjsUcd66sNMZsGkSbIaV5lxi6YAhiI-W2CbNU0gf4vh1KLkSOWhDD_Zz-cxIPHaEOH2QMs1BLgoKWV5hp3dovD7ONhlL_BJNmucLsSLwaEyGnkteuf3ZlBRoRt3-bFDoNrQOPveC3kwjMviUWNrzp_16o5TYB1UqzR7FKtcgrgzX1x8FNoXQ07Ysq02x3CxCN3di-5hh8uwwABTSensVGPNwK11REUrEXPdGxf9815zOPYAG0');"></div>
+<div class="flex flex-col justify-between flex-1">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg text-primary dark:text-slate-100">TechHub Plaza</h3>
+<span class="pv-tag px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">Under Review</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-base">location_on</span>
+                                        88 Innovation Way, Palo Alto
+                                    </p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex gap-4 text-xs font-medium text-slate-500">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">bolt</span> 84% Efficiency</span>
+</div>
+<span class="text-primary dark:text-accent font-bold text-sm">View Insights</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Property Card 3 -->
+<div class="pv-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer border-l-4 border-l-primary">
+<div class="flex p-4 gap-4">
+<div class="h-24 w-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Industrial warehouse complex aerial view" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCdoXcPMX-Gc02rDEfVKDk1mneJP8jlIh1z8l10EXnHWesyTNX48jCfJW14nnpTCcU8XLPnKnp_Kr6euSvkuOQ6aYATIk_ZV2wnQvOBLVnfXgn4KlmryYBTZtrY4XbraMEiMqbI5WzXCgIDXJ6-SJdLdSSSpd4SklOBBD7kaFy6tK1KsvyDDPMJRIR6whdye5r6ljWVQuYae9EueXl-WzMndR4TwIJ1YDJFxspUCvO_57gEmQbTC6mRbwi6lzr-4eK9lK2CzTvMlSgq');"></div>
+<div class="flex flex-col justify-between flex-1">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg text-primary dark:text-slate-100">Northside Logistics</h3>
+<span class="pv-tag px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary dark:bg-primary/20 dark:text-slate-300">Full Access</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-base">location_on</span>
+                                        4000 Cargo Way, San Jose
+                                    </p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex gap-4 text-xs font-medium text-slate-500">
+<span class="flex items-center gap-1 text-red-500"><span class="material-symbols-outlined text-sm">warning</span> 2 Alerts</span>
+</div>
+<span class="text-primary dark:text-accent font-bold text-sm">View Insights</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Property Card 4 -->
+<div class="pv-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow group cursor-pointer">
+<div class="flex p-4 gap-4">
+<div class="h-24 w-24 rounded-lg bg-center bg-cover shrink-0" data-alt="Modern townhouse with sustainable energy solar panels" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDsguJqXvTptVaillcIaNIp2xiXXN27c0TWNtFuEFZltB_wto0q7qc2CpFAXI6CFhSECZ-SuFbeb4f-Ivz9rwqkdrvUJZcS_8h9_8MCNTmI_GY7YTpoR4MRpl0MLVdFLlc00N71LH-43VF6n4sf_9K6L_iaJv5sVxbQJ97MyZUClB5lO45ibpCYrhSv8iTkMsUzuL66ZiTrDHSxnUiW34v1JZ9q3VwazM-HYPaz6tgJI4JQkOo8uQdv62EQMv4ZJwIuaAX1_RhBrgxs');"></div>
+<div class="flex flex-col justify-between flex-1">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg text-primary dark:text-slate-100">Greenway Lofts</h3>
+<span class="pv-tag px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">Vacant</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-base">location_on</span>
+                                        15 Eco St, Berkeley
+                                    </p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex gap-4 text-xs font-medium text-slate-500">
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-sm">electric_car</span> 4 EV Ports</span>
+</div>
+<span class="text-primary dark:text-accent font-bold text-sm">View Insights</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Right Panel: Leaflet Map Placeholder (ElectroMap.vue) -->
+<section class="hidden md:block flex-1 relative bg-el-bg-soft dark:bg-slate-950">
+<!-- Map UI Overlays -->
+<div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
+<div class="bg-white dark:bg-slate-900 shadow-xl rounded-xl p-2 flex items-center gap-2 border border-slate-200 dark:border-slate-800">
+<button class="p-2 bg-primary text-white rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">map</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">layers</span>
+</button>
+</div>
+</div>
+<div class="absolute top-4 right-4 z-10 flex flex-col gap-2">
+<div class="bg-white dark:bg-slate-900 shadow-xl rounded-xl flex flex-col border border-slate-200 dark:border-slate-800">
+<button class="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 border-b border-slate-100 dark:border-slate-800 rounded-t-xl">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-b-xl">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+</div>
+<!-- Main Map Visual -->
+<div class="w-full h-full grayscale-[0.2] dark:grayscale-[0.8]" style="background: radial-gradient(circle at 50% 50%, #E8EEF7 0%, #cbd5e1 100%);">
+<!-- Map Background Mockup -->
+<div class="w-full h-full relative overflow-hidden bg-cover bg-center opacity-40 mix-blend-multiply" data-alt="Detailed city map grid showing property markers" data-location="San Francisco" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAHuJdokASLCngpFvJygneOoMvmqUL-7jevBG3QpWlOVVAD1HYlCFMdLhPy0SDMCCl33bp9CzDyonmaR5SrXhp3k0dF-5-EWvs8ctWXs-qI5N0H5Kqr19Rgu3hkxQCY0OpnQABfIbn-plK3npDtb-70FMD1U0r3anlF1cL3a4L6WzMNsZbc69N9jpaNC57O35uC9hRPhihSS1sxHYmVguOEvDjEbgLQMTcldySNmOQGTWCrOpmx5QhfDNfac4UgW50frtAEMRn0urKM');">
+</div>
+<!-- Custom Markers (Type: Property) -->
+<!-- Marker 1 (Active) -->
+<div class="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 group">
+<div class="relative flex flex-col items-center">
+<div class="bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg shadow-lg mb-2 border border-slate-200 dark:border-slate-800 whitespace-nowrap hidden group-hover:block transition-all">
+<span class="text-xs font-bold text-primary dark:text-white">Oakwood Residency</span>
+</div>
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-2xl border-2 border-white cursor-pointer hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white text-xl">home</span>
+</div>
+<div class="w-2 h-2 bg-primary/40 rounded-full blur-sm mt-1"></div>
+</div>
+</div>
+<!-- Marker 2 -->
+<div class="absolute top-1/2 left-2/3 -translate-x-1/2 -translate-y-1/2 group">
+<div class="relative flex flex-col items-center">
+<div class="bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg shadow-lg mb-2 border border-slate-200 dark:border-slate-800 whitespace-nowrap hidden group-hover:block transition-all">
+<span class="text-xs font-bold text-primary dark:text-white">TechHub Plaza</span>
+</div>
+<div class="w-8 h-8 bg-slate-500 rounded-full flex items-center justify-center shadow-xl border-2 border-white cursor-pointer hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-white text-sm">business</span>
+</div>
+</div>
+</div>
+<!-- Marker 3 -->
+<div class="absolute bottom-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 group">
+<div class="relative flex flex-col items-center">
+<div class="bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg shadow-lg mb-2 border border-slate-200 dark:border-slate-800 whitespace-nowrap hidden group-hover:block transition-all">
+<span class="text-xs font-bold text-primary dark:text-white">Greenway Lofts</span>
+</div>
+<div class="w-8 h-8 bg-slate-500 rounded-full flex items-center justify-center shadow-xl border-2 border-white cursor-pointer hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-white text-sm">apartment</span>
+</div>
+</div>
+</div>
+<!-- Marker 4 -->
+<div class="absolute top-1/4 right-1/4 -translate-x-1/2 -translate-y-1/2 group">
+<div class="relative flex flex-col items-center">
+<div class="bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg shadow-lg mb-2 border border-slate-200 dark:border-slate-800 whitespace-nowrap hidden group-hover:block transition-all">
+<span class="text-xs font-bold text-primary dark:text-white">Northside Logistics</span>
+</div>
+<div class="w-8 h-8 bg-slate-500 rounded-full flex items-center justify-center shadow-xl border-2 border-white cursor-pointer hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-white text-sm">warehouse</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Legend -->
+<div class="absolute bottom-6 right-6 z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-xs">
+<h4 class="text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest mb-3">Resource Status</h4>
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="text-xs font-semibold">Active Monitoring</span>
+</div>
+<span class="text-xs font-bold text-primary">85%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-amber-500"></div>
+<span class="text-xs font-semibold">Maintenance Window</span>
+</div>
+<span class="text-xs font-bold text-primary">12%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-red-500"></div>
+<span class="text-xs font-semibold">System Outage</span>
+</div>
+<span class="text-xs font-bold text-primary">3%</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

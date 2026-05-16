@@ -15,19 +15,43 @@ export class InventoryApiService extends BaseApi {
         return new BaseEndpoint(this, `${techniciansEndpointPath}/${technicianId}/inventory`);
     }
 
-    getAll() {
-        return this.#getInventoryEndpoint.getAll();
+    #getStockItemsEndpoint(technicianId) {
+        return new BaseEndpoint(this, `${techniciansEndpointPath}/${technicianId}/inventory/stock-items`);
     }
 
-    getById(id) {
-        return this.#getInventoryEndpoint.getById(id);
+    #getComponentEndpoint(technicianId, componentId) {
+        return new BaseEndpoint(this, `${techniciansEndpointPath}/${technicianId}/inventory/${componentId}`);
+    }
+
+    createInventory(technicianId) {
+        return this.#getInventoryEndpoint(technicianId).create({});
     }
 
     getInventory(technicianId) {
         return this.#getInventoryEndpoint(technicianId).getAll();
     }
 
-    addStock(command) {
-        return this.#getInventoryEndpoint(command.technicianId).update(command);
+    getStockItems(technicianId) {
+        return this.#getStockItemsEndpoint(technicianId).getAll();
+    }
+
+    addStock(technicianId, command) {
+        return this.#getStockItemsEndpoint(technicianId).create(command);
+    }
+
+    updateStock(technicianId, componentId, command) {
+        return this.#getComponentEndpoint(technicianId, componentId).update(command);
+    }
+
+    removeStock(technicianId, componentId) {
+        return this.#getComponentEndpoint(technicianId, componentId).delete();
+    }
+
+    increaseStock(technicianId, componentId, data) {
+        return this.http.patch(`${techniciansEndpointPath}/${technicianId}/inventory/${componentId}/increase`, data);
+    }
+
+    decreaseStock(technicianId, componentId, data) {
+        return this.http.patch(`${techniciansEndpointPath}/${technicianId}/inventory/${componentId}/decrease`, data);
     }
 }

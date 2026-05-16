@@ -10,8 +10,10 @@ export class ProfileAssembler {
             technicianId: resource.technician.technicianId,
             specialties: resource.technician.specialties,
             experienceYears: resource.technician.experienceYears,
-            aboutMe: resource.technician.aboutMe
+            aboutMe: resource.technician.aboutMe,
+            serviceArea: resource.technician.serviceArea || null
         }) : null;
+
 
         const homeowner = resource.homeowner ? new Homeowner({
             homeownerId: resource.homeowner.homeownerId,
@@ -66,8 +68,10 @@ export class ProfileAssembler {
                 technicianId: entity.technician.technicianId,
                 specialties: entity.technician.specialties,
                 experienceYears: entity.technician.experienceYears,
-                aboutMe: entity.technician.aboutMe
+                aboutMe: entity.technician.aboutMe,
+                serviceArea: entity.technician.serviceArea
             } : null,
+
             homeowner: entity.homeowner ? {
                 homeownerId: entity.homeowner.homeownerId,
                 preferredContactTime: entity.homeowner.preferredContactTime,

@@ -2,6 +2,7 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
+  id: String,
   label: String,
   icon: String,
   variant: {
@@ -22,6 +23,7 @@ const emit = defineEmits(['click']);
 
 <template>
   <pv-button
+    :id="id"
     :label="label"
     :icon="icon"
     :loading="loading"

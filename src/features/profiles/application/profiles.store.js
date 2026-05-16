@@ -45,9 +45,17 @@ export const useProfilesStore = defineStore('profilesV2', () => {
             }
             return false;
         } catch (error) {
-            errors.value.push(error);
-            console.error('Error completing technician profile:', error.message);
+            if (error.response) {
+                const status = error.response.status;
+                const msg = error.response.data?.message || 'Error desconocido';
+                errors.value = [{ status, message: msg }];
+                console.error(`HTTP ${status}: ${msg}`);
+            } else {
+                errors.value.push(error);
+                console.error('Error completing technician profile:', error.message);
+            }
         } finally {
+
             isLoading.value = false;
         }
     }
@@ -66,9 +74,17 @@ export const useProfilesStore = defineStore('profilesV2', () => {
             }
             return false;
         } catch (error) {
-            errors.value.push(error);
-            console.error('Error completing homeowner profile:', error.message);
+            if (error.response) {
+                const status = error.response.status;
+                const msg = error.response.data?.message || 'Error desconocido';
+                errors.value = [{ status, message: msg }];
+                console.error(`HTTP ${status}: ${msg}`);
+            } else {
+                errors.value.push(error);
+                console.error('Error completing homeowner profile:', error.message);
+            }
         } finally {
+
             isLoading.value = false;
         }
     }

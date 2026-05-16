@@ -2,11 +2,11 @@ export class CompleteProfileAsHomeownerCommand {
     constructor({
         firstName,
         lastName,
-        email,
         phoneNumber,
         dni,
         dateOfBirth,
         street,
+        number,
         district,
         city,
         country,
@@ -19,11 +19,11 @@ export class CompleteProfileAsHomeownerCommand {
     }) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.phoneNumber = phoneNumber;
         this.dni = dni;
         this.dateOfBirth = dateOfBirth;
         this.street = street;
+        this.number = number;
         this.district = district;
         this.city = city;
         this.country = country;
