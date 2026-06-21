@@ -66,16 +66,13 @@ function goToPasswordRecovery() {
         <form @submit.prevent="performSignIn" class="login-form">
 
           <!-- Email Input -->
-          <div class="field">
-            <label class="field-label" for="sign-in-email">Email Address</label>
-            <pv-input-text
-              id="sign-in-email"
-              v-model="form.email"
-              placeholder="name@electrolink.com"
-              class="w-full"
-              :invalid="!form.email"
-            />
-          </div>
+          <el-input-text
+            id="sign-in-email"
+            v-model="form.email"
+            label="Email Address"
+            placeholder="name@electrolink.com"
+            :error="!form.email ? 'Email is required' : ''"
+          />
 
           <!-- Password Input -->
           <div class="field">
@@ -85,25 +82,24 @@ function goToPasswordRecovery() {
                 Forgot password?
               </a>
             </div>
-            <pv-password
+            
+            <el-input-text
               id="sign-in-password"
               v-model="form.password"
               placeholder="••••••••"
-              :feedback="false"
-              toggleMask
-              class="w-full"
-              inputClass="w-full"
-              :invalid="!form.password"
+              type="password"
+              :error="!form.password ? 'Password is required' : ''"
             />
           </div>
 
           <!-- Sign In Button -->
-          <pv-button
+          <el-button
+            id="sign-in-submit"
             type="submit"
             label="Sign In"
             icon="pi pi-arrow-right"
             iconPos="right"
-            class="sign-in-btn w-full"
+            class="sign-in-btn w-100"
             :disabled="!form.email || !form.password"
           />
         </form>
@@ -111,7 +107,7 @@ function goToPasswordRecovery() {
         <!-- Footer Note -->
         <p class="form-footer">
           New to the platform?
-          <a href="#" @click.prevent="goToSignUp" class="footer-link">Request access</a>
+          <a href="#" @click.prevent="goToSignUp" class="footer-link">Sign Up</a>
         </p>
       </div>
     </section>
@@ -232,7 +228,7 @@ function goToPasswordRecovery() {
 }
 
 .sign-in-form-wrapper {
-  width: 100%;
+  width: 75%;
   max-width: 28rem;
 }
 
@@ -351,4 +347,6 @@ function goToPasswordRecovery() {
 .w-full {
   width: 100%;
 }
+
+
 </style>

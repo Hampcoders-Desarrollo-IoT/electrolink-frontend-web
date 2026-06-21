@@ -2,7 +2,10 @@ import {User} from "../../domain/models/user.entity.js";
 
 export class UserAssembler {
     static toEntityFromResource(resource) {
-        return new User({...resource });
+        return new User({
+            id: resource.id || resource.userId,
+            username: resource.username || resource.email
+        });
     }
 
     static toEntitiesFromResponse(response) {

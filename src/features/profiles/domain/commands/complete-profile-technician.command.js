@@ -2,26 +2,29 @@ export class CompleteProfileAsTechnicianCommand {
     constructor({
         firstName,
         lastName,
-        email,
         phoneNumber,
         dni,
         dateOfBirth,
         street,
+        number,
         district,
         city,
         country,
         postalCode,
         specialties,
         experienceYears,
-        aboutMe
+        aboutMe,
+        centerLatitude,
+        centerLongitude,
+        radiusKm
     }) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.phoneNumber = phoneNumber;
         this.dni = dni;
         this.dateOfBirth = dateOfBirth;
         this.street = street;
+        this.number = number;
         this.district = district;
         this.city = city;
         this.country = country;
@@ -29,5 +32,9 @@ export class CompleteProfileAsTechnicianCommand {
         this.specialties = specialties;
         this.experienceYears = experienceYears;
         this.aboutMe = aboutMe;
+        this.centerLatitude = centerLatitude;
+        this.centerLongitude = centerLongitude;
+        this.radiusKm = radiusKm;
     }
 }
+

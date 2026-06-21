@@ -2,6 +2,7 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProfilesStore } from '../../application/profiles.store.js';
+import { validateServiceArea } from '../../domain/validators/service-area.validator.js';
 
 import ElButton from '../../../../shared/presentation/components/el-button.vue';
 
@@ -79,15 +80,28 @@ const formData = reactive({
 });
 
 const isSubmitting = ref(false);
+const validationErrors = ref({});
 
 const saveProfile = async () => {
+  if (role.value === 'TECHNICIAN') {
+    const validation = validateServiceArea(
+      formData.centerLatitude,
+      formData.centerLongitude,
+      formData.radiusKm
+    );
+    if (!validation.valid) {
+      validationErrors.value = validation.errors;
+      return;
+    }
+  }
+  validationErrors.value = {};
+
   isSubmitting.value = true;
   try {
     const payload = { ...formData, role: role.value };
-    // Handle role-specific command creation inside the store or helper
     const success = await profilesStore.createProfileV2(payload);
     if (success) {
-      router.push('/dashboard');
+      router.push('/profiles/management');
     }
   } catch (error) {
     console.error('Error creating profile:', error);
@@ -115,6 +129,7 @@ onMounted(() => {
 });
 </script>
 
+
 <template>
   <div class="complete-profile-view">
     <div class="completion-container">
@@ -137,6 +152,7 @@ onMounted(() => {
             v-model:dateOfBirth="formData.dateOfBirth"
             v-model:phone="formData.phone"
             v-model:street="formData.street"
+            v-model:number="formData.number"
             v-model:district="formData.district"
             v-model:city="formData.city"
             v-model:country="formData.country"
@@ -216,7 +232,7 @@ onMounted(() => {
 .complete-profile-view {
   min-height: 100vh;
   background-color: var(--el-bg-soft);
-  padding: 2rem 1.5rem;
+  padding: 0;
 }
 
 .completion-container {

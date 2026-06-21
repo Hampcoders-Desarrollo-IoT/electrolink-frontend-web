@@ -12,11 +12,11 @@
   },
   "about": {
     "title": "About Us",
-    "content": "ACME Learning Center is an Education Business Platform, part of ACME Corporation."
+    "content": "Electrolink is a business platform for managing information related to electrical engineering."
   },
   "home": {
     "title": "Welcome",
-    "content": "Welcome to ACME Learning Center, your gateway to quality education."
+    "content": "Welcome to Electrolink, your gateway to manage information related to electrical engineering."
   },
   "page-not-found": {
     "title": "Page Not Found",
@@ -60,5 +60,12 @@
   },
   "errors": {
     "occurred": "Errors occurred"
+  },
+  "profiles": {
+    "errors": {
+      "invalid_latitude": "Invalid latitude (must be between -90 and 90)",
+      "invalid_longitude": "Invalid longitude (must be between -180 and 180)",
+      "invalid_radius": "Radius must be between 0 and 100 km"
+    }
   }
 }

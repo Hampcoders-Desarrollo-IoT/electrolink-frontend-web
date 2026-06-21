@@ -40,16 +40,13 @@ function resendEmail() {
       </div>
 
       <form @submit.prevent="sendRecoveryLink" class="recovery-form">
-        <div class="field">
-          <label class="field-label" for="recovery-email">Email Address</label>
-          <pv-input-text
-            id="recovery-email"
-            v-model="email"
-            placeholder="name@company.com"
-            type="email"
-            class="w-full"
-          />
-        </div>
+        <el-input-text
+          id="recovery-email"
+          v-model="email"
+          label="Email Address"
+          placeholder="name@company.com"
+          type="email"
+        />
 
         <pv-button
           type="submit"

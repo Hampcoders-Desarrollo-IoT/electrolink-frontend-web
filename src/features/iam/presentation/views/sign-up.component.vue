@@ -42,78 +42,36 @@ function goToSignIn() {
 
         <!-- Registration Form -->
         <form @submit.prevent="performSignUp" class="register-form">
-          <!-- Role Selection -->
-          <div class="field">
-            <label class="field-label">Select your role</label>
-            <div class="role-grid">
-              <!-- Homeowner Option -->
-              <label class="role-option" :class="{ 'role-active': selectedRole === 'owner' }">
-                <pv-radio-button
-                  v-model="selectedRole"
-                  inputId="role-owner"
-                  value="owner"
-                  class="role-radio-hidden"
-                />
-                <i class="pi pi-home" style="font-size: 1.25rem; margin-bottom: 0.25rem"></i>
-                <span class="role-label">Homeowner</span>
-              </label>
-
-              <!-- Technician Option -->
-              <label class="role-option" :class="{ 'role-active': selectedRole === 'technician' }">
-                <pv-radio-button
-                  v-model="selectedRole"
-                  inputId="role-technician"
-                  value="technician"
-                  class="role-radio-hidden"
-                />
-                <i class="pi pi-wrench" style="font-size: 1.25rem; margin-bottom: 0.25rem"></i>
-                <span class="role-label">Technician</span>
-              </label>
-            </div>
-          </div>
-
           <!-- Email Field -->
-          <div class="field">
-            <label class="field-label" for="reg-email">Email Address</label>
-            <pv-input-text
-              id="reg-email"
-              v-model="form.email"
-              placeholder="name@example.com"
-              type="email"
-              class="w-full"
-            />
-          </div>
+          <el-input-text
+            id="reg-email"
+            v-model="form.email"
+            label="Email Address"
+            placeholder="name@example.com"
+            type="email"
+          />
 
           <!-- Password Field -->
-          <div class="field">
-            <label class="field-label" for="reg-password">Password</label>
-            <pv-password
-              id="reg-password"
-              v-model="form.password"
-              placeholder="••••••••"
-              toggleMask
-              class="w-full"
-              inputClass="w-full"
-            />
-          </div>
+          <el-input-text
+            id="reg-password"
+            v-model="form.password"
+            label="Password"
+            placeholder="••••••••"
+            type="password"
+          />
 
           <!-- Confirm Password Field -->
-          <div class="field">
-            <label class="field-label" for="reg-confirm">Confirm Password</label>
-            <pv-password
-              id="reg-confirm"
-              v-model="form.passwordConfirmation"
-              placeholder="••••••••"
-              :feedback="false"
-              toggleMask
-              class="w-full"
-              inputClass="w-full"
-            />
-          </div>
+          <el-input-text
+            id="reg-confirm"
+            v-model="form.passwordConfirmation"
+            label="Confirm Password"
+            placeholder="••••••••"
+            type="password"
+          />
 
           <!-- Terms and Conditions -->
           <div class="terms-row">
-            <pv-checkbox
+            <el-checkbox
               v-model="acceptTerms"
               :binary="true"
               inputId="terms"
@@ -127,7 +85,7 @@ function goToSignIn() {
           </div>
 
           <!-- Submit Button -->
-          <pv-button
+          <el-button
             type="submit"
             label="Create Account"
             class="submit-btn w-full"

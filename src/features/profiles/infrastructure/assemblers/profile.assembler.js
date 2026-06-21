@@ -17,6 +17,7 @@ export class ProfileAssembler {
             radiusKm: resource.technician.radiusKm
         }) : null;
 
+
         const homeowner = resource.homeowner ? new Homeowner({
             homeownerId: resource.homeowner.homeownerId,
             preferredContactTime: resource.homeowner.preferredContactTime,
@@ -93,6 +94,7 @@ export class ProfileAssembler {
                 centerLongitude: entity.technician.centerLongitude,
                 radiusKm: entity.technician.radiusKm
             } : null,
+
             homeowner: entity.homeowner ? {
                 homeownerId: entity.homeowner.homeownerId,
                 preferredContactTime: entity.homeowner.preferredContactTime,

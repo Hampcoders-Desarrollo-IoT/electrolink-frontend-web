@@ -23,6 +23,22 @@ import {
 import router from "./shared/presentation/router.js";
 import pinia from "./shared/infrastructure/config/pinia.js";
 
+// Shared ElectroLink components
+import ElButton from "./shared/presentation/components/el-button.vue";
+import ElCheckbox from "./shared/presentation/components/el-checkbox.vue";
+import ElChip from "./shared/presentation/components/el-chip.vue";
+import ElDatepicker from "./shared/presentation/components/el-datepicker.vue";
+import ElInputText from "./shared/presentation/components/el-input-text.vue";
+import ElMultiSelect from "./shared/presentation/components/el-multi-select.vue";
+import ElSelect from "./shared/presentation/components/el-select.vue";
+import ElSwitcher from "./shared/presentation/components/el-switcher.vue";
+import ElTextarea from "./shared/presentation/components/el-textarea.vue";
+import ElSidebar from "./shared/presentation/components/el-sidebar.vue";
+import ElHeader from "./shared/presentation/components/el-header.vue";
+import ElDialog from "./shared/presentation/components/el-dialog.vue";
+import ElTableCard from "./shared/presentation/components/el-table-card.vue";
+import ElConfirmDialog from "./shared/presentation/components/el-confirm-dialog.vue";
+
 createApp(App)
     .use(i18n)
     .use(PrimeVue, {theme: {preset: Material}, ripple: true})
@@ -62,6 +78,20 @@ createApp(App)
     .component('pv-toggle-button',   ToggleButton)
     .component('pv-toolbar',         Toolbar)
     .component('pv-toast',           Toast)
+    .component('el-button',          ElButton)
+    .component('el-checkbox',        ElCheckbox)
+    .component('el-chip',            ElChip)
+    .component('el-datepicker',      ElDatepicker)
+    .component('el-input-text',      ElInputText)
+    .component('el-multi-select',    ElMultiSelect)
+    .component('el-select',          ElSelect)
+    .component('el-switcher',        ElSwitcher)
+    .component('el-textarea',        ElTextarea)
+    .component('el-sidebar',         ElSidebar)
+    .component('el-header',          ElHeader)
+    .component('el-dialog',          ElDialog)
+    .component('el-table-card',      ElTableCard)
+    .component('el-confirm-dialog',  ElConfirmDialog)
     .directive('tooltip',            Tooltip)
     .use(router)
     .use(pinia)

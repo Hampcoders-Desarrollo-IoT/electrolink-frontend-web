@@ -17,3 +17,4 @@ export class Technician {
         this.radiusKm = radiusKm;
     }
 }
+

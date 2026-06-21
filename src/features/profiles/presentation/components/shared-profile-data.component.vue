@@ -1,6 +1,4 @@
 <script setup>
-import ElInputText from '../../../../shared/presentation/components/el-input-text.vue';
-import ElDatepicker from '../../../../shared/presentation/components/el-datepicker.vue';
 
 const props = defineProps({
   firstName: String,
@@ -9,6 +7,7 @@ const props = defineProps({
   dateOfBirth: [String, Date],
   phone: String,
   street: String,
+  number: String,
   district: String,
   city: String,
   country: String,
@@ -36,6 +35,7 @@ const emit = defineEmits([
     <div class="data-group">
       <div class="form-grid">
         <el-input-text
+          id="prof-first-name"
           :modelValue="firstName"
           @update:modelValue="emit('update:firstName', $event)"
           label="First Name"
@@ -43,6 +43,7 @@ const emit = defineEmits([
           required
         />
         <el-input-text
+          id="prof-last-name"
           :modelValue="lastName"
           @update:modelValue="emit('update:lastName', $event)"
           label="Last Name"
@@ -50,6 +51,7 @@ const emit = defineEmits([
           required
         />
         <el-input-text
+          id="prof-dni"
           :modelValue="dni"
           @update:modelValue="emit('update:dni', $event)"
           label="DNI / Identification"
@@ -57,6 +59,7 @@ const emit = defineEmits([
           required
         />
         <el-datepicker
+          id="prof-dob"
           :modelValue="dateOfBirth"
           @update:modelValue="emit('update:dateOfBirth', $event)"
           label="Date of Birth"
@@ -64,6 +67,7 @@ const emit = defineEmits([
           required
         />
         <el-input-text
+          id="prof-phone"
           :modelValue="phone"
           @update:modelValue="emit('update:phone', $event)"
           label="Phone Number"
@@ -82,30 +86,42 @@ const emit = defineEmits([
       </div>
       <div class="form-grid">
         <el-input-text
+          id="prof-street"
           :modelValue="street"
           @update:modelValue="emit('update:street', $event)"
           label="Street Address"
           placeholder="e.g. Av. Javier Prado"
         />
         <el-input-text
+          id="prof-number"
+          :modelValue="number"
+          @update:modelValue="emit('update:number', $event)"
+          label="Number"
+          placeholder="e.g. 123"
+        />
+        <el-input-text
+          id="prof-district"
           :modelValue="district"
           @update:modelValue="emit('update:district', $event)"
           label="District"
           placeholder="e.g. San Isidro"
         />
         <el-input-text
+          id="prof-city"
           :modelValue="city"
           @update:modelValue="emit('update:city', $event)"
           label="City"
           placeholder="e.g. Lima"
         />
         <el-input-text
+          id="prof-country"
           :modelValue="country"
           @update:modelValue="emit('update:country', $event)"
           label="Country"
           placeholder="e.g. Peru"
         />
         <el-input-text
+          id="prof-postal-code"
           :modelValue="postalCode"
           @update:modelValue="emit('update:postalCode', $event)"
           label="Postal Code"
