@@ -30,30 +30,61 @@ const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value;
 };
 
-const homeownerId = computed(() => {
-  const hoId = profilesStore.profile?.homeowner?.homeownerId;
-  if (hoId) console.log(`[Layout] Homeowner section enabled with ID: ${hoId}`);
-  return hoId || '';
+const businessRole = computed(() => {
+  const raw = profilesStore.profile?.businessRole || iamStore.jwtBusinessRole || '';
+  const result = raw.toUpperCase();
+  console.log('[Layout] businessRole computed — profile:', profilesStore.profile?.businessRole, 'jwt:', iamStore.jwtBusinessRole, '→ normalized:', result);
+  return result;
 });
 
 const technicianId = computed(() => {
+  if (businessRole.value !== 'TECHNICIAN') return '';
   const tcId = iamStore.roleSubjectId || profilesStore.profile?.technician?.technicianId;
   if (tcId) console.log(`[Layout] Technician section enabled with ID: ${tcId}`);
   return tcId || '';
 });
 
+const isPropertyOwner = computed(() => {
+  const result = businessRole.value === 'HOMEOWNER' || businessRole.value === 'COMPANY';
+  console.log('[Layout] isPropertyOwner:', result, '(businessRole:', businessRole.value, ')');
+  return result;
+});
+
+const propertyRoutePrefix = computed(() => {
+  if (businessRole.value === 'COMPANY') return '/assets/companies';
+  return '/assets/homeowners';
+});
+
+const propertyOwnerParam = computed(() => {
+  if (businessRole.value === 'COMPANY') {
+    const result = iamStore.roleSubjectId || profilesStore.profile?.company?.companyId || '';
+    console.log('[Layout] propertyOwnerParam (company):', result);
+    return result;
+  }
+  const result = profilesStore.profile?.homeowner?.homeownerId || '';
+  console.log('[Layout] propertyOwnerParam (homeowner):', result);
+  return result;
+});
+
+const accessRoleLabel = computed(() => {
+  if (iamStore.isSuperAdmin) return 'SuperAdmin';
+  if (iamStore.isAdmin) return 'Admin';
+  return '';
+});
+
 const menuItems = computed(() => {
+  console.log('[Layout] Building menuItems — isPropertyOwner:', isPropertyOwner.value, 'propertyOwnerParam:', propertyOwnerParam.value, 'technicianId:', technicianId.value);
   const items = [
     { label: "Home", icon: "pi pi-home", to: "/home" },
   ];
 
-  if (homeownerId.value && homeownerId.value !== 'undefined') {
+  if (isPropertyOwner.value && propertyOwnerParam.value) {
     items.push({
       label: "Properties",
       icon: "pi pi-building",
       children: [
-        { label: "My Properties", to: `/assets/homeowners/${homeownerId.value}/properties`, icon: "pi pi-list" },
-        { label: "Property Portfolio", to: `/assets/homeowners/${homeownerId.value}/properties/dashboard`, icon: "pi pi-th-large" }
+        { label: "My Properties", to: `${propertyRoutePrefix.value}/${propertyOwnerParam.value}/properties`, icon: "pi pi-list" },
+        { label: "Property Portfolio", to: `${propertyRoutePrefix.value}/${propertyOwnerParam.value}/properties/dashboard`, icon: "pi pi-th-large" }
       ]
     });
   }
@@ -99,6 +130,9 @@ const menuItems = computed(() => {
     >
       <template #footer>
         <div class="sidebar-footer-content">
+          <div v-if="accessRoleLabel" class="access-role-badge">
+            {{ accessRoleLabel }}
+          </div>
           <pv-button 
             icon="pi pi-chevron-left" 
             class="p-button-text p-button-rounded collapse-btn"
@@ -159,6 +193,16 @@ const menuItems = computed(() => {
 .collapse-btn {
   color: white !important;
   transition: transform 0.3s ease;
+}
+
+.access-role-badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
 }
 
 /* Main wrapper */

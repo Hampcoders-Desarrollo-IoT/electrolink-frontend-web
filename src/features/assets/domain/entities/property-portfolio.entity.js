@@ -1,13 +1,13 @@
 export class PropertyPortfolio {
     constructor({
-        id = '',
-        homeownerId = '',
+        portfolioId = '',
+        ownerId = '',
         status = '',
-        entries = []
+        properties = []
     } = {}) {
-        this.id = id;
-        this.homeownerId = homeownerId;
+        this.portfolioId = portfolioId;
+        this.ownerId = ownerId;
         this.status = status;
-        this.entries = entries;
+        this.properties = properties;
     }
 }

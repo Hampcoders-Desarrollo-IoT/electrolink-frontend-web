@@ -75,15 +75,7 @@ function handleDelete(item) {
     });
 }
 
-async function handleActivate(item) {
-    // TODO: implement activate when API is ready
-    toast.add({ severity: 'success', summary: 'Activated', detail: `"${item.name}" is now active.`, life: 3000 });
-}
 
-async function handleDeactivate(item) {
-    // TODO: implement deactivate when API is ready
-    toast.add({ severity: 'warn', summary: 'Deactivated', detail: `"${item.name}" has been deactivated.`, life: 3000 });
-}
 </script>
 
 <template>
@@ -122,8 +114,6 @@ async function handleDeactivate(item) {
           :componentTypes="componentTypeStore.componentTypes"
           @edit="handleEdit"
           @delete="handleDelete"
-          @activate="handleActivate"
-          @deactivate="handleDeactivate"
         />
       </div>
     </div>

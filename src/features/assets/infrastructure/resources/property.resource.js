@@ -1,10 +1,13 @@
 export class PropertyResource {
-    constructor({ propertyId, homeownerId, address, geolocation, status, isActive }) {
+    constructor({ propertyId, ownerId, address, geolocation, status, isActive, propertyType, mainPhotoProviderId, photos }) {
         this.propertyId = propertyId;
-        this.homeownerId = homeownerId;
-        this.address = address;  
-        this.geolocation = geolocation; 
+        this.ownerId = ownerId;
+        this.address = address;
+        this.geolocation = geolocation;
         this.status = status;
         this.isActive = isActive;
+        this.propertyType = propertyType;
+        this.mainPhotoProviderId = mainPhotoProviderId;
+        this.photos = photos || [];
     }
 }

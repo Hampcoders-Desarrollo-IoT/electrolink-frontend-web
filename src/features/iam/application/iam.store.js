@@ -6,6 +6,7 @@ import {UserAssembler} from "../infrastructure/assembler/user.assembler.js";
 import {SignUpAssembler} from "../infrastructure/assembler/sign-up.assembler.js";
 import {RefreshClaimsAssembler} from "../infrastructure/assembler/refresh-claims.assembler.js";
 import {RefreshClaimsCommand} from "../domain/commands/refresh-claims.command.js";
+import {AccessRole} from "../domain/value-objects/access-role.vo.js";
 import {ProfilesApi} from "../../profiles/infrastructure/services/profiles-api.service.js";
 
 import {useProfilesStore} from "../../profiles/application/profiles.store.js";
@@ -40,7 +41,22 @@ const useIamStore = defineStore('iam', () => {
 
     const roleSubjectId = computed(() => decodedToken.value?.roleSubjectId);
     const profileId = computed(() => decodedToken.value?.profileId);
-    const currentAccessRole = computed(() => decodedToken.value?.role || null);
+    const currentAccessRole = computed(() => {
+        const token = decodedToken.value;
+        if (!token) return null;
+        return token['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+            || token.role
+            || null;
+    });
+    const jwtBusinessRole = computed(() => {
+        const role = decodedToken.value?.businessRole;
+        const result = role ? role.toUpperCase() : null;
+        console.log('[IAM Store] jwtBusinessRole from JWT:', role, '→ normalized:', result);
+        return result;
+    });
+    const isUser = computed(() => currentAccessRole.value === AccessRole.USER);
+    const isAdmin = computed(() => currentAccessRole.value === AccessRole.ADMIN);
+    const isSuperAdmin = computed(() => currentAccessRole.value === AccessRole.SUPERADMIN);
 
     function signIn(signInCommand, router) {
         console.log(signInCommand);
@@ -58,17 +74,21 @@ const useIamStore = defineStore('iam', () => {
                     console.log(`User ${currentUsername.value} signed in successfully.`);
                     errors.value = [];
 
-                    const profilesStore = useProfilesStore();
-                    profilesStore.fetchProfileStatus().then(async (statusResource) => {
-                        if (statusResource && statusResource.status === 'Incomplete') {
-                            router.push({ name: 'profiles-complete' });
-                        } else {
-                            await profilesStore.loadProfile(currentUserId.value);
-                            router.push({ name: 'home' });
-                        }
-                    }).catch(() => {
+                    if (!isUser.value) {
                         router.push({ name: 'home' });
-                    });
+                    } else {
+                        const profilesStore = useProfilesStore();
+                        profilesStore.fetchProfileStatus().then(async (statusResource) => {
+                            if (statusResource && statusResource.status === 'Incomplete') {
+                                router.push({ name: 'profiles-complete' });
+                            } else {
+                                await profilesStore.loadProfile(currentUserId.value);
+                                router.push({ name: 'home' });
+                            }
+                        }).catch(() => {
+                            router.push({ name: 'home' });
+                        });
+                    }
                 } else {
                     isSignedIn.value = false;
                     console.log(`Sign-in failed: Invalid response.`);
@@ -161,15 +181,14 @@ const useIamStore = defineStore('iam', () => {
                 isSignedIn.value = true;
                 console.log(`Session validated for ${currentUsername.value} (ID: ${currentUserId.value})`);
 
-                // Load full profile into profiles store
-                const profilesStore = useProfilesStore();
-                // We use 'me' to ensure we get the logged-in user profile
-                await profilesStore.loadProfile('me');
+                if (isUser.value) {
+                    const profilesStore = useProfilesStore();
+                    await profilesStore.loadProfile('me');
 
-                // Check profile status on validation
-                const statusResource = await profilesStore.fetchProfileStatus();
-                if (statusResource && statusResource.status === 'Incomplete') {
-                    return 'INCOMPLETE';
+                    const statusResource = await profilesStore.fetchProfileStatus();
+                    if (statusResource && statusResource.status === 'Incomplete') {
+                        return 'INCOMPLETE';
+                    }
                 }
             }
         } catch (error) {
@@ -190,6 +209,10 @@ const useIamStore = defineStore('iam', () => {
         roleSubjectId,
         profileId,
         currentAccessRole,
+        jwtBusinessRole,
+        isUser,
+        isAdmin,
+        isSuperAdmin,
         signIn,
         signUp,
         refreshClaims,

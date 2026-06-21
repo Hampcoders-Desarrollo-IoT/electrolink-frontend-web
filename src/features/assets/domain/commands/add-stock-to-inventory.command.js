@@ -1,8 +1,9 @@
 export class AddStockToInventoryCommand {
-    constructor({ technicianId, componentId, quantity, alertThreshold }) {
-        this.technicianId = technicianId;
+    constructor({ componentId, componentTypeId, quantity, alertThreshold }) {
         this.componentId = componentId;
+        this.componentTypeId = componentTypeId;
         this.quantity = quantity;
         this.alertThreshold = alertThreshold;
     }
 }
+

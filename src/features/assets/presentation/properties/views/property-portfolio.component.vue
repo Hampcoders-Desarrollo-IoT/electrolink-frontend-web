@@ -19,11 +19,13 @@ const route  = useRoute();
 const toast  = useToast();
 const confirm = useConfirm();
 
+const isCompanyContext = computed(() => route.name?.startsWith('assets-company'));
+const ownerParam = computed(() => route.params.homeownerId || route.params.ownerId);
 const showAddModal = ref(false);
 
 onMounted(() => {
-    propertiesStore.loadProperties(route.params.homeownerId);
-    portfolioStore.loadPortfolio(route.params.homeownerId);
+    propertiesStore.loadProperties(ownerParam.value, {}, isCompanyContext.value ? 'company' : 'homeowner');
+    portfolioStore.loadPortfolio(ownerParam.value);
 });
 
 function getStatusVariant(status) {
@@ -41,7 +43,7 @@ function goToAddProperty() {
 }
 
 function onPortfolioUpdated() {
-    portfolioStore.loadPortfolio(route.params.homeownerId);
+    portfolioStore.loadPortfolio(ownerParam.value);
     toast.add({ severity: 'success', summary: 'Success', detail: 'Property added to portfolio', life: 3000 });
 }
 
@@ -52,24 +54,26 @@ function confirmRemove(data) {
         icon: 'pi pi-exclamation-triangle',
         acceptClass: 'p-button-danger',
         accept: async () => {
-            await portfolioStore.removePropertyFromPortfolio(route.params.homeownerId, data.propertyId, "User requested removal via UI");
+            await portfolioStore.removePropertyFromPortfolio(ownerParam.value, data.propertyId, "User requested removal via UI");
             toast.add({ severity: 'success', summary: 'Removed', detail: 'Property removed from portfolio', life: 3000 });
-            portfolioStore.loadPortfolio(route.params.homeownerId);
+            portfolioStore.loadPortfolio(ownerParam.value);
         }
     });
 }
 
 // Map the "Dashboard / Properties / Portfolio ..." links in the mockup
 function goToList() {
+    const routeName = isCompanyContext.value ? 'assets-company-properties' : 'assets-homeowner-properties';
+    const paramKey = isCompanyContext.value ? 'ownerId' : 'homeownerId';
     router.push({
-        name:   'assets-homeowner-properties',
-        params: { homeownerId: route.params.homeownerId }
+        name:   routeName,
+        params: { [paramKey]: ownerParam.value }
     });
 }
 
 // Map portfolio entries
 const enrichedProperties = computed(() => {
-    const entries = portfolioStore.portfolio?.entries ?? [];
+    const entries = portfolioStore.portfolio?.properties ?? [];
     return entries.map(entry => {
         const prop = propertiesStore.properties.find(p => p.id === entry.propertyId);
         return {
@@ -145,7 +149,8 @@ const selectedCenter = computed(() => {
         <section class="table-section">
             <add-property-portfolio-modal 
                 v-model="showAddModal" 
-                :homeownerId="route.params.homeownerId"
+                :homeownerId="ownerParam"
+                :context="isCompanyContext ? 'company' : 'homeowner'"
                 @save="onPortfolioUpdated"
             />
             <el-table-card

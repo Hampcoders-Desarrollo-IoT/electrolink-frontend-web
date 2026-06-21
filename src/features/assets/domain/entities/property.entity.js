@@ -5,7 +5,10 @@ export class Property {
         address = null,
         geolocation = null,
         status = '',
-        isActive = true
+        isActive = true,
+        propertyType = '',
+        mainPhotoProviderId = null,
+        photos = []
     } = {}) {
         this.id = id;
         this.ownerId = ownerId;
@@ -13,6 +16,9 @@ export class Property {
         this.geolocation = geolocation;
         this.status = status;
         this.isActive = isActive;
+        this.propertyType = propertyType;
+        this.mainPhotoProviderId = mainPhotoProviderId;
+        this.photos = photos;
     }
 
     get fullAddress() {

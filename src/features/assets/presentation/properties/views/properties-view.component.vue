@@ -16,12 +16,15 @@ const router = useRouter();
 const route  = useRoute();
 const toast  = useToast();
 
-const activeFilter = ref('All'); // 'All', 'OwnerOccupied', 'Rented', 'Vacant', 'UnderRenovation'
+const isCompanyContext = computed(() => route.name?.startsWith('assets-company'));
+const activeFilter = ref('All');
 const showModal = ref(false);
 
+const ownerParam = computed(() => route.params.homeownerId || route.params.ownerId);
+
 onMounted(() => {
-    propertiesStore.loadProperties(route.params.homeownerId);
-    portfolioStore.loadPortfolio(route.params.homeownerId);
+    propertiesStore.loadProperties(ownerParam.value, {}, isCompanyContext.value ? 'company' : 'homeowner');
+    portfolioStore.loadPortfolio(ownerParam.value);
 });
 
 function getStatusVariant(status) {
@@ -74,18 +77,20 @@ function onPropertySaved() {
         detail:   'The new property has been successfully added.',
         life:     3000
     });
-    propertiesStore.loadProperties(route.params.homeownerId);
+    propertiesStore.loadProperties(ownerParam.value, {}, isCompanyContext.value ? 'company' : 'homeowner');
 }
 
 function goToDashboard() {
+    const routeName = isCompanyContext.value ? 'assets-company-properties-dashboard' : 'assets-homeowner-properties-dashboard';
+    const paramKey = isCompanyContext.value ? 'ownerId' : 'homeownerId';
     router.push({
-        name:   'assets-homeowner-properties-dashboard',
-        params: { homeownerId: route.params.homeownerId }
+        name:   routeName,
+        params: { [paramKey]: ownerParam.value }
     });
 }
 
 const enrichedProperties = computed(() => {
-    const entries = portfolioStore.portfolio?.entries ?? [];
+    const entries = portfolioStore.portfolio?.properties ?? [];
     let list = propertiesStore.properties.map(prop => {
         const entry = entries.find(e => e.propertyId === prop.id);
         return {
@@ -294,7 +299,8 @@ const selectedCenter = computed(() => {
 
     <property-modal
         v-model="showModal"
-        :homeowner-id="route.params.homeownerId"
+        :homeowner-id="ownerParam"
+        :context="isCompanyContext ? 'company' : 'homeowner'"
         @save="onPropertySaved"
     />
   </div>

@@ -7,7 +7,7 @@ const props = defineProps({
     componentTypes: { type: Array, default: () => [] }
 });
 
-const emit = defineEmits(['edit', 'delete', 'activate', 'deactivate']);
+const emit = defineEmits(['edit', 'delete']);
 
 const globalFilter = ref('');
 
@@ -83,13 +83,6 @@ function getTypeName(typeId) {
               class="p-button-text p-button-rounded p-button-sm"
               v-tooltip.top="'Edit'"
               @click="emit('edit', data)"
-            />
-            <pv-button
-              :icon="data.isActive ? 'pi pi-ban' : 'pi pi-check-circle'"
-              class="p-button-text p-button-rounded p-button-sm"
-              :class="data.isActive ? 'p-button-warning' : 'p-button-success'"
-              v-tooltip.top="data.isActive ? 'Deactivate' : 'Activate'"
-              @click="data.isActive ? emit('deactivate', data) : emit('activate', data)"
             />
             <pv-button
               icon="pi pi-trash"

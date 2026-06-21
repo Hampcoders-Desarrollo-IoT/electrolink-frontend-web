@@ -38,12 +38,15 @@ const isValid = computed(() => name.value.trim().length > 0);
 
 function handleSave() {
     if (!isValid.value) return;
-    emit('save', {
+    const payload = {
         name: name.value.trim(),
         description: description.value.trim(),
-        componentTypeId: componentTypeId.value,
         isActive: isActive.value
-    });
+    };
+    if (isEditMode.value && componentTypeId.value) {
+        payload.typeId = componentTypeId.value;
+    }
+    emit('save', payload);
 }
 
 function handleClose() {

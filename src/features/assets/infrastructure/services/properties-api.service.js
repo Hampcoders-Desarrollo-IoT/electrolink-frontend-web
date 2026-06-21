@@ -1,48 +1,93 @@
 import { BaseApi } from '@/shared/infrastructure/apis/base-api.js';
-import { BaseEndpoint } from '@/shared/infrastructure/apis/base-endpoint.js';
 
 const homeownersEndpointPath = import.meta.env.VITE_HOMEOWNERS_ENDPOINT_PATH;
+const techniciansEndpointPath = import.meta.env.VITE_TECHNICIANS_ENDPOINT_PATH;
 
 export class PropertiesApiService extends BaseApi {
     constructor() {
         super();
     }
 
-    #propertiesPath(homeownerId) {
-        return `${homeownersEndpointPath}/${homeownerId}/properties`;
+    // ── Homeowner paths ────────────────────────────────────────────────────
+
+    #homeownerPropertiesPath(ownerId) {
+        return `${homeownersEndpointPath}/${ownerId}/properties`;
     }
 
-    getAll(homeownerId) {
-        return this.http.get(this.#propertiesPath(homeownerId));
+    // ── Company paths ──────────────────────────────────────────────────────
+
+    #companyPropertiesPath(ownerId) {
+        return `/companies/${ownerId}/properties`;
     }
 
-    getById(homeownerId, id) {
-        return this.http.get(`${this.#propertiesPath(homeownerId)}/${id}`);
+    // ── Homeowner endpoints ────────────────────────────────────────────────
+
+    getAll(ownerId, params = {}) {
+        return this.http.get(this.#homeownerPropertiesPath(ownerId), { params });
     }
 
-    create(homeownerId, command) {
-        return this.http.post(this.#propertiesPath(homeownerId), command);
+    getById(ownerId, id) {
+        return this.http.get(`${this.#homeownerPropertiesPath(ownerId)}/${id}`);
     }
 
-    updateAddress(homeownerId, propertyId, resource) {
-        return this.http.patch(`${this.#propertiesPath(homeownerId)}/${propertyId}/address`, resource);
+    create(ownerId, command) {
+        return this.http.post(this.#homeownerPropertiesPath(ownerId), command);
     }
 
-    updateGeolocation(homeownerId, propertyId, resource) {
-        return this.http.patch(`${this.#propertiesPath(homeownerId)}/${propertyId}/geolocation`, resource);
+    updateAddress(ownerId, propertyId, resource) {
+        return this.http.patch(`${this.#homeownerPropertiesPath(ownerId)}/${propertyId}/address`, resource);
     }
 
-    activate(homeownerId, propertyId) {
-        return this.http.patch(`${this.#propertiesPath(homeownerId)}/${propertyId}/activate`);
+    updateGeolocation(ownerId, propertyId, resource) {
+        return this.http.patch(`${this.#homeownerPropertiesPath(ownerId)}/${propertyId}/geolocation`, resource);
     }
 
-    deactivate(homeownerId, propertyId) {
-        return this.http.patch(`${this.#propertiesPath(homeownerId)}/${propertyId}/deactivate`);
+    activate(ownerId, propertyId) {
+        return this.http.patch(`${this.#homeownerPropertiesPath(ownerId)}/${propertyId}/activate`);
     }
 
-    /** @param {string} reason — requerido por el backend como query param */
-    delete(homeownerId, propertyId, reason = '') {
+    deactivate(ownerId, propertyId) {
+        return this.http.patch(`${this.#homeownerPropertiesPath(ownerId)}/${propertyId}/deactivate`);
+    }
+
+    delete(ownerId, propertyId, reason = '') {
         const params = reason ? `?reason=${encodeURIComponent(reason)}` : '';
-        return this.http.delete(`${this.#propertiesPath(homeownerId)}/${propertyId}${params}`);
+        return this.http.delete(`${this.#homeownerPropertiesPath(ownerId)}/${propertyId}${params}`);
+    }
+
+    // ── Company endpoints ──────────────────────────────────────────────────
+
+    getAllCompany(ownerId, params = {}) {
+        return this.http.get(this.#companyPropertiesPath(ownerId), { params });
+    }
+
+    getCompanyById(ownerId, id) {
+        return this.http.get(`${this.#companyPropertiesPath(ownerId)}/${id}`);
+    }
+
+    createCompany(ownerId, command) {
+        return this.http.post(this.#companyPropertiesPath(ownerId), command);
+    }
+
+    updateLocation(ownerId, propertyId, resource) {
+        return this.http.patch(`${this.#companyPropertiesPath(ownerId)}/${propertyId}/location`, resource);
+    }
+
+    activateCompany(ownerId, propertyId) {
+        return this.http.patch(`${this.#companyPropertiesPath(ownerId)}/${propertyId}/activate`);
+    }
+
+    // ── Photo endpoints (shared, under /homeowners path) ───────────────────
+
+    getUploadUrl(ownerId, propertyId) {
+        return this.http.get(`${this.#homeownerPropertiesPath(ownerId)}/${propertyId}/photos/upload-url`);
+    }
+
+    registerPhoto(ownerId, propertyId, resource) {
+        return this.http.post(`${this.#homeownerPropertiesPath(ownerId)}/${propertyId}/photos`, resource);
+    }
+
+    setMainPhoto(ownerId, propertyId, resource) {
+        return this.http.post(`${this.#homeownerPropertiesPath(ownerId)}/${propertyId}/main-photo`, resource);
     }
 }

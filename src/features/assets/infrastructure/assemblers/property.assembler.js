@@ -1,4 +1,5 @@
 import { Property } from '../../domain/entities/property.entity.js';
+import { Photo } from '../../domain/entities/photo.entity.js';
 import { PropertyResource } from '../resources/property.resource.js';
 import { AddressResource } from '../resources/address.resource.js';
 import { GeolocationResource } from '../resources/geolocation.resource.js';
@@ -6,13 +7,26 @@ import { GeolocationResource } from '../resources/geolocation.resource.js';
 export class PropertyAssembler {
     static toEntityFromResource(resource) {
         if (!resource) return null;
+
+        const photos = resource.photos
+            ? resource.photos.map(p => new Photo({
+                providerId: p.providerId,
+                publicUrl: p.publicUrl,
+                thumbnailUrl: p.thumbnailUrl,
+                uploadedAt: p.uploadedAt
+            }))
+            : [];
+
         return new Property({
             id: resource.propertyId,
-            ownerId: resource.homeownerId,
+            ownerId: resource.ownerId,
             address: resource.address,
             geolocation: resource.geolocation,
             status: resource.status,
-            isActive: resource.isActive
+            isActive: resource.isActive,
+            propertyType: resource.propertyType,
+            mainPhotoProviderId: resource.mainPhotoProviderId,
+            photos: photos
         });
     }
 
@@ -20,11 +34,14 @@ export class PropertyAssembler {
         if (!entity) return null;
         return new PropertyResource({
             propertyId: entity.id,
-            homeownerId: entity.ownerId,
+            ownerId: entity.ownerId,
             address: entity.address ? new AddressResource(entity.address) : null,
             geolocation: entity.geolocation ? new GeolocationResource(entity.geolocation) : null,
             status: entity.status,
-            isActive: entity.isActive
+            isActive: entity.isActive,
+            propertyType: entity.propertyType,
+            mainPhotoProviderId: entity.mainPhotoProviderId,
+            photos: entity.photos || []
         });
     }
 

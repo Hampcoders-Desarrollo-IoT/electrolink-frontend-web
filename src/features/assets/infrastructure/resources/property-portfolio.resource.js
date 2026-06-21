@@ -1,8 +1,8 @@
 export class PropertyPortfolioResource {
-    constructor({ id, homeownerId, status, entries }) {
-        this.id = id;
-        this.homeownerId = homeownerId;
+    constructor({ portfolioId, ownerId, status, properties }) {
+        this.portfolioId = portfolioId;
+        this.ownerId = ownerId;
         this.status = status;
-        this.entries = entries;
+        this.properties = properties || [];
     }
 }

@@ -8,7 +8,7 @@ export class ComponentTypeAssembler {
             id: resource.componentTypeId,
             name: resource.name,
             description: resource.description,
-            isActive: resource.isActive !== undefined ? resource.isActive : (resource.status === 'Active')
+            isActive: resource.isActive !== undefined ? resource.isActive : true
         });
     }
 
@@ -17,7 +17,8 @@ export class ComponentTypeAssembler {
         return new ComponentTypeResource({
             componentTypeId: entity.id,
             name: entity.name,
-            description: entity.description
+            description: entity.description,
+            isActive: entity.isActive
         });
     }
 

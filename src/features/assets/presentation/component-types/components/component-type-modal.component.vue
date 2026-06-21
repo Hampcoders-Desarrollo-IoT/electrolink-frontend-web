@@ -29,10 +29,14 @@ const isValid = computed(() => name.value.trim().length > 0);
 
 function handleSave() {
     if (!isValid.value) return;
-    emit('save', {
+    const payload = {
         name: name.value.trim(),
         description: description.value.trim()
-    });
+    };
+    if (isEditMode.value) {
+        payload.isActive = props.selectedComponentType?.isActive !== undefined ? props.selectedComponentType.isActive : true;
+    }
+    emit('save', payload);
 }
 
 function handleClose() {
