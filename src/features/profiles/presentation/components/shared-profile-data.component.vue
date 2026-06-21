@@ -22,6 +22,7 @@ const emit = defineEmits([
   'update:dateOfBirth',
   'update:phone',
   'update:street',
+  'update:number',
   'update:district',
   'update:city',
   'update:country',
@@ -33,10 +34,6 @@ const emit = defineEmits([
   <div class="shared-profile-data">
     <!-- Personal Information -->
     <div class="data-group">
-      <div class="group-header">
-        <i class="pi pi-user" style="color: var(--el-custom)"></i>
-        <h4 class="group-label">Personal Information</h4>
-      </div>
       <div class="form-grid">
         <el-input-text
           :modelValue="firstName"
@@ -88,7 +85,7 @@ const emit = defineEmits([
           :modelValue="street"
           @update:modelValue="emit('update:street', $event)"
           label="Street Address"
-          placeholder="e.g. Av. Javier Prado 123"
+          placeholder="e.g. Av. Javier Prado"
         />
         <el-input-text
           :modelValue="district"

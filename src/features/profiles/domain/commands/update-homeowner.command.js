@@ -1,13 +1,11 @@
-export class Homeowner {
+export class UpdateHomeownerCommand {
     constructor({
-        homeownerId = '',
-        preferredContactTime = 'Morning',
-        smsNotifications = false,
-        emailNotifications = false,
-        pushNotifications = false,
-        emergencyContact = null
+        preferredContactTime,
+        smsNotifications,
+        emailNotifications,
+        pushNotifications,
+        emergencyContact
     } = {}) {
-        this.homeownerId = homeownerId;
         this.preferredContactTime = preferredContactTime;
         this.smsNotifications = smsNotifications;
         this.emailNotifications = emailNotifications;

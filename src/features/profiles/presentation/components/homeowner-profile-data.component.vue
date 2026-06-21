@@ -4,7 +4,7 @@ import ElSelect from '../../../../shared/presentation/components/el-select.vue';
 import ElCheckbox from '../../../../shared/presentation/components/el-checkbox.vue';
 
 const props = defineProps({
-  preferredContactTime: Number,
+  preferredContactTime: [String, Number],
   smsNotifications: Boolean,
   emailNotifications: Boolean,
   pushNotifications: Boolean,
@@ -27,10 +27,9 @@ const emit = defineEmits([
 ]);
 
 const contactTimeOptions = [
-  { label: 'Morning (8AM - 12PM)', value: 0 },
-  { label: 'Afternoon (12PM - 4PM)', value: 1 },
-  { label: 'Evening (4PM - 8PM)', value: 2 },
-  { label: 'Anytime', value: 3 }
+  { label: 'Morning (8AM - 12PM)', value: 'Morning' },
+  { label: 'Afternoon (12PM - 4PM)', value: 'Afternoon' },
+  { label: 'Evening (4PM - 8PM)', value: 'Evening' }
 ];
 
 const updateEmergencyContact = (field, value) => {
@@ -45,10 +44,6 @@ const updateEmergencyContact = (field, value) => {
   <div class="homeowner-profile-data">
     <!-- Service Preferences -->
     <div class="data-group">
-      <div class="group-header">
-        <i class="pi pi-clock" style="color: var(--el-custom)"></i>
-        <h4 class="group-label">Service Preferences</h4>
-      </div>
       <div class="group-content">
         <el-select
           :modelValue="preferredContactTime"

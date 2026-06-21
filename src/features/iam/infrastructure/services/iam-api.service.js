@@ -4,17 +4,20 @@ import {BaseEndpoint} from "@/shared/infrastructure/apis/base-endpoint.js";
 const signInEndpointPath = import.meta.env.VITE_SIGNIN_ENDPOINT_PATH;
 const signUpEndpointPath = import.meta.env.VITE_SIGNUP_ENDPOINT_PATH;
 const usersEndpointPath = import.meta.env.VITE_USERS_ENDPOINT_PATH;
+const refreshClaimsEndpointPath = import.meta.env.VITE_REFRESH_CLAIMS_ENDPOINT_PATH;
 
 export class IamApiService extends BaseApi {
     #signInEndpoint;
     #signUpEndpoint;
     #usersEndpoint;
+    #refreshClaimsEndpoint;
 
     constructor() {
         super();
         this.#signInEndpoint = new BaseEndpoint(this, signInEndpointPath);
         this.#signUpEndpoint = new BaseEndpoint(this, signUpEndpointPath);
         this.#usersEndpoint = new BaseEndpoint(this, usersEndpointPath);
+        this.#refreshClaimsEndpoint = new BaseEndpoint(this, refreshClaimsEndpointPath);
     }
 
     signIn(signInRequest) {
@@ -23,6 +26,10 @@ export class IamApiService extends BaseApi {
 
     signUp(signUpRequest) {
         return this.#signUpEndpoint.create(signUpRequest);
+    }
+
+    refreshClaims(refreshClaimsRequest) {
+        return this.#refreshClaimsEndpoint.create(refreshClaimsRequest);
     }
 
     getUsers() {

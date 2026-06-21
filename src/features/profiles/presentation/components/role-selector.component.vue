@@ -26,6 +26,14 @@ const selectRole = (role) => {
       <button
         type="button"
         class="role-btn"
+        :class="{ 'role-btn-active': modelValue === 'HOMEOWNER' }"
+        @click="selectRole('HOMEOWNER')"
+      >
+        Homeowner
+      </button>
+      <button
+        type="button"
+        class="role-btn"
         :class="{ 'role-btn-active': modelValue === 'TECHNICIAN' }"
         @click="selectRole('TECHNICIAN')"
       >
@@ -34,10 +42,10 @@ const selectRole = (role) => {
       <button
         type="button"
         class="role-btn"
-        :class="{ 'role-btn-active': modelValue === 'HOMEOWNER' }"
-        @click="selectRole('HOMEOWNER')"
+        :class="{ 'role-btn-active': modelValue === 'COMPANY' }"
+        @click="selectRole('COMPANY')"
       >
-        Homeowner
+        Company
       </button>
     </div>
   </div>
@@ -59,7 +67,7 @@ const selectRole = (role) => {
 
 .role-btn-group {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 0;
   border: 1px solid rgba(169, 177, 186, 0.3);
   border-radius: 8px;

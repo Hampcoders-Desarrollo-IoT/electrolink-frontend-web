@@ -17,23 +17,18 @@ const emit = defineEmits([
 ]);
 
 const specialtyOptions = [
-  { label: 'Solar Installation', value: 0 },
-  { label: 'Electrical Maintenance', value: 1 },
-  { label: 'Repair', value: 2 },
-  { label: 'Inspection', value: 3 },
-  { label: 'Upgrade', value: 4 },
-  { label: 'Battery Systems', value: 5 }
+  { label: 'Solar Installation', value: 'SolarInstallation' },
+  { label: 'Electrical Maintenance', value: 'ElectricalMaintenance' },
+  { label: 'Repair', value: 'Repair' },
+  { label: 'Inspection', value: 'Inspection' },
+  { label: 'Upgrade', value: 'Upgrade' },
+  { label: 'Battery Systems', value: 'BatterySystems' }
 ];
 </script>
 
 <template>
   <div class="technician-profile-data">
     <div class="data-group">
-      <div class="group-header">
-        <i class="pi pi-briefcase" style="color: var(--el-custom)"></i>
-        <h4 class="group-label">Professional Experience</h4>
-      </div>
-      
       <div class="form-grid">
         <specialties-selector
           :modelValue="specialties"

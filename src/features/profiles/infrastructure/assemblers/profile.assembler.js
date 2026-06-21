@@ -1,6 +1,7 @@
 import { Profile } from '../../domain/entities/profile.entity.js';
 import { Technician } from '../../domain/entities/technician.entity.js';
 import { Homeowner } from '../../domain/entities/homeowner.entity.js';
+import { Company } from '../../domain/entities/company.entity.js';
 
 export class ProfileAssembler {
     static toEntityFromResource(resource) {
@@ -10,7 +11,14 @@ export class ProfileAssembler {
             technicianId: resource.technician.technicianId,
             specialties: resource.technician.specialties,
             experienceYears: resource.technician.experienceYears,
+<<<<<<< Updated upstream
             aboutMe: resource.technician.aboutMe
+=======
+            aboutMe: resource.technician.aboutMe,
+            centerLatitude: resource.technician.centerLatitude,
+            centerLongitude: resource.technician.centerLongitude,
+            radiusKm: resource.technician.radiusKm
+>>>>>>> Stashed changes
         }) : null;
 
         const homeowner = resource.homeowner ? new Homeowner({
@@ -19,9 +27,22 @@ export class ProfileAssembler {
             smsNotifications: resource.homeowner.smsNotifications,
             emailNotifications: resource.homeowner.emailNotifications,
             pushNotifications: resource.homeowner.pushNotifications,
-            emergencyContactName: resource.homeowner.emergencyContactName,
-            emergencyContactRelationship: resource.homeowner.emergencyContactRelationship,
-            emergencyContactPhone: resource.homeowner.emergencyContactPhone
+            emergencyContact: resource.homeowner.emergencyContact || null
+        }) : null;
+
+        const company = resource.company ? new Company({
+            companyId: resource.company.companyId,
+            companyName: resource.company.companyName,
+            taxId: resource.company.taxId,
+            industry: resource.company.industry,
+            companySize: resource.company.companySize,
+            website: resource.company.website,
+            billingStreet: resource.company.billingStreet,
+            billingNumber: resource.company.billingNumber,
+            billingDistrict: resource.company.billingDistrict,
+            billingCity: resource.company.billingCity,
+            billingCountry: resource.company.billingCountry,
+            billingPostalCode: resource.company.billingPostalCode
         }) : null;
 
         return new Profile({
@@ -29,18 +50,21 @@ export class ProfileAssembler {
             userId: resource.userId,
             status: resource.status,
             businessRole: resource.businessRole,
+            profilePictureUrl: resource.profilePictureUrl || '',
             firstName: resource.firstName,
             lastName: resource.lastName,
             phoneNumber: resource.phoneNumber,
             dni: resource.dni,
             dateOfBirth: resource.dateOfBirth,
             street: resource.street,
+            number: resource.number || '',
             district: resource.district,
             city: resource.city,
             country: resource.country,
             postalCode: resource.postalCode,
             technician: technician,
-            homeowner: homeowner
+            homeowner: homeowner,
+            company: company
         });
     }
 
@@ -52,12 +76,14 @@ export class ProfileAssembler {
             userId: entity.userId,
             status: entity.status,
             businessRole: entity.businessRole,
+            profilePictureUrl: entity.profilePictureUrl,
             firstName: entity.firstName,
             lastName: entity.lastName,
             phoneNumber: entity.phoneNumber,
             dni: entity.dni,
             dateOfBirth: entity.dateOfBirth,
             street: entity.street,
+            number: entity.number,
             district: entity.district,
             city: entity.city,
             country: entity.country,
@@ -66,7 +92,14 @@ export class ProfileAssembler {
                 technicianId: entity.technician.technicianId,
                 specialties: entity.technician.specialties,
                 experienceYears: entity.technician.experienceYears,
+<<<<<<< Updated upstream
                 aboutMe: entity.technician.aboutMe
+=======
+                aboutMe: entity.technician.aboutMe,
+                centerLatitude: entity.technician.centerLatitude,
+                centerLongitude: entity.technician.centerLongitude,
+                radiusKm: entity.technician.radiusKm
+>>>>>>> Stashed changes
             } : null,
             homeowner: entity.homeowner ? {
                 homeownerId: entity.homeowner.homeownerId,
@@ -74,9 +107,22 @@ export class ProfileAssembler {
                 smsNotifications: entity.homeowner.smsNotifications,
                 emailNotifications: entity.homeowner.emailNotifications,
                 pushNotifications: entity.homeowner.pushNotifications,
-                emergencyContactName: entity.homeowner.emergencyContactName,
-                emergencyContactRelationship: entity.homeowner.emergencyContactRelationship,
-                emergencyContactPhone: entity.homeowner.emergencyContactPhone
+                emergencyContact: entity.homeowner.emergencyContact
+            } : null,
+
+            company: entity.company ? {
+                companyId: entity.company.companyId,
+                companyName: entity.company.companyName,
+                taxId: entity.company.taxId,
+                industry: entity.company.industry,
+                companySize: entity.company.companySize,
+                website: entity.company.website,
+                billingStreet: entity.company.billingStreet,
+                billingNumber: entity.company.billingNumber,
+                billingDistrict: entity.company.billingDistrict,
+                billingCity: entity.company.billingCity,
+                billingCountry: entity.company.billingCountry,
+                billingPostalCode: entity.company.billingPostalCode
             } : null
         };
     }

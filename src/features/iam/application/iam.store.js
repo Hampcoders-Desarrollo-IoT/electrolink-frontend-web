@@ -4,6 +4,8 @@ import {computed, ref} from "vue";
 import {SignInAssembler} from "../infrastructure/assembler/sign-in.assembler.js";
 import {UserAssembler} from "../infrastructure/assembler/user.assembler.js";
 import {SignUpAssembler} from "../infrastructure/assembler/sign-up.assembler.js";
+import {RefreshClaimsAssembler} from "../infrastructure/assembler/refresh-claims.assembler.js";
+import {RefreshClaimsCommand} from "../domain/commands/refresh-claims.command.js";
 import {ProfilesApi} from "../../profiles/infrastructure/services/profiles-api.service.js";
 
 import {useProfilesStore} from "../../profiles/application/profiles.store.js";
@@ -20,6 +22,29 @@ const useIamStore = defineStore('iam', () => {
     const currentUserId = ref('');
     const currentToken = computed(() => localStorage.getItem('token'));
 
+<<<<<<< Updated upstream
+=======
+    const decodedToken = computed(() => {
+        const token = currentToken.value;
+        if (!token) return null;
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            console.error('Error decoding JWT:', e);
+            return null;
+        }
+    });
+
+    const roleSubjectId = computed(() => decodedToken.value?.roleSubjectId);
+    const profileId = computed(() => decodedToken.value?.profileId);
+    const currentAccessRole = computed(() => decodedToken.value?.role || null);
+
+>>>>>>> Stashed changes
     function signIn(signInCommand, router) {
         console.log(signInCommand);
         iamApi.signIn(signInCommand)
@@ -64,7 +89,7 @@ const useIamStore = defineStore('iam', () => {
             });
     }
 
-    function signUp(signUpCommand, role, router) {
+    function signUp(signUpCommand, router) {
         iamApi.signUp(signUpCommand)
             .then(response => {
                 let signUpResource = SignUpAssembler.toResourceFromResponse(response);
@@ -77,7 +102,7 @@ const useIamStore = defineStore('iam', () => {
                     console.log('Stored Token:', signUpResource.token);
                     errors.value = [];
                     
-                    router.push({ name: 'profiles-complete', query: { role: role.toUpperCase() } });
+                    router.push({ name: 'profiles-complete' });
                 } else {
                     isSignedIn.value = false;
                     console.log(`Sign-up failed: Invalid response.`);
@@ -93,6 +118,28 @@ const useIamStore = defineStore('iam', () => {
                 errors.value.push(error);
                 router.push({ name: 'iam-sign-up' });
             })
+    }
+
+    function refreshClaims() {
+        const command = new RefreshClaimsCommand();
+        return iamApi.refreshClaims(command)
+            .then(response => {
+                const resource = RefreshClaimsAssembler.toResourceFromResponse(response);
+                if (resource) {
+                    localStorage.setItem('token', resource.token);
+                    console.log('Token claims refreshed successfully.');
+                    errors.value = [];
+                } else {
+                    console.error('Refresh claims failed: Invalid response.');
+                    errors.value.push(new Error('Invalid response from refresh-claims.'));
+                }
+                return resource;
+            })
+            .catch(error => {
+                console.error('Refresh claims failed:', error.message);
+                errors.value.push(error);
+                return null;
+            });
     }
 
     function signOut(router) {
@@ -140,8 +187,15 @@ const useIamStore = defineStore('iam', () => {
         currentUsername,
         currentUserId,
         currentToken,
+<<<<<<< Updated upstream
+=======
+        roleSubjectId,
+        profileId,
+        currentAccessRole,
+>>>>>>> Stashed changes
         signIn,
         signUp,
+        refreshClaims,
         signOut,
         validateSession
     };

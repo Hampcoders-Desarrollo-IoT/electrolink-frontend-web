@@ -8,7 +8,6 @@ const router = useRouter();
 const store = useIamStore();
 const { signUp } = store;
 
-const selectedRole = ref('owner');
 const acceptTerms = ref(false);
 
 const form = reactive({
@@ -19,7 +18,7 @@ const form = reactive({
 
 function performSignUp() {
   const signUpCommand = new SignUpCommand(form);
-  signUp(signUpCommand, selectedRole.value, router);
+  signUp(signUpCommand, router);
 }
 
 function goToSignIn() {
