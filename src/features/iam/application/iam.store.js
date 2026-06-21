@@ -40,10 +40,7 @@ const useIamStore = defineStore('iam', () => {
 
     const roleSubjectId = computed(() => decodedToken.value?.roleSubjectId);
     const profileId = computed(() => decodedToken.value?.profileId);
-<<<<<<< HEAD
     const currentAccessRole = computed(() => decodedToken.value?.role || null);
-=======
->>>>>>> develop
 
     function signIn(signInCommand, router) {
         console.log(signInCommand);
@@ -192,10 +189,7 @@ const useIamStore = defineStore('iam', () => {
         currentToken,
         roleSubjectId,
         profileId,
-<<<<<<< HEAD
         currentAccessRole,
-=======
->>>>>>> develop
         signIn,
         signUp,
         refreshClaims,

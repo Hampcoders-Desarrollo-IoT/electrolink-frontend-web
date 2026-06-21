@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {iamInterceptor} from "@/features/iam/infrastructure/services/iam.interceptor.js";
 
-const platformApi = import.meta.env.VITE_LEARNING_PLATFORM_API_URL;
+const platformApi = import.meta.env.VITE_ELECTROLINK_PLATFORM_API_URL;
 
 export class BaseApi {
     #http;
@@ -12,8 +12,7 @@ export class BaseApi {
 
     constructor() {
         this.#http = axios.create({baseURL: platformApi,
-            headers: {'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*' },
+            headers: {'Content-Type': 'application/json'},
         });
         this.#http.interceptors.request.use(iamInterceptor);
     }
