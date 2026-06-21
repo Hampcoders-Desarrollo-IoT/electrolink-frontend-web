@@ -20,6 +20,25 @@ const useIamStore = defineStore('iam', () => {
     const currentUserId = ref('');
     const currentToken = computed(() => localStorage.getItem('token'));
 
+    const decodedToken = computed(() => {
+        const token = currentToken.value;
+        if (!token) return null;
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            console.error('Error decoding JWT:', e);
+            return null;
+        }
+    });
+
+    const roleSubjectId = computed(() => decodedToken.value?.roleSubjectId);
+    const profileId = computed(() => decodedToken.value?.profileId);
+
     function signIn(signInCommand, router) {
         console.log(signInCommand);
         iamApi.signIn(signInCommand)
@@ -143,6 +162,8 @@ const useIamStore = defineStore('iam', () => {
         currentUsername,
         currentUserId,
         currentToken,
+        roleSubjectId,
+        profileId,
         signIn,
         signUp,
         signOut,

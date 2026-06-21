@@ -2,17 +2,19 @@
 import { ref, computed } from 'vue';
 
 const props = defineProps({
-  options: { type: Array, default: () => [] }
+  options: { type: Array, default: () => [] },
+  componentTypeOptions: { type: Array, default: () => [] }
 });
 
 const emit = defineEmits(['submit']);
 
 const selectedComponent = ref(null);
+const selectedComponentType = ref(null);
 const quantity = ref(0);
 const alertThreshold = ref(5);
 
 const isValid = computed(() => {
-    return selectedComponent.value && quantity.value > 0 && alertThreshold.value > 0;
+    return selectedComponent.value && selectedComponentType.value && quantity.value > 0 && alertThreshold.value > 0;
 });
 
 function handleSubmit() {
@@ -20,6 +22,7 @@ function handleSubmit() {
     
     emit('submit', {
         componentId: selectedComponent.value,
+        componentTypeId: selectedComponentType.value,
         type: 'INCREASE', // Always INCREASE for new additions
         quantity: quantity.value,
         alertThreshold: alertThreshold.value
@@ -30,6 +33,7 @@ function handleSubmit() {
 
 function resetForm() {
     selectedComponent.value = null;
+    selectedComponentType.value = null;
     quantity.value = 0;
     alertThreshold.value = 5;
 }
@@ -56,6 +60,18 @@ function resetForm() {
       <small v-if="options.length === 0" class="ti-helper">
           You already have all available components in your inventory.
       </small>
+    </div>
+
+    <!-- Component Type Select -->
+    <div class="ti-field">
+      <el-select
+        v-model="selectedComponentType"
+        :options="componentTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        label="Component Type"
+        placeholder="Select a component type..."
+      />
     </div>
 
     <!-- Quantity -->

@@ -4,9 +4,11 @@ import { ref, computed } from "vue";
 import { Drawer as PvDrawer } from "primevue";
 import FooterContent from "../components/footer-content.vue";
 import { useProfilesStore } from "@/features/profiles/application/profiles.store.js";
+import useIamStore from "@/features/iam/application/iam.store.js";
 
 const { t } = useI18n();
 const profilesStore = useProfilesStore();
+const iamStore = useIamStore();
 
 const drawer = ref(false);
 const isCollapsed = ref(false);
@@ -35,7 +37,7 @@ const homeownerId = computed(() => {
 });
 
 const technicianId = computed(() => {
-  const tcId = profilesStore.profile?.technician?.technicianId;
+  const tcId = iamStore.roleSubjectId || profilesStore.profile?.technician?.technicianId;
   if (tcId) console.log(`[Layout] Technician section enabled with ID: ${tcId}`);
   return tcId || '';
 });

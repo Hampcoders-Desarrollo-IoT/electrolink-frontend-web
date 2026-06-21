@@ -3,14 +3,16 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTechnicianInventoryStore } from '../../../application/technician-inventory.store.js';
 import { useComponentStore } from '../../../application/component.store.js';
+import { useComponentTypeStore } from '../../../application/component-type.store.js';
 import TechnicianInventoryDrawer from '../components/technician-inventory-drawer.component.vue';
-import InventoryTable from '../components/inventory-table.component.vue';
 import ElKpiCard from '@/shared/presentation/components/el-kpi-card.vue';
 
 const inventoryStore = useTechnicianInventoryStore();
 const componentStore = useComponentStore();
+const componentTypeStore = useComponentTypeStore();
 const route = useRoute();
 
+const globalFilter = ref('');
 const showDrawer = ref(false);
 
 onMounted(async () => {
@@ -18,14 +20,21 @@ onMounted(async () => {
     await Promise.all([
         inventoryStore.loadInventory(techId),
         inventoryStore.loadStockItems(techId),
-        componentStore.loadComponents(techId)
+        componentStore.loadComponents(techId),
+        componentTypeStore.loadComponentTypes(techId)
     ]);
 });
 
-const displayItems = computed(() => {
-    return inventoryStore.detailedStockItems.length > 0
+const filteredInventory = computed(() => {
+    const items = inventoryStore.detailedStockItems.length > 0
         ? inventoryStore.detailedStockItems
         : inventoryStore.stockItems;
+    if (!globalFilter.value) return items;
+    const filter = globalFilter.value.toLowerCase();
+    return items.filter(item =>
+        (item.componentName || '').toLowerCase().includes(filter) ||
+        (item.componentId || '').toLowerCase().includes(filter)
+    );
 });
 
 // KPI computed
@@ -51,6 +60,7 @@ async function handleAdjustmentSubmit(payload) {
     if (isNew && payload.type === 'INCREASE') {
         await inventoryStore.addStockItem(techId, {
             componentId: payload.componentId,
+            componentTypeId: payload.componentTypeId,
             quantity: payload.quantity,
             alertThreshold: payload.alertThreshold || 5
         });
@@ -70,10 +80,6 @@ async function handleAdjustmentSubmit(payload) {
 
 function exportCSV() {
     console.log('Export CSV triggered');
-}
-
-function handleAdjust(item) {
-    showDrawer.value = true;
 }
 </script>
 
@@ -122,13 +128,83 @@ function handleAdjust(item) {
       />
     </div>
 
-    <!-- Table -->
+    <!-- Search & Table -->
     <div class="inventory-view__table-container">
-      <inventory-table
-        :items="displayItems"
-        :isLoading="inventoryStore.isLoading"
-        @adjust="handleAdjust"
-      />
+      <pv-data-table
+        :value="filteredInventory"
+        :loading="inventoryStore.isLoading"
+        paginator
+        :rows="10"
+        dataKey="id"
+        responsiveLayout="scroll"
+        class="inventory-table"
+        :rowsPerPageOptions="[5, 10, 25]"
+        stripedRows
+      >
+        <template #header>
+          <div class="inventory-table__header">
+            <el-input-text
+              v-model="globalFilter"
+              placeholder="Search by component name..."
+              icon="pi pi-search"
+            />
+          </div>
+        </template>
+
+        <pv-column field="componentName" header="COMPONENT" sortable style="min-width: 16rem">
+          <template #body="{ data }">
+            <div class="inventory-table__component">
+              <div class="inventory-table__component-icon-wrap">
+                <i class="pi pi-bolt"></i>
+              </div>
+              <div>
+                <span class="inventory-table__component-name">{{ data.componentName || 'Unknown' }}</span>
+                <span class="inventory-table__component-id">{{ data.componentId }}</span>
+              </div>
+            </div>
+          </template>
+        </pv-column>
+
+        <pv-column field="quantityAvailable" header="STOCK" sortable style="min-width: 8rem">
+          <template #body="{ data }">
+            <div class="inventory-table__stock">
+              <span :class="['inventory-table__stock-value', {
+                'inventory-table__stock-value--low': data.isLowStock,
+                'inventory-table__stock-value--critical': data.isCriticalStock
+              }]">
+                {{ data.stock }} units
+              </span>
+              <pv-tag v-if="data.isLowStock && !data.isCriticalStock" value="LOW" severity="warn" class="inventory-table__stock-badge" />
+              <pv-tag v-if="data.isCriticalStock" value="CRITICAL" severity="danger" class="inventory-table__stock-badge" />
+            </div>
+          </template>
+        </pv-column>
+
+        <pv-column field="alertThreshold" header="ALERT AT" sortable style="min-width: 8rem">
+          <template #body="{ data }">
+            <span class="inventory-table__threshold">{{ data.alertThreshold }} units</span>
+          </template>
+        </pv-column>
+
+        <pv-column field="lastUpdated" header="LAST UPDATED" sortable style="min-width: 10rem">
+          <template #body="{ data }">
+            <span class="inventory-table__date">
+              {{ data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' }}
+            </span>
+          </template>
+        </pv-column>
+
+        <pv-column header="ACTIONS" style="min-width: 8rem">
+          <template #body="{ data }">
+            <el-button
+              variant="ghost"
+              label="Adjust"
+              icon="pi pi-pencil"
+              @click="showDrawer = true"
+            />
+          </template>
+        </pv-column>
+      </pv-data-table>
     </div>
 
     <!-- Adjustment Drawer -->
@@ -186,9 +262,79 @@ function handleAdjust(item) {
   color: var(--el-danger);
 }
 
-/* Table Container */
+/* Table */
 .inventory-view__table-container {
-  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.inventory-table__header {
+  max-width: 400px;
+}
+
+.inventory-table__component {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inventory-table__component-icon-wrap {
+  width: 2rem;
+  height: 2rem;
+  background-color: rgba(109, 158, 235, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--el-celeste);
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.inventory-table__component-name {
+  display: block;
+  font-weight: 600;
+  color: var(--el-primary);
+  font-size: 0.9rem;
+}
+
+.inventory-table__component-id {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--el-warm-gray);
+  font-family: monospace;
+  margin-top: 0.125rem;
+}
+
+.inventory-table__stock {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inventory-table__stock-value {
+  font-weight: 600;
+}
+
+.inventory-table__stock-value--low {
+  color: #d97706;
+}
+
+.inventory-table__stock-value--critical {
+  color: var(--el-danger);
+}
+
+.inventory-table__threshold {
+  color: #d97706;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.inventory-table__date {
+  font-size: 0.85rem;
+  color: var(--el-warm-gray);
 }
 
 @media (max-width: 768px) {
