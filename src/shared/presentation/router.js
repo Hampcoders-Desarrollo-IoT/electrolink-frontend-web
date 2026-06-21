@@ -4,6 +4,7 @@ import {authenticationGuard} from "@/features/iam/infrastructure/services/authen
 import iamRoutes from "@/features/iam/presentation/iam-routes.js";
 import assetsRoutes from "@/features/assets/presentation/assets-routes.js";
 import profilesRoutes from "@/features/profiles/presentation/profiles-routes.js";
+import subscriptionRoutes from "@/features/subscriptions/presentation/subscription-routes.js";
 const about = () => import('./views/about.vue');
 const pageNotFound = () => import('./views/page-not-found.vue');
 
@@ -23,6 +24,10 @@ const routes = [
                 children: [
                     { path: 'management', name: 'profiles-management', component: () => import('@/features/profiles/presentation/views/profile-management.component.vue'), meta: {title: 'My Profile'}}
                 ]
+            },
+            {
+                path: 'subscriptions',
+                children: subscriptionRoutes
             }
         ]
     },

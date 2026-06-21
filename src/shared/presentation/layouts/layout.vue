@@ -71,6 +71,7 @@ const menuItems = computed(() => {
   }
 
   items.push(
+    { label: "Subscription", icon: "pi pi-credit-card", to: "/subscriptions/management" },
     {
       label: "Settings",
       icon: "pi pi-cog",
