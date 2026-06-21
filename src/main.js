@@ -17,7 +17,7 @@ import {
     DataTable, Dialog,
     DialogService, Divider, Drawer, FileUpload, FloatLabel, IconField, InputIcon, InputNumber, InputText, Menu,
     Message, MultiSelect, Password, ProgressBar, RadioButton,
-    Rating, Row, Select, SelectButton, Tag, Textarea, Toast,
+    Rating, Row, Select, SelectButton, Skeleton, Tag, Textarea, Toast,
     ToastService, ToggleButton, Toolbar, Tooltip, DatePicker
 } from "primevue";
 import router from "./shared/presentation/router.js";
@@ -58,6 +58,7 @@ createApp(App)
     .component('pv-datepicker',      DatePicker)
     .component('pv-select',          Select)
     .component('pv-select-button',   SelectButton)
+    .component('pv-skeleton',         Skeleton)
     .component('pv-file-upload',     FileUpload)
     .component('pv-float-label',     FloatLabel)
     .component('pv-icon-field',      IconField)

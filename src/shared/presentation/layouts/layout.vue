@@ -70,6 +70,12 @@ const menuItems = computed(() => {
     });
   }
 
+  items.push({
+    label: "Monitoring",
+    icon: "pi pi-bolt",
+    to: "/monitoring/monitoring"
+  });
+
   items.push(
     {
       label: "Settings",
