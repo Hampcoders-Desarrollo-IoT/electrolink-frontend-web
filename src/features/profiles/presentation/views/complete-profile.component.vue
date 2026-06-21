@@ -60,9 +60,6 @@ const formData = reactive({
   // Technician specific
   specialties: [],
   experienceYears: 0,
-<<<<<<< Updated upstream
-  aboutMe: ''
-=======
   aboutMe: '',
   centerLatitude: -12.0464,
   centerLongitude: -77.0428,
@@ -79,7 +76,6 @@ const formData = reactive({
   billingCity: '',
   billingCountry: '',
   billingPostalCode: ''
->>>>>>> Stashed changes
 });
 
 const isSubmitting = ref(false);
@@ -107,8 +103,6 @@ onMounted(() => {
       role.value = qRole;
     }
   }
-<<<<<<< Updated upstream
-=======
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -118,7 +112,6 @@ onMounted(() => {
       console.warn('Geolocation failed or denied:', error.message);
     });
   }
->>>>>>> Stashed changes
 });
 </script>
 
@@ -151,55 +144,12 @@ onMounted(() => {
           />
         </section>
 
-<<<<<<< Updated upstream
-        <!-- Vertical Divider (Desktop) -->
-        <div class="board-divider"></div>
-
-        <!-- Right Column: Role Specific Information -->
-        <section class="board-column column-right">
-          <div class="role-selector-section">
-            <role-selector
-              v-model="role"
-              label="Select your role"
-            />
-          </div>
-
-          <div class="role-specific-content">
-            <homeowner-profile-data
-              v-if="role === 'HOMEOWNER'"
-              v-model:preferredContactTime="formData.preferredContactTime"
-              v-model:smsNotifications="formData.smsNotifications"
-              v-model:emailNotifications="formData.emailNotifications"
-              v-model:pushNotifications="formData.pushNotifications"
-              v-model:emergencyContact="formData.emergencyContact"
-            />
-
-            <technician-profile-data
-              v-if="role === 'TECHNICIAN'"
-              v-model:specialties="formData.specialties"
-              v-model:experienceYears="formData.experienceYears"
-              v-model:aboutMe="formData.aboutMe"
-            />
-          </div>
-
-          <div class="actions-section">
-            <el-button
-              label="Complete Registration"
-              icon="pi pi-check"
-              variant="primary"
-              :loading="isSubmitting"
-              class="w-full h-14"
-              @click="saveProfile"
-            />
-          </div>
-=======
         <!-- Role Selector -->
         <section class="form-section role-section">
           <role-selector
             v-model="role"
             label="Select your role"
           />
->>>>>>> Stashed changes
         </section>
 
         <!-- Role-Specific Section -->
@@ -272,10 +222,7 @@ onMounted(() => {
 .completion-container {
   max-width: 720px;
   margin: 0 auto;
-<<<<<<< Updated upstream
-=======
   padding: 1rem 1.5rem 3rem;
->>>>>>> Stashed changes
 }
 
 .completion-header {
