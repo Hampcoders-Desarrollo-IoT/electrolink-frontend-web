@@ -164,40 +164,6 @@ onMounted(async () => {
 
 <template>
   <div class="profile-layout">
-<<<<<<< Updated upstream
-    <!-- Sidebar -->
-    <aside class="profile-sidebar">
-      <div class="sidebar-brand">
-        <div class="brand-icon">E</div>
-        <span class="brand-name">ElectroLink</span>
-      </div>
-
-      <nav class="sidebar-nav">
-        <a
-          v-for="item in navItems"
-          :key="item.key"
-          href="#"
-          class="nav-item"
-          :class="{ 'nav-active': activeNav === item.key }"
-          @click.prevent="activeNav = item.key"
-        >
-          <i :class="item.icon"></i>
-          <span>{{ item.label }}</span>
-        </a>
-      </nav>
-
-      <!-- Danger Zone -->
-      <div class="sidebar-footer">
-        <button class="deactivate-btn">
-          <i class="pi pi-user-minus"></i>
-          <span>Deactivate Account</span>
-        </button>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-=======
->>>>>>> Stashed changes
     <main class="profile-main">
       <header class="profile-header">
         <div class="header-user">

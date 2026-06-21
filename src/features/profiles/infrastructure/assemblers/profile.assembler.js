@@ -11,14 +11,10 @@ export class ProfileAssembler {
             technicianId: resource.technician.technicianId,
             specialties: resource.technician.specialties,
             experienceYears: resource.technician.experienceYears,
-<<<<<<< Updated upstream
-            aboutMe: resource.technician.aboutMe
-=======
             aboutMe: resource.technician.aboutMe,
             centerLatitude: resource.technician.centerLatitude,
             centerLongitude: resource.technician.centerLongitude,
             radiusKm: resource.technician.radiusKm
->>>>>>> Stashed changes
         }) : null;
 
         const homeowner = resource.homeowner ? new Homeowner({
@@ -92,14 +88,10 @@ export class ProfileAssembler {
                 technicianId: entity.technician.technicianId,
                 specialties: entity.technician.specialties,
                 experienceYears: entity.technician.experienceYears,
-<<<<<<< Updated upstream
-                aboutMe: entity.technician.aboutMe
-=======
                 aboutMe: entity.technician.aboutMe,
                 centerLatitude: entity.technician.centerLatitude,
                 centerLongitude: entity.technician.centerLongitude,
                 radiusKm: entity.technician.radiusKm
->>>>>>> Stashed changes
             } : null,
             homeowner: entity.homeowner ? {
                 homeownerId: entity.homeowner.homeownerId,

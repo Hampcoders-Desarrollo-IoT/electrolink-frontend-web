@@ -22,8 +22,6 @@ const useIamStore = defineStore('iam', () => {
     const currentUserId = ref('');
     const currentToken = computed(() => localStorage.getItem('token'));
 
-<<<<<<< Updated upstream
-=======
     const decodedToken = computed(() => {
         const token = currentToken.value;
         if (!token) return null;
@@ -44,7 +42,6 @@ const useIamStore = defineStore('iam', () => {
     const profileId = computed(() => decodedToken.value?.profileId);
     const currentAccessRole = computed(() => decodedToken.value?.role || null);
 
->>>>>>> Stashed changes
     function signIn(signInCommand, router) {
         console.log(signInCommand);
         iamApi.signIn(signInCommand)
@@ -187,12 +184,9 @@ const useIamStore = defineStore('iam', () => {
         currentUsername,
         currentUserId,
         currentToken,
-<<<<<<< Updated upstream
-=======
         roleSubjectId,
         profileId,
         currentAccessRole,
->>>>>>> Stashed changes
         signIn,
         signUp,
         refreshClaims,
