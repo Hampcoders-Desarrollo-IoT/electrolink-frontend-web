@@ -3,6 +3,7 @@ import Home from "./views/home.vue";
 import {authenticationGuard} from "@/features/iam/infrastructure/services/authentication.guard.js";
 import iamRoutes from "@/features/iam/presentation/iam-routes.js";
 import assetsRoutes from "@/features/assets/presentation/assets-routes.js";
+import planningRoutes from "@/features/planning/presentation/planning-routes.js";
 import profilesRoutes from "@/features/profiles/presentation/profiles-routes.js";
 const about = () => import('./views/about.vue');
 const pageNotFound = () => import('./views/page-not-found.vue');
@@ -18,6 +19,7 @@ const routes = [
             { path: "home", name: 'home', component: Home, meta: {title: 'Home'}},
             { path: "about", name: 'about', component: about, meta: {title: 'About'}},
             { path: 'assets', name: 'assets', children: assetsRoutes},
+            { path: 'planning', name: 'planning', children: planningRoutes},
             {
                 path: 'profiles',
                 children: [

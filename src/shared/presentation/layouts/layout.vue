@@ -89,7 +89,38 @@ const menuItems = computed(() => {
     });
   }
 
+  if (businessRole.value === 'HOMEOWNER') {
+    items.push({
+      label: "Services",
+      icon: "pi pi-bolt",
+      children: [
+        { label: "My Requests", to: "/planning/requests", icon: "pi pi-list" },
+        { label: "Suggestions", to: "/planning/suggestions", icon: "pi pi-lightbulb" }
+      ]
+    });
+  }
+
+  if (businessRole.value === 'COMPANY') {
+    items.push({
+      label: "Services",
+      icon: "pi pi-briefcase",
+      children: [
+        { label: "Service Requests", to: "/planning/company/requests", icon: "pi pi-list" }
+      ]
+    });
+  }
+
   if (technicianId.value && technicianId.value !== 'undefined') {
+    items.push({
+      label: "Services",
+      icon: "pi pi-clipboard",
+      children: [
+        { label: "My Catalog", to: "/planning/catalog", icon: "pi pi-book" },
+        { label: "Assignments", to: "/planning/assignments", icon: "pi pi-briefcase" },
+        { label: "Service History", to: "/planning/history", icon: "pi pi-history" }
+      ]
+    });
+
     items.push({
       label: "Inventory",
       icon: "pi pi-wrench",
