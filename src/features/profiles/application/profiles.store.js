@@ -39,6 +39,8 @@ export const useProfilesStore = defineStore('profilesV2', () => {
                 profile.value = ProfileAssembler.toEntityFromResource(response.data);
                 console.log('Technician profile completed successfully');
                 errors.value = [];
+                const iamStore = useIamStore();
+                await iamStore.refreshClaims();
                 router.push({ name: 'profiles-management' });
                 return true;
             }
@@ -68,6 +70,8 @@ export const useProfilesStore = defineStore('profilesV2', () => {
                 profile.value = ProfileAssembler.toEntityFromResource(response.data);
                 console.log('Homeowner profile completed successfully');
                 errors.value = [];
+                const iamStore = useIamStore();
+                await iamStore.refreshClaims();
                 router.push({ name: 'profiles-management' });
                 return true;
             }
@@ -97,6 +101,8 @@ export const useProfilesStore = defineStore('profilesV2', () => {
                 profile.value = ProfileAssembler.toEntityFromResource(response.data);
                 console.log('Company profile completed successfully');
                 errors.value = [];
+                const iamStore = useIamStore();
+                await iamStore.refreshClaims();
                 router.push({ name: 'profiles-management' });
                 return true;
             }

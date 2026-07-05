@@ -164,7 +164,10 @@ onMounted(async () => {
 
 <template>
   <div class="profile-layout">
+<<<<<<< Updated upstream
     <!-- Main Content -->
+=======
+>>>>>>> Stashed changes
     <main class="profile-main">
       <header class="profile-header">
         <div class="header-user">
