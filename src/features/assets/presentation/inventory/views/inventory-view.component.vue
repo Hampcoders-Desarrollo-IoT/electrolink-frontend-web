@@ -3,13 +3,11 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTechnicianInventoryStore } from '../../../application/technician-inventory.store.js';
 import { useComponentStore } from '../../../application/component.store.js';
-import { useComponentTypeStore } from '../../../application/component-type.store.js';
 import TechnicianInventoryDrawer from '../components/technician-inventory-drawer.component.vue';
 import ElKpiCard from '@/shared/presentation/components/el-kpi-card.vue';
 
 const inventoryStore = useTechnicianInventoryStore();
 const componentStore = useComponentStore();
-const componentTypeStore = useComponentTypeStore();
 const route = useRoute();
 
 const globalFilter = ref('');
@@ -20,8 +18,7 @@ onMounted(async () => {
     await Promise.all([
         inventoryStore.loadInventory(techId),
         inventoryStore.loadStockItems(techId),
-        componentStore.loadComponents(techId),
-        componentTypeStore.loadComponentTypes(techId)
+        componentStore.loadComponents(techId)
     ]);
 });
 
@@ -60,7 +57,6 @@ async function handleAdjustmentSubmit(payload) {
     if (isNew && payload.type === 'INCREASE') {
         await inventoryStore.addStockItem(techId, {
             componentId: payload.componentId,
-            componentTypeId: payload.componentTypeId,
             quantity: payload.quantity,
             alertThreshold: payload.alertThreshold || 5
         });

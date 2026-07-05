@@ -8,8 +8,7 @@ export class ComponentAssembler {
             id: resource.componentId,
             name: resource.name,
             description: resource.description,
-            isActive: resource.isActive,
-            componentTypeId: resource.componentTypeId
+            isActive: resource.isActive
         });
     }
 
@@ -19,8 +18,7 @@ export class ComponentAssembler {
             componentId: entity.id,
             name: entity.name,
             description: entity.description,
-            isActive: entity.isActive,
-            componentTypeId: entity.componentTypeId
+            isActive: entity.isActive
         });
     }
 

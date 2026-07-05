@@ -3,8 +3,7 @@ import { ref, computed } from 'vue';
 
 const props = defineProps({
     components: { type: Array, default: () => [] },
-    isLoading: { type: Boolean, default: false },
-    componentTypes: { type: Array, default: () => [] }
+    isLoading: { type: Boolean, default: false }
 });
 
 const emit = defineEmits(['edit', 'delete']);
@@ -24,11 +23,6 @@ function getStatusLabel(item) {
     return item.isActive ? 'Active' : 'Inactive';
 }
 
-function getTypeName(typeId) {
-    if (!typeId) return '—';
-    const type = props.componentTypes.find(t => t.id === typeId);
-    return type ? type.name : 'Unknown Type';
-}
 </script>
 
 <template>
@@ -54,12 +48,6 @@ function getTypeName(typeId) {
       <pv-column field="description" header="DESCRIPTION" sortable>
         <template #body="{ data }">
           <span class="cc-cell-desc">{{ data.description || '—' }}</span>
-        </template>
-      </pv-column>
-
-      <pv-column field="componentTypeId" header="TYPE" sortable>
-        <template #body="{ data }">
-          <span class="cc-cell-type">{{ getTypeName(data.componentTypeId) }}</span>
         </template>
       </pv-column>
 
@@ -114,12 +102,6 @@ function getTypeName(typeId) {
   color: #6b7280;
   font-size: 0.875rem;
   font-style: italic;
-}
-
-.cc-cell-type {
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-weight: 500;
 }
 
 .cc-badge {

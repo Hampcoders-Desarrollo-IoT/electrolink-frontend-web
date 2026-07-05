@@ -17,7 +17,6 @@ export class ProfileAssembler {
             radiusKm: resource.technician.radiusKm
         }) : null;
 
-
         const homeowner = resource.homeowner ? new Homeowner({
             homeownerId: resource.homeowner.homeownerId,
             preferredContactTime: resource.homeowner.preferredContactTime,

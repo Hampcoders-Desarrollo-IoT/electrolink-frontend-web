@@ -1,13 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useTechnicianInventoryStore } from '../../../application/technician-inventory.store.js';
 import { useComponentStore } from '../../../application/component.store.js';
-import { useComponentTypeStore } from '../../../application/component-type.store.js';
 import TechnicianInventoryForm from './technician-inventory-form.component.vue';
 
 const inventoryStore = useTechnicianInventoryStore();
 const componentStore = useComponentStore();
-const componentTypeStore = useComponentTypeStore();
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
@@ -24,13 +22,6 @@ const ownedComponentIds = computed(() =>
 // All catalog components as dropdown options
 const componentOptions = computed(() =>
     componentStore.components.map(item => ({
-        label: item.name,
-        value: item.id
-    }))
-);
-
-const componentTypeOptions = computed(() =>
-    componentTypeStore.componentTypes.map(item => ({
         label: item.name,
         value: item.id
     }))
@@ -56,7 +47,6 @@ function handleClose() {
   >
     <technician-inventory-form
         :componentOptions="componentOptions"
-        :componentTypeOptions="componentTypeOptions"
         :ownedComponentIds="ownedComponentIds"
         @submit="handleSubmit"
     />

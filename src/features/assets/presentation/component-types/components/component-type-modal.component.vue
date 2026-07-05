@@ -8,8 +8,7 @@ const props = defineProps({
 
 const emit = defineEmits(['save', 'close', 'update:visible']);
 
-const name = ref('');
-const description = ref('');
+const isActive = ref(true);
 
 const isEditMode = computed(() => !!props.selectedComponentType);
 const modalTitle = computed(() => isEditMode.value ? 'Edit Component Type' : 'New Component Type');
@@ -18,23 +17,21 @@ const submitIcon = computed(() => isEditMode.value ? 'pi pi-pencil' : 'pi pi-plu
 
 watch(() => props.selectedComponentType, (val) => {
     if (val) {
-        name.value = val.name;
-        description.value = val.description;
+        isActive.value = val.isActive !== undefined ? val.isActive : true;
     } else {
         resetForm();
     }
 }, { immediate: true });
 
-const isValid = computed(() => name.value.trim().length > 0);
+const isValid = computed(() => true);
 
 function handleSave() {
     if (!isValid.value) return;
-    const payload = {
-        name: name.value.trim(),
-        description: description.value.trim()
-    };
+    const payload = {};
     if (isEditMode.value) {
-        payload.isActive = props.selectedComponentType?.isActive !== undefined ? props.selectedComponentType.isActive : true;
+        payload.isActive = isActive.value;
+    } else {
+        payload.isActive = isActive.value;
     }
     emit('save', payload);
 }
@@ -45,8 +42,7 @@ function handleClose() {
 }
 
 function resetForm() {
-    name.value = '';
-    description.value = '';
+    isActive.value = true;
 }
 </script>
 
@@ -58,20 +54,15 @@ function resetForm() {
     @close="handleClose"
   >
     <div class="ct-modal__body">
-      <el-input-text
-        v-model="name"
-        label="Name"
-        placeholder="e.g. Relay, Capacitor, Wiring..."
-        class="mb-4"
-        autofocus
-      />
+      <p class="ct-modal__hint" v-if="!isEditMode">
+        A new component type will be created with a system-generated ID and activated by default.
+      </p>
 
-      <el-textarea
-        v-model="description"
-        label="Description"
-        placeholder="Brief description of this component type..."
-        :rows="4"
-        class="mb-2"
+      <el-checkbox
+        v-model="isActive"
+        label="Component type is active"
+        description="Active component types are available in the catalog and inventory."
+        variant="card"
       />
     </div>
 
@@ -98,8 +89,13 @@ function resetForm() {
   padding-top: 0.5rem;
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
 }
 
-.mb-4 { margin-bottom: 1.5rem; }
-.mb-2 { margin-bottom: 1rem; }
+.ct-modal__hint {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
 </style>

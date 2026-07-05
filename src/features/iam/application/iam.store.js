@@ -120,6 +120,7 @@ const useIamStore = defineStore('iam', () => {
                     errors.value = [];
                     
                     router.push({ name: 'profiles-complete' });
+                    router.push({ name: 'profiles-complete' });
                 } else {
                     isSignedIn.value = false;
                     console.log(`Sign-up failed: Invalid response.`);
@@ -135,6 +136,28 @@ const useIamStore = defineStore('iam', () => {
                 errors.value.push(error);
                 router.push({ name: 'iam-sign-up' });
             })
+    }
+
+    function refreshClaims() {
+        const command = new RefreshClaimsCommand();
+        return iamApi.refreshClaims(command)
+            .then(response => {
+                const resource = RefreshClaimsAssembler.toResourceFromResponse(response);
+                if (resource) {
+                    localStorage.setItem('token', resource.token);
+                    console.log('Token claims refreshed successfully.');
+                    errors.value = [];
+                } else {
+                    console.error('Refresh claims failed: Invalid response.');
+                    errors.value.push(new Error('Invalid response from refresh-claims.'));
+                }
+                return resource;
+            })
+            .catch(error => {
+                console.error('Refresh claims failed:', error.message);
+                errors.value.push(error);
+                return null;
+            });
     }
 
     function refreshClaims() {
@@ -215,6 +238,7 @@ const useIamStore = defineStore('iam', () => {
         isSuperAdmin,
         signIn,
         signUp,
+        refreshClaims,
         refreshClaims,
         signOut,
         validateSession
