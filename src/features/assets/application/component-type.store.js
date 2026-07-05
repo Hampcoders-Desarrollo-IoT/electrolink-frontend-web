@@ -67,8 +67,8 @@ export const useComponentTypeStore = defineStore('componentType', () => {
             const response = await componentTypeApi.update(technicianId, id, command);
             if (response && response.data) {
                 const updated = ComponentTypeAssembler.toEntityFromResource(response.data);
-                const index = componentTypes.value.findIndex(ct => ct.id === id);
-                if (index !== -1) componentTypes.value[index] = updated;
+                const existing = componentTypes.value.find(ct => ct.id === id);
+                if (existing) Object.assign(existing, updated);
                 return updated;
             }
         } catch (error) {
@@ -103,13 +103,10 @@ export const useComponentTypeStore = defineStore('componentType', () => {
     async function activateComponentType(technicianId, id) {
         isLoading.value = true;
         try {
-            const response = await componentTypeApi.activate(technicianId, id);
-            if (response && response.data) {
-                const updated = ComponentTypeAssembler.toEntityFromResource(response.data);
-                const index = componentTypes.value.findIndex(ct => ct.id === id);
-                if (index !== -1) componentTypes.value[index] = updated;
-                return updated;
-            }
+            await componentTypeApi.activate(technicianId, id);
+            const existing = componentTypes.value.find(ct => ct.id === id);
+            if (existing) existing.isActive = true;
+            return existing;
         } catch (error) {
             errors.value.push(error);
             console.error('Error activating component type:', error.message);
@@ -121,13 +118,10 @@ export const useComponentTypeStore = defineStore('componentType', () => {
     async function deactivateComponentType(technicianId, id) {
         isLoading.value = true;
         try {
-            const response = await componentTypeApi.deactivate(technicianId, id);
-            if (response && response.data) {
-                const updated = ComponentTypeAssembler.toEntityFromResource(response.data);
-                const index = componentTypes.value.findIndex(ct => ct.id === id);
-                if (index !== -1) componentTypes.value[index] = updated;
-                return updated;
-            }
+            await componentTypeApi.deactivate(technicianId, id);
+            const existing = componentTypes.value.find(ct => ct.id === id);
+            if (existing) existing.isActive = false;
+            return existing;
         } catch (error) {
             errors.value.push(error);
             console.error('Error deactivating component type:', error.message);

@@ -2,7 +2,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useComponentStore } from '../../../application/component.store.js';
-import { useComponentTypeStore } from '../../../application/component-type.store.js';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import ComponentCatalogTable from '../components/component-catalog-table.component.vue';
@@ -11,7 +10,6 @@ import ComponentCatalogKpis from '../components/component-catalog-kpis.component
 
 const route = useRoute();
 const componentStore = useComponentStore();
-const componentTypeStore = useComponentTypeStore();
 const confirm = useConfirm();
 const toast = useToast();
 
@@ -20,15 +18,12 @@ const technicianId = () => route.params.technicianId;
 
 onMounted(() => {
     componentStore.loadComponents(technicianId());
-    componentTypeStore.loadComponentTypes(technicianId());
 });
 
 // KPI computeds
 const totalComponents = computed(() => componentStore.components.length);
 const activeComponents = computed(() => componentStore.components.filter(c => c.isActive).length);
 const inactiveComponents = computed(() => componentStore.components.filter(c => !c.isActive).length);
-const totalTypes = computed(() => componentTypeStore.componentTypes.length);
-
 function openNew() {
     componentStore.selectComponent(null);
     isModalVisible.value = true;
@@ -102,7 +97,6 @@ function handleDelete(item) {
         :totalComponents="totalComponents"
         :activeComponents="activeComponents"
         :inactiveComponents="inactiveComponents"
-        :totalTypes="totalTypes"
         class="cc-view__kpis"
       />
 
@@ -111,7 +105,6 @@ function handleDelete(item) {
         <component-catalog-table
           :components="componentStore.components"
           :isLoading="componentStore.isLoading"
-          :componentTypes="componentTypeStore.componentTypes"
           @edit="handleEdit"
           @delete="handleDelete"
         />
@@ -122,7 +115,6 @@ function handleDelete(item) {
     <component-catalog-modal
       v-model:visible="isModalVisible"
       :selectedComponent="componentStore.selectedComponent"
-      :componentTypes="componentTypeStore.componentTypes"
       @save="handleSave"
       @close="closeModal"
     />

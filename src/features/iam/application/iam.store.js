@@ -107,7 +107,6 @@ const useIamStore = defineStore('iam', () => {
     }
 
     function signUp(signUpCommand, router) {
-    function signUp(signUpCommand, router) {
         iamApi.signUp(signUpCommand)
             .then(response => {
                 let signUpResource = SignUpAssembler.toResourceFromResponse(response);

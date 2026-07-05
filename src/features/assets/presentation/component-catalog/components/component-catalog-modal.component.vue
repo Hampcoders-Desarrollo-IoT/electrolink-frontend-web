@@ -3,15 +3,13 @@ import { ref, watch, computed } from 'vue';
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
-    selectedComponent: { type: Object, default: null },
-    componentTypes: { type: Array, default: () => [] }
+    selectedComponent: { type: Object, default: null }
 });
 
 const emit = defineEmits(['save', 'close', 'update:visible']);
 
 const name = ref('');
 const description = ref('');
-const componentTypeId = ref('');
 const isActive = ref(true);
 
 const isEditMode = computed(() => !!props.selectedComponent);
@@ -23,16 +21,11 @@ watch(() => props.selectedComponent, (val) => {
     if (val) {
         name.value = val.name;
         description.value = val.description;
-        componentTypeId.value = val.componentTypeId;
         isActive.value = val.isActive !== undefined ? val.isActive : true;
     } else {
         resetForm();
     }
 }, { immediate: true });
-
-const typeOptions = computed(() =>
-    props.componentTypes.map(ct => ({ label: ct.name, value: ct.id }))
-);
 
 const isValid = computed(() => name.value.trim().length > 0);
 
@@ -43,9 +36,6 @@ function handleSave() {
         description: description.value.trim(),
         isActive: isActive.value
     };
-    if (isEditMode.value && componentTypeId.value) {
-        payload.typeId = componentTypeId.value;
-    }
     emit('save', payload);
 }
 
@@ -57,7 +47,6 @@ function handleClose() {
 function resetForm() {
     name.value = '';
     description.value = '';
-    componentTypeId.value = '';
     isActive.value = true;
 }
 </script>
@@ -83,16 +72,6 @@ function resetForm() {
         label="Description"
         placeholder="Brief description of this component..."
         :rows="3"
-        class="mb-4"
-      />
-
-      <el-select
-        v-model="componentTypeId"
-        :options="typeOptions"
-        optionLabel="label"
-        optionValue="value"
-        label="Component Type"
-        placeholder="Select a type..."
         class="mb-4"
       />
 

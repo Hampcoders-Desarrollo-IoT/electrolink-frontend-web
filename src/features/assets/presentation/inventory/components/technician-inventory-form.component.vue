@@ -5,7 +5,6 @@ import TechnicianInventoryAddTab from './technician-inventory-add-tab.component.
 
 const props = defineProps({
   componentOptions: { type: Array, default: () => [] },
-  componentTypeOptions: { type: Array, default: () => [] },
   ownedComponentIds: { type: Array, default: () => [] }
 });
 
@@ -59,7 +58,6 @@ function handleSubmit(payload) {
     <technician-inventory-add-tab 
         v-if="activeTab === 'add'"
         :options="unownedOptions"
-        :componentTypeOptions="componentTypeOptions"
         @submit="handleSubmit"
     />
   </section>

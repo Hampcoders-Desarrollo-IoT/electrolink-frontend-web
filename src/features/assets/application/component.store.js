@@ -67,8 +67,8 @@ export const useComponentStore = defineStore('component', () => {
             const response = await componentApi.update(technicianId, id, command);
             if (response && response.data) {
                 const updated = ComponentAssembler.toEntityFromResource(response.data);
-                const index = components.value.findIndex(c => c.id === id);
-                if (index !== -1) components.value[index] = updated;
+                const existing = components.value.find(c => c.id === id);
+                if (existing) Object.assign(existing, updated);
                 return updated;
             }
         } catch (error) {
