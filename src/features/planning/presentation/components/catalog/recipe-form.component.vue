@@ -76,7 +76,20 @@ async function save() {
     <div class="recipe-form__row">
       <div class="recipe-form__field">
         <label>Category</label>
-        <el-select v-model="form.category" :options="['Electrical Repair', 'Installation', 'Maintenance', 'Inspection', 'IoT Setup']" placeholder="Select category" />
+        <!--<el-select v-model="form.category" :options="['Electrical Repair', 'Installation', 'Maintenance', 'Inspection', 'IoT Setup']" placeholder="Select category" />-->
+        <el-select
+          v-model="form.category"
+          :options="[
+            { label: 'Electrical Repair', value: 'Electrical Repair' },
+            { label: 'Installation', value: 'Installation' },
+            { label: 'Maintenance', value: 'Maintenance' },
+            { label: 'Inspection', value: 'Inspection' },
+            { label: 'IoT Setup', value: 'IoT Setup' }
+          ]"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select category"
+        />
       </div>
       <div class="recipe-form__field">
         <label>Duration (min)</label>
