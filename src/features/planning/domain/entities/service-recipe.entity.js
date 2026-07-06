@@ -1,29 +1,37 @@
 export class ServiceRecipe {
     constructor({
         recipeId = '',
-        catalogId = '',
-        name = '',
-        description = '',
-        category = '',
-        estimatedDuration = 0,
-        basePrice = 0,
-        requiresIoTCertification = false,
-        requiredComponents = [],
+        serviceName = '',
+        serviceDescription = '',
+        serviceCategory = '',
+        componentRequirements = [],
+        estimatedDurationMinutes = 0,
+        materialsEstimate = 0,
+        laborCost = 0,
+        totalPrice = 0,
+        currency = 'USD',
+        prerequisites = [],
+        deliverables = [],
+        warrantyMonths = 0,
         isActive = true,
-        createdAt = null,
-        updatedAt = null
+        timesRequested = 0,
+        requiresIoTCertification = false
     } = {}) {
         this.recipeId = recipeId;
-        this.catalogId = catalogId;
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.estimatedDuration = estimatedDuration;
-        this.basePrice = basePrice;
-        this.requiresIoTCertification = requiresIoTCertification;
-        this.requiredComponents = requiredComponents;
+        this.serviceName = serviceName;
+        this.serviceDescription = serviceDescription;
+        this.serviceCategory = serviceCategory;
+        this.componentRequirements = componentRequirements;
+        this.estimatedDurationMinutes = estimatedDurationMinutes;
+        this.materialsEstimate = materialsEstimate;
+        this.laborCost = laborCost;
+        this.totalPrice = totalPrice;
+        this.currency = currency;
+        this.prerequisites = prerequisites;
+        this.deliverables = deliverables;
+        this.warrantyMonths = warrantyMonths;
         this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.timesRequested = timesRequested;
+        this.requiresIoTCertification = requiresIoTCertification;
     }
 }

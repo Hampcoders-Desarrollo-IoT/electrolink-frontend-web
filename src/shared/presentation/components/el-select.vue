@@ -24,6 +24,10 @@ const props = defineProps({
   fluid: {
     type: Boolean,
     default: true
+  },
+  filterable: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -53,6 +57,7 @@ const onChange = (event) => {
       :placeholder="placeholder"
       :disabled="disabled"
       :fluid="fluid"
+      :filter="filterable"
       :class="['el-select-field', { 'el-select-field--error': error }]"
       panelClass="el-select-panel"
     />

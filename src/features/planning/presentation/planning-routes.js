@@ -18,7 +18,7 @@ const planningRoutes = [
     // Company
     { path: 'company/requests', name: 'planning-company-requests', component: CompanyRequests, meta: { title: 'Service Requests', requiredBusinessRole: 'COMPANY' } },
     // Technician
-    { path: 'catalog', name: 'planning-catalog', component: TechnicianCatalog, meta: { title: 'My Catalog', requiredBusinessRole: 'TECHNICIAN' } },
+    { path: 'catalog', name: 'planning-catalog', component: TechnicianCatalog, meta: { title: 'My Recipe Catalog', requiredBusinessRole: 'TECHNICIAN' } },
     { path: 'assignments', name: 'planning-assignments', component: TechnicianAssignments, meta: { title: 'Assignments', requiredBusinessRole: 'TECHNICIAN' } },
     { path: 'executions/:id', name: 'planning-execution-detail', component: TechnicianExecution, meta: { title: 'Execution', requiredBusinessRole: 'TECHNICIAN' } },
     { path: 'history', name: 'planning-history', component: TechnicianHistory, meta: { title: 'Service History', requiredBusinessRole: 'TECHNICIAN' } },

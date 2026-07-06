@@ -15,7 +15,22 @@ export const useServiceCatalogStore = defineStore('serviceCatalog', () => {
 
     const activeRecipes = computed(() => recipes.value.filter(r => r.isActive));
     const inactiveRecipes = computed(() => recipes.value.filter(r => !r.isActive));
-    const iotRecipes = computed(() => recipes.value.filter(r => r.requiresIoTCertification));
+
+    async function createCatalog(technicianId) {
+        isLoading.value = true;
+        try {
+            await api.createCatalog(technicianId);
+            await fetchCatalog(technicianId);
+        } catch (error) {
+            if (error.response && error.response.status === 409) {
+                await fetchCatalog(technicianId);
+            } else {
+                errors.value.push(error);
+            }
+        } finally {
+            isLoading.value = false;
+        }
+    }
 
     async function fetchCatalog(technicianId) {
         isLoading.value = true;
@@ -26,7 +41,31 @@ export const useServiceCatalogStore = defineStore('serviceCatalog', () => {
                 recipes.value = catalog.value.recipes;
             }
         } catch (error) {
+            if (error.response && error.response.status === 404) {
+                catalog.value = null;
+                recipes.value = [];
+            } else {
+                errors.value.push(error);
+            }
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function fetchRecipeDetail(technicianId, recipeId) {
+        isLoading.value = true;
+        try {
+            const response = await api.getRecipe(technicianId, recipeId);
+            if (response && response.data) {
+                const recipe = ServiceRecipeAssembler.toEntityFromResource(response.data);
+                const index = recipes.value.findIndex(r => r.recipeId === recipeId);
+                if (index !== -1) recipes.value[index] = recipe;
+                selectedRecipe.value = recipe;
+                return recipe;
+            }
+        } catch (error) {
             errors.value.push(error);
+            console.error('[ServiceCatalogStore] fetchRecipeDetail failed:', error);
         } finally {
             isLoading.value = false;
         }
@@ -36,13 +75,12 @@ export const useServiceCatalogStore = defineStore('serviceCatalog', () => {
         isLoading.value = true;
         try {
             const response = await api.createRecipe(technicianId, command);
-            if (response && response.data) {
-                const recipe = ServiceRecipeAssembler.toEntityFromResource(response.data);
-                recipes.value.push(recipe);
-                return recipe;
+            if (response && response.data && response.data.recipeId) {
+                await fetchRecipeDetail(technicianId, response.data.recipeId);
             }
         } catch (error) {
             errors.value.push(error);
+            console.error('[ServiceCatalogStore] createRecipe failed:', error);
         } finally {
             isLoading.value = false;
         }
@@ -51,28 +89,25 @@ export const useServiceCatalogStore = defineStore('serviceCatalog', () => {
     async function updateRecipe(technicianId, recipeId, command) {
         isLoading.value = true;
         try {
-            const response = await api.updateRecipe(technicianId, recipeId, command);
-            if (response && response.data) {
-                const updated = ServiceRecipeAssembler.toEntityFromResource(response.data);
-                const index = recipes.value.findIndex(r => r.recipeId === recipeId);
-                if (index !== -1) recipes.value[index] = updated;
-                if (selectedRecipe.value?.recipeId === recipeId) selectedRecipe.value = updated;
-                return updated;
-            }
+            await api.updateRecipe(technicianId, recipeId, command);
+            await fetchRecipeDetail(technicianId, recipeId);
         } catch (error) {
             errors.value.push(error);
+            console.error('[ServiceCatalogStore] updateRecipe failed:', error);
         } finally {
             isLoading.value = false;
         }
     }
 
-    async function deactivateRecipe(technicianId, recipeId) {
+    async function deactivateRecipe(technicianId, recipeId, command) {
         isLoading.value = true;
         try {
-            await api.deactivateRecipe(technicianId, recipeId);
-            recipes.value = recipes.value.filter(r => r.recipeId !== recipeId);
+            await api.deactivateRecipe(technicianId, recipeId, command);
+            const recipe = recipes.value.find(r => r.recipeId === recipeId);
+            if (recipe) recipe.isActive = false;
         } catch (error) {
             errors.value.push(error);
+            console.error('[ServiceCatalogStore] deactivateRecipe failed:', error);
         } finally {
             isLoading.value = false;
         }
@@ -81,14 +116,12 @@ export const useServiceCatalogStore = defineStore('serviceCatalog', () => {
     async function reactivateRecipe(technicianId, recipeId) {
         isLoading.value = true;
         try {
-            const response = await api.reactivateRecipe(technicianId, recipeId);
-            if (response && response.data) {
-                const recipe = ServiceRecipeAssembler.toEntityFromResource(response.data);
-                recipes.value.push(recipe);
-                return recipe;
-            }
+            await api.reactivateRecipe(technicianId, recipeId);
+            const recipe = recipes.value.find(r => r.recipeId === recipeId);
+            if (recipe) recipe.isActive = true;
         } catch (error) {
             errors.value.push(error);
+            console.error('[ServiceCatalogStore] reactivateRecipe failed:', error);
         } finally {
             isLoading.value = false;
         }
@@ -106,8 +139,9 @@ export const useServiceCatalogStore = defineStore('serviceCatalog', () => {
         errors,
         activeRecipes,
         inactiveRecipes,
-        iotRecipes,
+        createCatalog,
         fetchCatalog,
+        fetchRecipeDetail,
         createRecipe,
         updateRecipe,
         deactivateRecipe,

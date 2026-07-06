@@ -2,16 +2,14 @@ export class ServiceCatalog {
     constructor({
         catalogId = '',
         technicianId = '',
-        isActive = true,
-        recipes = [],
-        createdAt = null,
-        updatedAt = null
+        status = 'ACTIVE',
+        totalRecipes = 0,
+        recipes = []
     } = {}) {
         this.catalogId = catalogId;
         this.technicianId = technicianId;
-        this.isActive = isActive;
+        this.status = status;
+        this.totalRecipes = totalRecipes;
         this.recipes = recipes;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 }

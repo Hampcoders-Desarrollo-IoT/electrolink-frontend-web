@@ -29,15 +29,17 @@ export class ServiceCatalogApiService extends BaseApi {
     }
 
     getRecipe(technicianId, recipeId) {
-        return this.#recipeEndpoint(technicianId, recipeId).getById(recipeId);
+        return this.http.get(`${techniciansPath}/${technicianId}/catalog/recipes/${recipeId}`);
     }
 
     updateRecipe(technicianId, recipeId, command) {
-        return this.#recipeEndpoint(technicianId, recipeId).update(recipeId, command);
+        return this.http.patch(`${techniciansPath}/${technicianId}/catalog/recipes/${recipeId}`, command);
     }
 
-    deactivateRecipe(technicianId, recipeId) {
-        return this.http.delete(`${techniciansPath}/${technicianId}/catalog/recipes/${recipeId}`);
+    deactivateRecipe(technicianId, recipeId, { reason, notes } = {}) {
+        return this.http.delete(`${techniciansPath}/${technicianId}/catalog/recipes/${recipeId}`, {
+            data: { reason, notes }
+        });
     }
 
     reactivateRecipe(technicianId, recipeId) {

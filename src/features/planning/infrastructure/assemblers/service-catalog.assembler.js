@@ -8,12 +8,11 @@ export class ServiceCatalogAssembler {
         return new ServiceCatalog({
             catalogId: resource.catalogId,
             technicianId: resource.technicianId,
-            isActive: resource.isActive,
+            status: resource.status,
+            totalRecipes: resource.totalRecipes,
             recipes: resource.recipes
                 ? resource.recipes.map(r => ServiceRecipeAssembler.toEntityFromResource(r))
-                : [],
-            createdAt: resource.createdAt,
-            updatedAt: resource.updatedAt
+                : []
         });
     }
 
@@ -22,10 +21,9 @@ export class ServiceCatalogAssembler {
         return new ServiceCatalogResource({
             catalogId: entity.catalogId,
             technicianId: entity.technicianId,
-            isActive: entity.isActive,
-            recipes: entity.recipes.map(r => ServiceRecipeAssembler.toResourceFromEntity(r)),
-            createdAt: entity.createdAt,
-            updatedAt: entity.updatedAt
+            status: entity.status,
+            totalRecipes: entity.totalRecipes,
+            recipes: entity.recipes.map(r => ServiceRecipeAssembler.toResourceFromEntity(r))
         });
     }
 

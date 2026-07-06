@@ -15,6 +15,10 @@ export class ServiceRequestApiService extends BaseApi {
         return new BaseEndpoint(this, `${serviceRequestsPath}/${requestId}`);
     }
 
+    getAllRequests() {
+        return this.#serviceRequestsEndpoint.getAll();
+    }
+
     getEligibility() {
         return this.http.get(`${serviceRequestsPath}/eligibility`);
     }

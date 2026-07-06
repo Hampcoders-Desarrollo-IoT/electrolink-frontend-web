@@ -148,6 +148,20 @@ export const useServiceRequestStore = defineStore('serviceRequest', () => {
         }
     }
 
+    async function fetchRequests() {
+        isLoading.value = true;
+        try {
+            const response = await api.getAllRequests();
+            if (response && response.data) {
+                requests.value = ServiceRequestAssembler.toEntityListFromResponse(response);
+            }
+        } catch (error) {
+            errors.value.push(error);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
     return {
         currentRequest,
         requests,
@@ -158,6 +172,7 @@ export const useServiceRequestStore = defineStore('serviceRequest', () => {
         isEligible,
         remainingRequests,
         fetchEligibility,
+        fetchRequests,
         initiateRequest,
         selectProperty,
         fetchAvailableServices,

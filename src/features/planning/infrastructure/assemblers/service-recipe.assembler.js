@@ -6,17 +6,21 @@ export class ServiceRecipeAssembler {
         if (!resource) return null;
         return new ServiceRecipe({
             recipeId: resource.recipeId,
-            catalogId: resource.catalogId,
-            name: resource.name,
-            description: resource.description,
-            category: resource.category,
-            estimatedDuration: resource.estimatedDuration,
-            basePrice: resource.basePrice,
-            requiresIoTCertification: resource.requiresIoTCertification,
-            requiredComponents: resource.requiredComponents || [],
+            serviceName: resource.serviceName,
+            serviceDescription: resource.serviceDescription || '',
+            serviceCategory: resource.serviceCategory,
+            componentRequirements: resource.componentRequirements || [],
+            estimatedDurationMinutes: resource.estimatedDurationMinutes,
+            materialsEstimate: resource.materialsEstimate || 0,
+            laborCost: resource.laborCost || 0,
+            totalPrice: resource.totalPrice,
+            currency: resource.currency || 'USD',
+            prerequisites: resource.prerequisites || [],
+            deliverables: resource.deliverables || [],
+            warrantyMonths: resource.warrantyMonths || 0,
             isActive: resource.isActive,
-            createdAt: resource.createdAt,
-            updatedAt: resource.updatedAt
+            timesRequested: resource.timesRequested || 0,
+            requiresIoTCertification: resource.requiresIoTCertification || false
         });
     }
 
@@ -24,17 +28,20 @@ export class ServiceRecipeAssembler {
         if (!entity) return null;
         return new ServiceRecipeResource({
             recipeId: entity.recipeId,
-            catalogId: entity.catalogId,
-            name: entity.name,
-            description: entity.description,
-            category: entity.category,
-            estimatedDuration: entity.estimatedDuration,
-            basePrice: entity.basePrice,
-            requiresIoTCertification: entity.requiresIoTCertification,
-            requiredComponents: entity.requiredComponents,
+            serviceName: entity.serviceName,
+            serviceDescription: entity.serviceDescription,
+            serviceCategory: entity.serviceCategory,
+            componentRequirements: entity.componentRequirements,
+            estimatedDurationMinutes: entity.estimatedDurationMinutes,
+            materialsEstimate: entity.materialsEstimate,
+            laborCost: entity.laborCost,
+            totalPrice: entity.totalPrice,
+            currency: entity.currency,
+            prerequisites: entity.prerequisites,
+            deliverables: entity.deliverables,
+            warrantyMonths: entity.warrantyMonths,
             isActive: entity.isActive,
-            createdAt: entity.createdAt,
-            updatedAt: entity.updatedAt
+            timesRequested: entity.timesRequested
         });
     }
 

@@ -1,10 +1,9 @@
 export class ServiceCatalogResource {
-    constructor({ catalogId, technicianId, isActive, recipes, createdAt, updatedAt }) {
+    constructor({ catalogId, technicianId, status, totalRecipes, recipes }) {
         this.catalogId = catalogId;
         this.technicianId = technicianId;
-        this.isActive = isActive;
+        this.status = status;
+        this.totalRecipes = totalRecipes;
         this.recipes = recipes || [];
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 }
