@@ -1,14 +1,18 @@
 const assetsRoutes = [
     // Technician — inventory & catalog sub-domains
-    { path: 'technicians/:technicianId/components', name: 'assets-technician-components', component: () => import('./component-catalog/views/component-catalog-view.component.vue'), meta: { title: 'All Components' }},
-    { path: 'technicians/:technicianId/component-types', name: 'assets-technician-component-types', component: () => import('./component-types/views/component-types-view.component.vue'), meta: { title: 'Component Types' }},
+    { path: 'technicians/:technicianId/components', name: 'assets-technician-components', component: () => import('./component-catalog/views/component-catalog-view.component.vue'), meta: { title: 'All Components', requiredBusinessRole: 'TECHNICIAN' }},
+    { path: 'technicians/:technicianId/component-types', name: 'assets-technician-component-types', component: () => import('./component-types/views/component-types-view.component.vue'), meta: { title: 'Component Types', requiredBusinessRole: 'TECHNICIAN' }},
     
     // Homeowner — properties sub-domain
-    { path: 'homeowners/:homeownerId/properties', name: 'assets-homeowner-properties', component: () => import('./properties/views/properties-view.component.vue'), meta: { title: 'Properties' } },
-    { path: 'homeowners/:homeownerId/properties/dashboard', name: 'assets-homeowner-properties-dashboard', component: () => import('./properties/views/property-portfolio.component.vue'), meta: { title: 'Property Portfolio Dashboard' } },
+    { path: 'homeowners/:homeownerId/properties', name: 'assets-homeowner-properties', component: () => import('./properties/views/properties-view.component.vue'), meta: { title: 'Properties', requiredBusinessRole: 'HOMEOWNER' } },
+    { path: 'homeowners/:homeownerId/properties/dashboard', name: 'assets-homeowner-properties-dashboard', component: () => import('./properties/views/property-portfolio.component.vue'), meta: { title: 'Property Portfolio Dashboard', requiredBusinessRole: 'HOMEOWNER' } },
+    
+    // Company — properties sub-domain
+    { path: 'companies/:ownerId/properties', name: 'assets-company-properties', component: () => import('./properties/views/properties-view.component.vue'), meta: { title: 'Properties', requiredBusinessRole: 'COMPANY' } },
+    { path: 'companies/:ownerId/properties/dashboard', name: 'assets-company-properties-dashboard', component: () => import('./properties/views/property-portfolio.component.vue'), meta: { title: 'Property Portfolio Dashboard', requiredBusinessRole: 'COMPANY' } },
     
     // Technician — inventory sub-domain
-    { path: 'technicians/:technicianId/inventory', name: 'assets-technician-inventory', component: () => import('./inventory/views/inventory-view.component.vue'), meta: { title: 'My Inventory' }},
+    { path: 'technicians/:technicianId/inventory', name: 'assets-technician-inventory', component: () => import('./inventory/views/inventory-view.component.vue'), meta: { title: 'My Inventory', requiredBusinessRole: 'TECHNICIAN' }},
 ];
 
 export default assetsRoutes;

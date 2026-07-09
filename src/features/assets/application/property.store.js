@@ -33,10 +33,11 @@ export const usePropertyStore = defineStore('property', () => {
     });
 
     // ── Actions ───────────────────────────────────────────────────────────────
-    async function loadProperties(homeownerId) {
+    async function loadProperties(ownerId, params = {}, context = 'homeowner') {
         isLoading.value = true;
         try {
-            const response = await propertiesApi.getAll(homeownerId);
+            const getAllMethod = context === 'company' ? 'getAllCompany' : 'getAll';
+            const response = await propertiesApi[getAllMethod](ownerId, params);
             if (response && response.data) {
                 properties.value = PropertyAssembler.toEntityListFromResponse(response);
             }
@@ -65,10 +66,11 @@ export const usePropertyStore = defineStore('property', () => {
         }
     }
 
-    async function createProperty(homeownerId, command) {
+    async function createProperty(ownerId, command, context = 'homeowner') {
         isLoading.value = true;
         try {
-            const response = await propertiesApi.create(homeownerId, command);
+            const createMethod = context === 'company' ? 'createCompany' : 'create';
+            const response = await propertiesApi[createMethod](ownerId, command);
             if (response && response.data) {
                 const newProperty = PropertyAssembler.toEntityFromResource(response.data);
                 properties.value.push(newProperty);
@@ -167,6 +169,57 @@ export const usePropertyStore = defineStore('property', () => {
         }
     }
 
+    async function getUploadUrl(homeownerId, propertyId) {
+        isLoading.value = true;
+        try {
+            const response = await propertiesApi.getUploadUrl(homeownerId, propertyId);
+            return response.data;
+        } catch (error) {
+            errors.value.push(error);
+            console.error('Error getting upload URL:', error.message);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function registerPhoto(homeownerId, propertyId, { providerId, publicUrl }) {
+        isLoading.value = true;
+        try {
+            const response = await propertiesApi.registerPhoto(homeownerId, propertyId, { providerId, publicUrl });
+            if (response && response.data) {
+                const updated = PropertyAssembler.toEntityFromResource(response.data);
+                const index = properties.value.findIndex(p => p.id === propertyId);
+                if (index !== -1) properties.value[index] = updated;
+                if (selectedProperty.value?.id === propertyId) selectedProperty.value = updated;
+                return updated;
+            }
+        } catch (error) {
+            errors.value.push(error);
+            console.error('Error registering photo:', error.message);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function setMainPhoto(homeownerId, propertyId, providerId) {
+        isLoading.value = true;
+        try {
+            const response = await propertiesApi.setMainPhoto(homeownerId, propertyId, { providerId });
+            if (response && response.data) {
+                const updated = PropertyAssembler.toEntityFromResource(response.data);
+                const index = properties.value.findIndex(p => p.id === propertyId);
+                if (index !== -1) properties.value[index] = updated;
+                if (selectedProperty.value?.id === propertyId) selectedProperty.value = updated;
+                return updated;
+            }
+        } catch (error) {
+            errors.value.push(error);
+            console.error('Error setting main photo:', error.message);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
     function selectProperty(property) {
         selectedProperty.value = property;
     }
@@ -194,6 +247,9 @@ export const usePropertyStore = defineStore('property', () => {
         activateProperty,
         deactivateProperty,
         deleteProperty,
+        getUploadUrl,
+        registerPhoto,
+        setMainPhoto,
         selectProperty
     };
 });

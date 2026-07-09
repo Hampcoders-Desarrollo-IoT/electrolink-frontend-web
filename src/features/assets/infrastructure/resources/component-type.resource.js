@@ -1,7 +1,7 @@
 export class ComponentTypeResource {
-    constructor({ componentTypeId, name, description }) {
+    constructor({ componentTypeId, name = '', isActive }) {
         this.componentTypeId = componentTypeId;
         this.name = name;
-        this.description = description;
+        this.isActive = isActive;
     }
 }

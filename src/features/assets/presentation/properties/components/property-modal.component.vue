@@ -9,7 +9,8 @@ import ElSelect from '@/shared/presentation/components/el-select.vue';
 
 const props = defineProps({
     modelValue:  { type: Boolean, required: true },
-    homeownerId: { type: String,  required: true }
+    homeownerId: { type: String,  required: true },
+    context:     { type: String,  default: 'homeowner' }
 });
 
 const emit = defineEmits(['update:modelValue', 'save', 'cancel']);
@@ -18,22 +19,30 @@ const propertiesStore = usePropertyStore();
 const portfolioStore = usePropertyPortfolioStore();
 
 // Form fields
-const propertyName = ref('');
 const street       = ref('');
 const number       = ref('');
-const city         = ref('Berlin');
 const district     = ref('');
-const postalCode   = ref('10115');
-const latitude     = ref('52.5200');
-const longitude    = ref('13.4050');
+const city         = ref('Lima');
+const country      = ref('Perú');
+const postalCode   = ref('');
+const latitude     = ref('');
+const longitude    = ref('');
 const accuracy     = ref(null);
-const source       = ref('manual');
+const source       = ref('GPS');
+const propertyType = ref('RESIDENTIAL');
 
 const cityOptions = [
     { label: 'Select a city', value: '' },
-    { label: 'Berlin', value: 'Berlin' },
     { label: 'Lima', value: 'Lima' },
-    { label: 'Arequipa', value: 'Arequipa' }
+    { label: 'Arequipa', value: 'Arequipa' },
+    { label: 'Cusco', value: 'Cusco' },
+    { label: 'Trujillo', value: 'Trujillo' }
+];
+
+const propertyTypeOptions = [
+    { label: 'Residential', value: 'RESIDENTIAL' },
+    { label: 'Commercial', value: 'COMMERCIAL' },
+    { label: 'Building', value: 'BUILDING' }
 ];
 
 // Map state
@@ -49,7 +58,7 @@ const clickMarkerList = computed(() => {
     return [{
         lat:   parseFloat(latitude.value),
         lng:   parseFloat(longitude.value),
-        popup: propertyName.value || 'New Property',
+        popup: 'New Property',
         type:  'property'
     }];
 });
@@ -73,7 +82,7 @@ async function onSubmit() {
             number:     number.value.trim(),
             district:   district.value.trim(),
             city:       city.value.trim(),
-            country:    'Peru', 
+            country:    country.value.trim(),
             postalCode: postalCode.value.trim() || null
         },
         geolocation: {
@@ -81,19 +90,20 @@ async function onSubmit() {
             longitude: longitude.value ? parseFloat(longitude.value) : 0,
             accuracy:  accuracy.value  ? parseInt(accuracy.value)    : null,
             source:    source.value
-        }
+        },
+        propertyType: propertyType.value
     };
 
-    const result = await propertiesStore.createProperty(props.homeownerId, command);
+    const result = await propertiesStore.createProperty(props.homeownerId, command, props.context);
 
     if (result) {
-        // Add to portfolio
         const defaultNickname = street.value.trim() + ' ' + number.value.trim();
+        const occupancyStatus = props.context === 'company' ? 'Vacant' : 'VACANT';
         const portfolioCommand = {
             propertyId: result.id || result.propertyId,
-            nickname: propertyName.value || defaultNickname,
-            isPrimary: false, 
-            occupancyStatus: 'Vacant'
+            nickname: defaultNickname,
+            isPrimary: false,
+            occupancyStatus: occupancyStatus
         };
         await portfolioStore.addPropertyToPortfolio(props.homeownerId, portfolioCommand);
 
@@ -109,17 +119,19 @@ function closeModal() {
 }
 
 function resetForm() {
-    propertyName.value = '';
     street.value       = '';
     number.value       = '';
-    city.value         = 'Berlin';
     district.value     = '';
-    postalCode.value   = '10115';
-    latitude.value     = '52.5200';
-    longitude.value    = '13.4050';
+    city.value         = 'Lima';
+    country.value      = 'Perú';
+    postalCode.value   = '';
+    latitude.value     = '';
+    longitude.value    = '';
+    accuracy.value     = null;
+    source.value       = 'GPS';
+    propertyType.value = 'RESIDENTIAL';
 }
 
-// Reset form when modal opens
 watch(() => props.modelValue, (val) => {
     if (val) resetForm();
 });
@@ -157,11 +169,6 @@ watch(() => props.modelValue, (val) => {
                 </h3>
                 
                 <div class="form-fields">
-                  <div class="form-group">
-                    <label>Property Name</label>
-                    <el-input-text v-model="propertyName" placeholder="e.g. Oakwood Residency" />
-                  </div>
-
                   <div class="row">
                     <div class="form-group flex-2">
                       <label>Street</label>
@@ -171,6 +178,11 @@ watch(() => props.modelValue, (val) => {
                       <label>Number</label>
                       <el-input-text v-model="number" placeholder="42" />
                     </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>District</label>
+                    <el-input-text v-model="district" placeholder="e.g. Miraflores" />
                   </div>
 
                   <div class="row">
@@ -185,8 +197,23 @@ watch(() => props.modelValue, (val) => {
                     </div>
                     <div class="form-group">
                       <label>Postal Code</label>
-                      <el-input-text v-model="postalCode" placeholder="10115" />
+                      <el-input-text v-model="postalCode" placeholder="15074" />
                     </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Country</label>
+                    <el-input-text v-model="country" placeholder="Perú" />
+                  </div>
+
+                  <div class="form-group">
+                    <label>Property Type</label>
+                    <el-select
+                      v-model="propertyType"
+                      :options="propertyTypeOptions"
+                      optionLabel="label"
+                      optionValue="value"
+                    />
                   </div>
 
                   <div class="row">
@@ -541,7 +568,6 @@ label {
   opacity: 0;
 }
 
-/* Custom Scrollbar for Modal Body */
 .modal-body::-webkit-scrollbar {
   width: 6px;
 }
@@ -555,7 +581,6 @@ label {
   border-radius: 3px;
 }
 
-/* Dark Mode Support */
 .dark .modal-container { background-color: #0f172a; border-color: #334155; }
 .dark .modal-header { background-color: #0f172a; border-color: #1e293b; }
 .dark .modal-title { color: #f1f5f9; }

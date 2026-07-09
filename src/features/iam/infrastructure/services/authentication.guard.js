@@ -16,6 +16,19 @@ export const authenticationGuard = (to, from, next) => {
             return next({ name: 'page-not-found' });
         }
     }
+
+    // Business-role routes require USER access role + matching business role (from JWT)
+    if (to.meta.requiredBusinessRole) {
+        if (!store.isUser) {
+            console.warn(`Access denied. Business-role routes require User access role, current role: ${store.currentAccessRole}`);
+            return next({ name: 'home' });
+        }
+
+        if (store.jwtBusinessRole !== to.meta.requiredBusinessRole) {
+            console.warn(`Access denied. Required business role: ${to.meta.requiredBusinessRole}, user role: ${store.jwtBusinessRole}`);
+            return next({ name: 'home' });
+        }
+    }
     
     // If authenticated and authorized, check for profile completion
     profileCompletionGuard(to, from, next);

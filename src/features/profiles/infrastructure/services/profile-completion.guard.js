@@ -16,6 +16,11 @@ export const profileCompletionGuard = async (to, from, next) => {
         return next();
     }
 
+    // Admin and SuperAdmin users cannot have a business role, so skip profile completion
+    if (!iamStore.isUser) {
+        return next();
+    }
+
     // Skip if navigating to the completion page or sign-out
     if (to.name === 'profiles-complete' || to.name === 'iam-sign-in') {
         return next();

@@ -3,6 +3,7 @@ export class InventoryItem {
         id = '',
         technicianInventoryId = '',
         componentId = '',
+        componentTypeId = '',
         componentName = '',
         quantityAvailable = 0,
         reservedQuantity = 0,
@@ -12,6 +13,7 @@ export class InventoryItem {
         this.id = id;
         this.technicianInventoryId = technicianInventoryId;
         this.componentId = componentId;
+        this.componentTypeId = componentTypeId;
         this.componentName = componentName;
         this.quantityAvailable = quantityAvailable;
         this.reservedQuantity = reservedQuantity;

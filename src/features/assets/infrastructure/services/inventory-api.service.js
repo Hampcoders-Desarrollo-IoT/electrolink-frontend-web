@@ -24,7 +24,7 @@ export class InventoryApiService extends BaseApi {
     }
 
     createInventory(technicianId) {
-        return this.#getInventoryEndpoint(technicianId).create({});
+        return this.http.post(`${techniciansEndpointPath}/${technicianId}/inventory`);
     }
 
     getInventory(technicianId) {

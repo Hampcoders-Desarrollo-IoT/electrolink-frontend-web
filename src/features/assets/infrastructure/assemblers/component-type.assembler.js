@@ -6,9 +6,8 @@ export class ComponentTypeAssembler {
         if (!resource) return null;
         return new ComponentType({
             id: resource.componentTypeId,
-            name: resource.name,
-            description: resource.description,
-            isActive: resource.isActive !== undefined ? resource.isActive : (resource.status === 'Active')
+            name: resource.name || '',
+            isActive: resource.isActive !== undefined ? resource.isActive : true
         });
     }
 
@@ -17,7 +16,7 @@ export class ComponentTypeAssembler {
         return new ComponentTypeResource({
             componentTypeId: entity.id,
             name: entity.name,
-            description: entity.description
+            isActive: entity.isActive
         });
     }
 

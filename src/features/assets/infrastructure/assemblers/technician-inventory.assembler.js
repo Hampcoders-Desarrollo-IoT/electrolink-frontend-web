@@ -13,6 +13,7 @@ export class TechnicianInventoryAssembler {
             id: item.componentStockId,
             technicianInventoryId: '',
             componentId: item.componentId,
+            componentTypeId: item.componentTypeId || '',
             componentName: item.componentName || '',
             quantityAvailable: item.quantityAvailable,
             reservedQuantity: 0,
@@ -37,6 +38,7 @@ export class TechnicianInventoryAssembler {
             id: item.componentStockId,
             technicianInventoryId: '',
             componentId: item.componentId,
+            componentTypeId: item.componentTypeId || '',
             componentName: item.componentName || '',
             quantityAvailable: item.quantityAvailable,
             reservedQuantity: 0,
@@ -52,6 +54,7 @@ export class TechnicianInventoryAssembler {
             return new ComponentStockResource({
                 componentStockId: item.id,
                 componentId: item.componentId,
+                componentTypeId: item.componentTypeId || '',
                 componentName: name,
                 quantityAvailable: item.quantityAvailable,
                 alertThreshold: item.alertThreshold,

@@ -3,13 +3,11 @@ export class Component {
         id = '',
         name = '',
         description = '',
-        isActive = true,
-        componentTypeId = ''
+        isActive = true
     } = {}) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.isActive = isActive;
-        this.componentTypeId = componentTypeId;
     }
 }

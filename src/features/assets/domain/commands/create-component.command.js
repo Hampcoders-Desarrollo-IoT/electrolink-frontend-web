@@ -1,8 +1,8 @@
 export class CreateComponentCommand {
-    constructor({ name, description, isActive, componentTypeId }) {
+    constructor({ name, description, isActive }) {
         this.name = name;
         this.description = description;
         this.isActive = isActive;
-        this.componentTypeId = componentTypeId;
     }
 }
+

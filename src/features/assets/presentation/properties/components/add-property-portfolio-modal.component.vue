@@ -8,7 +8,8 @@ import ElSelect from '@/shared/presentation/components/el-select.vue';
 
 const props = defineProps({
     modelValue:  { type: Boolean, required: true },
-    homeownerId: { type: String,  required: true }
+    homeownerId: { type: String,  required: true },
+    context:     { type: String,  default: 'homeowner' }
 });
 
 const emit = defineEmits(['update:modelValue', 'save', 'cancel']);
@@ -19,18 +20,30 @@ const portfolioStore = usePropertyPortfolioStore();
 const selectedPropertyId = ref('');
 const nickname = ref('');
 const isPrimary = ref(false);
-const occupancyStatus = ref('Vacant');
 
-const occupancyOptions = [
-    { label: 'Owner Occupied', value: 'OwnerOccupied' },
-    { label: 'Rented', value: 'Rented' },
-    { label: 'Vacant', value: 'Vacant' },
-    { label: 'Under Renovation', value: 'UnderRenovation' }
-];
+const isCompanyContext = () => props.context === 'company';
+
+const occupancyOptions = computed(() => {
+    if (isCompanyContext()) {
+        return [
+            { label: 'Owner Occupied', value: 'OwnerOccupied' },
+            { label: 'Rented', value: 'Rented' },
+            { label: 'Vacant', value: 'Vacant' },
+            { label: 'Under Renovation', value: 'UnderRenovation' }
+        ];
+    }
+    return [
+        { label: 'Occupied', value: 'OCCUPIED' },
+        { label: 'Vacant', value: 'VACANT' },
+        { label: 'Rented', value: 'RENTED' }
+    ];
+});
+
+const occupancyStatus = ref('');
 
 // Available properties to add (those not already in the portfolio)
 const availableProperties = computed(() => {
-    const portfolioEntries = portfolioStore.portfolio?.entries || [];
+    const portfolioEntries = portfolioStore.portfolio?.properties || [];
     const inPortfolioIds = portfolioEntries.map(e => e.propertyId);
     
     return propertiesStore.properties
@@ -83,11 +96,14 @@ function resetForm() {
     selectedPropertyId.value = '';
     nickname.value = '';
     isPrimary.value = false;
-    occupancyStatus.value = 'Vacant';
+    occupancyStatus.value = isCompanyContext() ? 'Vacant' : 'VACANT';
 }
 
 watch(() => props.modelValue, (val) => {
-    if (val) resetForm();
+    if (val) {
+        occupancyStatus.value = isCompanyContext() ? 'Vacant' : 'VACANT';
+        resetForm();
+    }
 });
 </script>
 

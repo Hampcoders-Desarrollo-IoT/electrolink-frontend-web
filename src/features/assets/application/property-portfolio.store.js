@@ -28,7 +28,7 @@ export const usePropertyPortfolioStore = defineStore('propertyPortfolio', () => 
     async function addPropertyToPortfolio(homeownerId, command) {
         isLoading.value = true;
         try {
-            const response = await portfolioApi.create(homeownerId, command);
+            const response = await portfolioApi.addProperty(homeownerId, command);
             if (response && response.data) {
                 portfolio.value = PropertyPortfolioAssembler.toEntityFromResource(response.data);
                 return portfolio.value;
@@ -44,9 +44,9 @@ export const usePropertyPortfolioStore = defineStore('propertyPortfolio', () => 
     async function removePropertyFromPortfolio(homeownerId, propertyId, reason = '') {
         isLoading.value = true;
         try {
-            await portfolioApi.delete(homeownerId, propertyId, reason);
-            if (portfolio.value && portfolio.value.entries) {
-                portfolio.value.entries = portfolio.value.entries.filter(e => e.propertyId !== propertyId);
+            await portfolioApi.removeProperty(homeownerId, propertyId, reason);
+            if (portfolio.value && portfolio.value.properties) {
+                portfolio.value.properties = portfolio.value.properties.filter(e => e.propertyId !== propertyId);
             }
         } catch (error) {
             errors.value.push(error);

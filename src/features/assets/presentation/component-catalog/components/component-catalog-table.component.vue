@@ -3,11 +3,10 @@ import { ref, computed } from 'vue';
 
 const props = defineProps({
     components: { type: Array, default: () => [] },
-    isLoading: { type: Boolean, default: false },
-    componentTypes: { type: Array, default: () => [] }
+    isLoading: { type: Boolean, default: false }
 });
 
-const emit = defineEmits(['edit', 'delete', 'activate', 'deactivate']);
+const emit = defineEmits(['edit', 'delete']);
 
 const globalFilter = ref('');
 
@@ -24,11 +23,6 @@ function getStatusLabel(item) {
     return item.isActive ? 'Active' : 'Inactive';
 }
 
-function getTypeName(typeId) {
-    if (!typeId) return '—';
-    const type = props.componentTypes.find(t => t.id === typeId);
-    return type ? type.name : 'Unknown Type';
-}
 </script>
 
 <template>
@@ -57,12 +51,6 @@ function getTypeName(typeId) {
         </template>
       </pv-column>
 
-      <pv-column field="componentTypeId" header="TYPE" sortable>
-        <template #body="{ data }">
-          <span class="cc-cell-type">{{ getTypeName(data.componentTypeId) }}</span>
-        </template>
-      </pv-column>
-
       <pv-column field="isActive" header="STATUS" sortable>
         <template #body="{ data }">
           <span
@@ -83,13 +71,6 @@ function getTypeName(typeId) {
               class="p-button-text p-button-rounded p-button-sm"
               v-tooltip.top="'Edit'"
               @click="emit('edit', data)"
-            />
-            <pv-button
-              :icon="data.isActive ? 'pi pi-ban' : 'pi pi-check-circle'"
-              class="p-button-text p-button-rounded p-button-sm"
-              :class="data.isActive ? 'p-button-warning' : 'p-button-success'"
-              v-tooltip.top="data.isActive ? 'Deactivate' : 'Activate'"
-              @click="data.isActive ? emit('deactivate', data) : emit('activate', data)"
             />
             <pv-button
               icon="pi pi-trash"
@@ -121,12 +102,6 @@ function getTypeName(typeId) {
   color: #6b7280;
   font-size: 0.875rem;
   font-style: italic;
-}
-
-.cc-cell-type {
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-weight: 500;
 }
 
 .cc-badge {

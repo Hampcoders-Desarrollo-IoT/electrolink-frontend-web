@@ -14,8 +14,7 @@ const filteredItems = computed(() => {
     if (!globalFilter.value) return props.componentTypes;
     const filter = globalFilter.value.toLowerCase();
     return props.componentTypes.filter(ct =>
-        (ct.name || '').toLowerCase().includes(filter) ||
-        (ct.description || '').toLowerCase().includes(filter)
+        (ct.id || '').toLowerCase().includes(filter)
     );
 });
 
@@ -36,18 +35,11 @@ function getStatusLabel(item) {
   >
     <!-- Override search with local filtering -->
     <template #columns>
-      <pv-column field="name" header="COMPONENT" sortable>
+      <pv-column field="id" header="COMPONENT TYPE" sortable>
         <template #body="{ data }">
           <div>
-            <div class="ct-cell-title">{{ data.name }}</div>
-            <div class="ct-cell-id">ID: {{ data.id }}</div>
+            <div class="ct-cell-title">{{ data.id }}</div>
           </div>
-        </template>
-      </pv-column>
-
-      <pv-column field="description" header="DESCRIPTION" sortable>
-        <template #body="{ data }">
-          <span class="ct-cell-desc">{{ data.description || '—' }}</span>
         </template>
       </pv-column>
 
@@ -103,12 +95,6 @@ function getStatusLabel(item) {
   font-size: 0.75rem;
   color: #9ca3af;
   margin-top: 0.125rem;
-}
-
-.ct-cell-desc {
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-style: italic;
 }
 
 .ct-badge {

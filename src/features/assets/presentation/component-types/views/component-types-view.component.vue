@@ -30,14 +30,14 @@ async function handleSave(formData) {
         // Edit mode
         const updated = await componentTypeStore.updateComponentType(id, componentTypeStore.selectedComponentType.id, formData);
         if (updated) {
-            toast.add({ severity: 'success', summary: 'Updated', detail: `"${updated.name}" updated successfully.`, life: 3000 });
+            toast.add({ severity: 'success', summary: 'Updated', detail: `Component type "${updated.id}" updated successfully.`, life: 3000 });
             closeModal();
         }
     } else {
         // Create mode
         const created = await componentTypeStore.createComponentType(id, formData);
         if (created) {
-            toast.add({ severity: 'success', summary: 'Created', detail: `"${created.name}" created successfully.`, life: 3000 });
+            toast.add({ severity: 'success', summary: 'Created', detail: `Component type "${created.id}" created successfully.`, life: 3000 });
             closeModal();
         }
     }
@@ -55,14 +55,14 @@ function handleEdit(item) {
 
 function handleDelete(item) {
     confirm.require({
-        message: `Are you sure you want to delete "${item.name}"?`,
+        message: `Are you sure you want to delete component type "${item.id}"?`,
         header: 'Delete Component Type',
         icon: 'pi pi-exclamation-triangle',
         rejectClass: 'p-button-text',
         acceptClass: 'p-button-danger',
         accept: async () => {
             await componentTypeStore.deleteComponentType(technicianId(), item.id);
-            toast.add({ severity: 'info', summary: 'Deleted', detail: `"${item.name}" has been deleted.`, life: 3000 });
+            toast.add({ severity: 'info', summary: 'Deleted', detail: `Component type "${item.id}" has been deleted.`, life: 3000 });
         }
     });
 }
@@ -70,14 +70,14 @@ function handleDelete(item) {
 async function handleActivate(item) {
     const result = await componentTypeStore.activateComponentType(technicianId(), item.id);
     if (result) {
-        toast.add({ severity: 'success', summary: 'Activated', detail: `"${item.name}" is now active.`, life: 3000 });
+        toast.add({ severity: 'success', summary: 'Activated', detail: `Component type "${item.id}" is now active.`, life: 3000 });
     }
 }
 
 async function handleDeactivate(item) {
     const result = await componentTypeStore.deactivateComponentType(technicianId(), item.id);
     if (result) {
-        toast.add({ severity: 'warn', summary: 'Deactivated', detail: `"${item.name}" has been deactivated.`, life: 3000 });
+        toast.add({ severity: 'warn', summary: 'Deactivated', detail: `Component type "${item.id}" has been deactivated.`, life: 3000 });
     }
 }
 </script>
