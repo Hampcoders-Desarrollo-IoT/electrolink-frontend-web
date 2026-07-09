@@ -6,42 +6,44 @@ const store = useSubscriptionStore();
 
 /**
  * Plan catalog definitions.
- * Polimorphic: different plans shown depending on businessRole.
+ * Polymorphic: different plans shown depending on businessRole.
+ * Each plan carries planType + billingCycle instead of planId.
  */
 const availablePlans = computed(() => {
     const role    = store.businessRole;
-    const current = store.subscription?.planTier ?? '';
+    const currentPlanType = store.subscription?.planType ?? '';
+    const currentBilling  = store.subscription?.billingCycle ?? '';
 
-    if (role === 'HOMEOWNER') {
+    if (role === 'HomeOwner') {
         return [
             {
-                id:          'homeowner-basic',
-                planId:      'plan_homeowner_basic',
-                name:        'Plan Básico',
-                price:       null,
-                priceLabel:  'Free',
-                description: 'Essential tools for small property owners.',
-                tier:        'BASIC',
-                recommended: false,
-                isCurrent:   current === 'BASIC',
+                id:           'homeowner-basic',
+                planType:     'BASIC',
+                billingCycle: null,
+                name:         'Plan Básico',
+                price:        null,
+                priceLabel:   'Free',
+                description:  'Essential tools for small property owners.',
+                recommended:  false,
+                isCurrent:    currentPlanType === 'BASIC',
                 features: [
-                    { text: '2 Service Requests / month',   highlight: false },
+                    { text: '2 Service Requests / month',      highlight: false },
                     { text: 'Standard Support (48h response)', highlight: false },
-                    { text: 'Basic Property Listing',       highlight: false },
+                    { text: 'Basic Property Listing',          highlight: false },
                 ],
                 ctaLabel:    'Current Plan',
                 ctaVariant:  'outlined',
             },
             {
-                id:          'homeowner-premium',
-                planId:      'plan_homeowner_premium',
-                name:        'Plan Premium',
-                price:       29.90,
-                priceLabel:  'S/ 29.90',
-                description: 'Comprehensive suite for scale and priority resolution.',
-                tier:        'PREMIUM',
-                recommended: true,
-                isCurrent:   current === 'PREMIUM',
+                id:           'homeowner-premium',
+                planType:     'PREMIUM',
+                billingCycle: 'MONTHLY',
+                name:         'Plan Premium',
+                price:        29.90,
+                priceLabel:   'S/ 29.90',
+                description:  'Comprehensive suite for scale and priority resolution.',
+                recommended:  true,
+                isCurrent:    currentPlanType === 'PREMIUM',
                 features: [
                     { text: 'Unlimited Service Requests',    highlight: true  },
                     { text: 'Priority Technician Assignment', highlight: false },
@@ -54,88 +56,88 @@ const availablePlans = computed(() => {
         ];
     }
 
-    if (role === 'COMPANY') {
+    if (role === 'Company') {
         return [
             {
-                id:          'company-enterprise-basic',
-                planId:      'plan_company_enterprise_basic',
-                name:        'Enterprise Basic',
-                price:       149.00,
-                priceLabel:  'S/ 149.00',
-                description: 'Up to 50 IoT devices with standard monitoring.',
-                tier:        'ENTERPRISE_BASIC',
-                recommended: false,
-                isCurrent:   current === 'ENTERPRISE_BASIC',
+                id:           'company-enterprise-basic',
+                planType:     'ENTERPRISE_BASIC',
+                billingCycle: 'MONTHLY',
+                name:         'Enterprise Basic',
+                price:        149.00,
+                priceLabel:   'S/ 149.00',
+                description:  'Up to 50 IoT devices with standard monitoring.',
+                recommended:  false,
+                isCurrent:    currentPlanType === 'ENTERPRISE_BASIC',
                 features: [
                     { text: 'Up to 50 IoT Devices',          highlight: false },
-                    { text: 'Basic Dashboard & Alerts',       highlight: false },
-                    { text: 'Standard API Access',            highlight: false },
-                    { text: 'Email Support',                  highlight: false },
+                    { text: 'Basic Dashboard & Alerts',      highlight: false },
+                    { text: 'Standard API Access',           highlight: false },
+                    { text: 'Email Support',                 highlight: false },
                 ],
-                ctaLabel:   current === 'ENTERPRISE_BASIC' ? 'Current Plan' : 'Get Started',
-                ctaVariant: current === 'ENTERPRISE_BASIC' ? 'outlined' : 'filled',
+                ctaLabel:   currentPlanType === 'ENTERPRISE_BASIC' ? 'Current Plan' : 'Get Started',
+                ctaVariant: currentPlanType === 'ENTERPRISE_BASIC' ? 'outlined' : 'filled',
             },
             {
-                id:          'company-enterprise-pro',
-                planId:      'plan_company_enterprise_pro',
-                name:        'Enterprise Pro',
-                price:       399.00,
-                priceLabel:  'S/ 399.00',
-                description: 'Unlimited devices, advanced analytics, dedicated support.',
-                tier:        'ENTERPRISE_PRO',
-                recommended: true,
-                isCurrent:   current === 'ENTERPRISE_PRO',
+                id:           'company-enterprise-pro',
+                planType:     'ENTERPRISE_PRO',
+                billingCycle: 'MONTHLY',
+                name:         'Enterprise Pro',
+                price:        399.00,
+                priceLabel:   'S/ 399.00',
+                description:  'Unlimited devices, advanced analytics, dedicated support.',
+                recommended:  true,
+                isCurrent:    currentPlanType === 'ENTERPRISE_PRO',
                 features: [
                     { text: 'Unlimited IoT Devices',          highlight: true  },
                     { text: 'Real-time Analytics',            highlight: false },
                     { text: 'Advanced API & Webhooks',        highlight: false },
                     { text: 'Dedicated Account Manager',      highlight: false },
                 ],
-                ctaLabel:   current === 'ENTERPRISE_PRO' ? 'Current Plan' : 'Upgrade to Pro',
-                ctaVariant: current === 'ENTERPRISE_PRO' ? 'outlined' : 'filled',
+                ctaLabel:   currentPlanType === 'ENTERPRISE_PRO' ? 'Current Plan' : 'Upgrade to Pro',
+                ctaVariant: currentPlanType === 'ENTERPRISE_PRO' ? 'outlined' : 'filled',
             },
         ];
     }
 
-    if (role === 'TECHNICIAN') {
+    if (role === 'Technician') {
         return [
             {
-                id:          'tech-standard',
-                planId:      'plan_technician_standard',
-                name:        'Technician Standard',
-                price:       19.90,
-                priceLabel:  'S/ 19.90',
-                description: 'Activate your service catalog and get discovered by homeowners.',
-                tier:        'TECHNICIAN_STANDARD',
-                recommended: false,
-                isCurrent:   current === 'TECHNICIAN_STANDARD',
+                id:           'tech-standard',
+                planType:     'BASIC',
+                billingCycle: 'MONTHLY',
+                name:         'Technician Standard',
+                price:        19.90,
+                priceLabel:   'S/ 19.90',
+                description:  'Activate your service catalog and get discovered by homeowners.',
+                recommended:  false,
+                isCurrent:    currentPlanType === 'BASIC',
                 features: [
-                    { text: 'Service Catalog Activation',  highlight: false },
-                    { text: 'Appear in Client Searches',   highlight: false },
-                    { text: 'In-App Chat with Clients',    highlight: false },
-                    { text: 'Monthly Performance Reports', highlight: false },
+                    { text: 'Service Catalog Activation',   highlight: false },
+                    { text: 'Appear in Client Searches',    highlight: false },
+                    { text: 'In-App Chat with Clients',     highlight: false },
+                    { text: 'Monthly Performance Reports',  highlight: false },
                 ],
-                ctaLabel:   current === 'TECHNICIAN_STANDARD' ? 'Current Plan' : 'Activate Catalog',
-                ctaVariant: current === 'TECHNICIAN_STANDARD' ? 'outlined' : 'filled',
+                ctaLabel:   currentPlanType === 'BASIC' ? 'Current Plan' : 'Activate Catalog',
+                ctaVariant: currentPlanType === 'BASIC' ? 'outlined' : 'filled',
             },
             {
-                id:          'tech-pro',
-                planId:      'plan_technician_pro',
-                name:        'Technician Pro',
-                price:       39.90,
-                priceLabel:  'S/ 39.90',
-                description: 'Priority placement and advanced tools for high-volume technicians.',
-                tier:        'TECHNICIAN_PRO',
-                recommended: true,
-                isCurrent:   current === 'TECHNICIAN_PRO',
+                id:           'tech-pro',
+                planType:     'PREMIUM',
+                billingCycle: 'MONTHLY',
+                name:         'Technician Pro',
+                price:        39.90,
+                priceLabel:   'S/ 39.90',
+                description:  'Priority placement and advanced tools for high-volume technicians.',
+                recommended:  true,
+                isCurrent:    currentPlanType === 'PREMIUM',
                 features: [
                     { text: 'Priority Search Placement',  highlight: true  },
                     { text: 'Verified Pro Badge',         highlight: false },
                     { text: 'Earnings Analytics',         highlight: false },
                     { text: 'Priority Support',           highlight: false },
                 ],
-                ctaLabel:   current === 'TECHNICIAN_PRO' ? 'Current Plan' : 'Upgrade to Pro',
-                ctaVariant: current === 'TECHNICIAN_PRO' ? 'outlined' : 'filled',
+                ctaLabel:   currentPlanType === 'PREMIUM' ? 'Current Plan' : 'Upgrade to Pro',
+                ctaVariant: currentPlanType === 'PREMIUM' ? 'outlined' : 'filled',
             },
         ];
     }
@@ -145,12 +147,7 @@ const availablePlans = computed(() => {
 
 function handlePlanAction(plan) {
     if (plan.isCurrent) return;
-    const isCompany = store.isCompany;
-    if (isCompany) {
-        store.startEnterpriseCheckout(plan.planId);
-    } else {
-        store.startCheckout(plan.planId);
-    }
+    store.startCheckout(plan.planType, plan.billingCycle);
 }
 </script>
 

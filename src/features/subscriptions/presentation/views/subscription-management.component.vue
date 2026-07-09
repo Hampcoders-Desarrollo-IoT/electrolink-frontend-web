@@ -4,19 +4,32 @@ import { useRoute }            from 'vue-router';
 import { useSubscriptionStore }       from '../../application/subscription.store.js';
 import CurrentPlanSection             from '../components/current-plan-section.vue';
 import UsageQuotaTracker              from '../components/usage-quota-tracker.vue';
-import EnterpriseBillingBlock         from '../components/enterprise-billing-block.vue';
-import SubscriptionAlertBanner        from '../components/subscription-alert-banner.vue';
 import PlanPricingGrid                from '../components/plan-pricing-grid.vue';
-import BillingHistoryTable            from '../components/billing-history-table.vue';
 
 const store = useSubscriptionStore();
 const route = useRoute();
 
-// Handle Stripe Checkout return states
 const checkoutStatus = computed(() => route.query.checkout ?? null);
 
 onMounted(async () => {
     await store.initialize();
+
+    if (checkoutStatus.value === 'success') {
+        const raw = sessionStorage.getItem('electrolink_pending_plan');
+        if (raw) {
+            try {
+                const { planType, billingCycle } = JSON.parse(raw);
+                await store.createSubscription(planType, billingCycle);
+            } catch {
+                // fallback: just refresh
+                await store.fetchSubscription();
+            } finally {
+                sessionStorage.removeItem('electrolink_pending_plan');
+            }
+        } else {
+            await store.fetchSubscription();
+        }
+    }
 });
 </script>
 
@@ -29,7 +42,7 @@ onMounted(async () => {
             </div>
             <div class="page-title-actions">
                 <pv-button
-                    v-if="store.subscription?.stripeCustomerId"
+                    v-if="store.subscription?.subscriptionId"
                     label="Manage Billing"
                     icon="pi pi-external-link"
                     :loading="store.isPortalLoading"
@@ -64,41 +77,20 @@ onMounted(async () => {
                 </div>
             </Transition>
 
-            <!-- Dynamic Alert Banner (payment failed / pending install / grace period) -->
-            <SubscriptionAlertBanner />
-
             <!-- Top Section: Current Plan + Contextual Right Panel -->
             <div class="top-grid">
                 <!-- LEFT: Current Plan Card -->
                 <CurrentPlanSection />
 
-                <!-- RIGHT: Polymorphic panel based on businessRole -->
-                <!-- HOMEOWNER BASIC: Quota Tracker -->
+                <!-- RIGHT: Quota Tracker for HomeOwner BASIC -->
                 <UsageQuotaTracker v-if="store.showQuotaTracker" />
 
-                <!-- COMPANY ACTIVE: Enterprise Dynamic Billing -->
-                <EnterpriseBillingBlock v-else-if="store.showEnterpriseBilling" />
-
-                <!-- TECHNICIAN: Catalog activation CTA card -->
-                <div v-else-if="store.isTechnician && !store.isActive" class="tech-activation-card">
-                    <div class="tech-activation-icon">
-                        <i class="pi pi-wrench"></i>
-                    </div>
-                    <h3 class="tech-activation-title">Activate Your Catalog</h3>
-                    <p class="tech-activation-desc">
-                        Subscribe to a plan to make your services visible to homeowners and receive job requests.
-                    </p>
-                </div>
-
-                <!-- Fallback: empty card keeps the grid balanced -->
+                <!-- Fallback -->
                 <div v-else class="placeholder-card"></div>
             </div>
 
             <!-- Available Plans Grid -->
             <PlanPricingGrid />
-
-            <!-- Billing History Table -->
-            <BillingHistoryTable />
         </template>
     </div>
 </template>

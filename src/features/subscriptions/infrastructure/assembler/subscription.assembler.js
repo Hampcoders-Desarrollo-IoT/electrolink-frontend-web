@@ -1,11 +1,10 @@
 import { SubscriptionEntity } from '../../domain/models/subscription.entity.js';
 import { SubscriptionResource } from '../resources/subscription.resource.js';
-import { PaymentRecordEntity } from '../../domain/models/payment-record.entity.js';
 
 /**
  * SubscriptionAssembler
- * Converts snake_case API responses to camelCase domain entities
- * and transforms command objects into API-ready payloads.
+ * Converts API responses to domain entities and transforms command objects
+ * into API-ready payloads.
  */
 export class SubscriptionAssembler {
 
@@ -23,76 +22,39 @@ export class SubscriptionAssembler {
     }
 
     /**
-     * Converts a SubscriptionResource to a SubscriptionEntity (camelCase).
+     * Converts a SubscriptionResource to a SubscriptionEntity (camelCase domain model).
+     * The API already returns planType and status in UPPERCASE, so no .toUpperCase() needed.
      * @param {SubscriptionResource} resource
      * @returns {SubscriptionEntity}
      */
     static toEntityFromResource(resource) {
         return new SubscriptionEntity({
-            id:                       resource.id,
-            userId:                   resource.user_id,
-            businessRole:             resource.business_role,
-            planId:                   resource.plan_id,
-            planName:                 resource.plan_name,
-            planTier:                 resource.plan_tier,
-            status:                   resource.status,
-            pricePerMonth:            resource.price_per_month,
-            currentPeriodStart:       resource.current_period_start,
-            currentPeriodEnd:         resource.current_period_end,
-            stripeSubscriptionId:     resource.stripe_subscription_id,
-            stripeCustomerId:         resource.stripe_customer_id,
-            cancelAtPeriodEnd:        resource.cancel_at_period_end,
-            monthlyRequestsUsed:      resource.monthly_requests_used,
-            monthlyRequestsLimit:     resource.monthly_requests_limit,
-            activeDeviceCount:        resource.active_device_count,
-            pricePerDevice:           resource.price_per_device,
-            projectedNextMonthAmount: resource.projected_next_month_amount,
-            iotInstallationStatus:    resource.iot_installation_status,
+            subscriptionId:       resource.subscriptionId,
+            planType:             resource.plan_type,
+            status:               resource.status,
+            billingCycle:         resource.billing_cycle,
+            periodEnd:            resource.period_end,
+            cancelAtPeriodEnd:    resource.cancel_at_period_end,
+            monthlyRequestsUsed:  resource.monthly_requests_used,
+            monthlyRequestsLimit: resource.monthly_requests_limit,
+            gracePeriodEndsAt:    resource.grace_period_ends_at,
         });
     }
 
     /**
-     * Converts a raw payment record object (snake_case) to a PaymentRecordEntity.
-     * @param {Object} raw
-     * @returns {PaymentRecordEntity}
-     */
-    static toPaymentEntityFromRaw(raw) {
-        return new PaymentRecordEntity({
-            id:                    raw.id,
-            subscriptionId:        raw.subscription_id,
-            description:           raw.description,
-            amount:                raw.amount,
-            currency:              raw.currency,
-            status:                raw.status,
-            paidAt:                raw.paid_at,
-            invoiceUrl:            raw.invoice_url,
-            stripePaymentIntentId: raw.stripe_payment_intent_id,
-        });
-    }
-
-    /**
-     * Converts an array of raw payment records to PaymentRecordEntity array.
-     * @param {Array<Object>} rawList
-     * @returns {Array<PaymentRecordEntity>}
-     */
-    static toPaymentEntityListFromRaw(rawList) {
-        if (!Array.isArray(rawList)) return [];
-        return rawList.map(raw => SubscriptionAssembler.toPaymentEntityFromRaw(raw));
-    }
-
-    /**
-     * Converts an InitiateCheckoutCommand to a backend-ready payload.
+     * Converts an InitiateCheckoutCommand to a backend-ready payload (camelCase keys).
      * @param {import('../../domain/commands/initiate-checkout.command.js').InitiateCheckoutCommand} command
      * @returns {Object}
      */
     static toCheckoutPayload(command) {
         const payload = {
-            plan_id:     command.planId,
-            success_url: command.successUrl,
-            cancel_url:  command.cancelUrl,
+            planType:     command.planType,
+            billingCycle: command.billingCycle,
+            successUrl:   command.successUrl,
+            cancelUrl:    command.cancelUrl,
         };
         if (command.couponCode) {
-            payload.coupon_code = command.couponCode;
+            payload.couponCode = command.couponCode;
         }
         return payload;
     }
@@ -106,6 +68,51 @@ export class SubscriptionAssembler {
         return {
             reason:   command.reason,
             feedback: command.feedback,
+        };
+    }
+
+    /**
+     * Converts a CreateSubscriptionCommand to a backend-ready payload.
+     * @param {import('../../domain/commands/create-subscription.command.js').CreateSubscriptionCommand} command
+     * @returns {Object}
+     */
+    static toCreatePayload(command) {
+        return {
+            planType:     command.planType,
+            billingCycle: command.billingCycle,
+        };
+    }
+
+    /**
+     * Converts an ActivateSubscriptionCommand to a backend-ready payload.
+     * @param {import('../../domain/commands/activate-subscription.command.js').ActivateSubscriptionCommand} command
+     * @returns {Object}
+     */
+    static toActivatePayload(command) {
+        return {
+            subscriptionId: command.subscriptionId,
+        };
+    }
+
+    /**
+     * Converts a DegradeSubscriptionCommand to a backend-ready payload.
+     * @param {import('../../domain/commands/degrade-subscription.command.js').DegradeSubscriptionCommand} command
+     * @returns {Object}
+     */
+    static toDegradePayload(command) {
+        return {
+            subscriptionId: command.subscriptionId,
+        };
+    }
+
+    /**
+     * Converts a return URL to a backend-ready portal payload.
+     * @param {string} returnUrl
+     * @returns {Object}
+     */
+    static toPortalPayload(returnUrl) {
+        return {
+            returnUrl,
         };
     }
 }

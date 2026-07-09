@@ -5,32 +5,30 @@ import { useSubscriptionStore } from '../../application/subscription.store.js';
 const store = useSubscriptionStore();
 
 const planIcon = computed(() => {
-    const tier = store.subscription?.planTier ?? '';
-    if (tier.includes('PREMIUM'))         return 'pi-star-fill';
-    if (tier.includes('ENTERPRISE'))      return 'pi-building';
-    if (tier.includes('TECHNICIAN'))      return 'pi-wrench';
+    const pt = store.subscription?.planType ?? '';
+    if (pt.includes('PREMIUM'))    return 'pi-star-fill';
+    if (pt.includes('ENTERPRISE')) return 'pi-building';
     return 'pi-shield';
 });
 
 const planDescription = computed(() => {
-    const tier = store.subscription?.planTier ?? '';
+    const pt   = store.subscription?.planType ?? '';
     const role = store.businessRole;
-    if (role === 'HOMEOWNER' && tier === 'BASIC')    return 'Free tier for standard property management.';
-    if (role === 'HOMEOWNER' && tier === 'PREMIUM')  return 'Comprehensive suite for scale and priority resolution.';
-    if (role === 'COMPANY' && tier.includes('ENTERPRISE_BASIC')) return 'Entry-level corporate IoT monitoring plan.';
-    if (role === 'COMPANY' && tier.includes('ENTERPRISE_PRO'))   return 'Full-scale enterprise IoT infrastructure plan.';
-    if (role === 'TECHNICIAN')                       return 'Activate your service catalog and appear in searches.';
+    if (role === 'HomeOwner' && pt === 'BASIC')              return 'Free tier for standard property management.';
+    if (role === 'HomeOwner' && pt === 'PREMIUM')            return 'Comprehensive suite for scale and priority resolution.';
+    if (role === 'Company' && pt === 'ENTERPRISE_BASIC')     return 'Entry-level corporate IoT monitoring plan.';
+    if (role === 'Company' && pt === 'ENTERPRISE_PRO')       return 'Full-scale enterprise IoT infrastructure plan.';
+    if (role === 'Technician')                               return 'Activate your service catalog and appear in searches.';
     return 'Your current subscription plan.';
 });
 
 const formattedPrice = computed(() => {
-    const price = store.subscription?.pricePerMonth ?? 0;
-    if (price === 0) return 'Free';
-    return `S/ ${Number(price).toFixed(2)}/mo`;
+    if (store.subscription?.isFreeTier) return 'Free';
+    return `${store.subscription?.billingCycle === 'YEARLY' ? 'Yearly' : 'Monthly'} Plan`;
 });
 
 const renewalDate = computed(() => {
-    const end = store.subscription?.currentPeriodEnd;
+    const end = store.subscription?.periodEnd;
     if (!end) return null;
     return new Date(end).toLocaleDateString('en-US', {
         month: 'long', day: 'numeric', year: 'numeric',

@@ -1,57 +1,31 @@
 /**
  * Subscription Entity
- * Represents the user's current subscription state.
- * Supports polymorphic fields for HOMEOWNER, COMPANY, and TECHNICIAN roles.
+ * Represents the user's current subscription state as returned by
+ * GET /api/v1/subscriptions/me.
  */
 export class SubscriptionEntity {
     /**
      * @param {Object} data
-     * @param {string} data.id
-     * @param {string} data.userId
-     * @param {string} data.businessRole       - 'HOMEOWNER' | 'COMPANY' | 'TECHNICIAN'
-     * @param {string} data.planId
-     * @param {string} data.planName
-     * @param {string} data.planTier           - 'BASIC' | 'PREMIUM' | 'ENTERPRISE_BASIC' | 'ENTERPRISE_PRO' | 'TECHNICIAN_STANDARD'
-     * @param {string} data.status             - 'ACTIVE' | 'PENDING_INSTALLATION' | 'GRACE_PERIOD' | 'CANCELLED' | 'TRIALING'
-     * @param {number|null} data.pricePerMonth
-     * @param {string|null} data.currentPeriodStart - ISO date string
-     * @param {string|null} data.currentPeriodEnd   - ISO date string
-     * @param {string|null} data.stripeSubscriptionId
-     * @param {string|null} data.stripeCustomerId
+     * @param {string|null} data.subscriptionId
+     * @param {string} data.planType           - 'BASIC' | 'PREMIUM' | 'ENTERPRISE_BASIC' | 'ENTERPRISE_PRO'
+     * @param {string} data.status             - 'ACTIVE' | 'GRACE_PERIOD' | 'CANCELLED'
+     * @param {string|null} data.billingCycle
+     * @param {string|null} data.periodEnd
      * @param {boolean} data.cancelAtPeriodEnd
-     * // HOMEOWNER-specific fields
-     * @param {number|null} data.monthlyRequestsUsed
-     * @param {number|null} data.monthlyRequestsLimit
-     * // COMPANY-specific fields
-     * @param {number|null} data.activeDeviceCount
-     * @param {number|null} data.pricePerDevice
-     * @param {number|null} data.projectedNextMonthAmount
-     * @param {string|null} data.iotInstallationStatus - 'PENDING' | 'COMPLETED' | null
+     * @param {number} data.monthlyRequestsUsed
+     * @param {number} data.monthlyRequestsLimit
+     * @param {string|null} data.gracePeriodEndsAt
      */
     constructor(data = {}) {
-        this.id                       = data.id ?? null;
-        this.userId                   = data.userId ?? null;
-        this.businessRole             = data.businessRole ?? null;
-        this.planId                   = data.planId ?? null;
-        this.planName                 = data.planName ?? 'Plan Básico';
-        this.planTier                 = data.planTier ?? 'BASIC';
-        this.status                   = data.status ?? 'ACTIVE';
-        this.pricePerMonth            = data.pricePerMonth ?? 0;
-        this.currentPeriodStart       = data.currentPeriodStart ?? null;
-        this.currentPeriodEnd         = data.currentPeriodEnd ?? null;
-        this.stripeSubscriptionId     = data.stripeSubscriptionId ?? null;
-        this.stripeCustomerId         = data.stripeCustomerId ?? null;
-        this.cancelAtPeriodEnd        = data.cancelAtPeriodEnd ?? false;
-
-        // HOMEOWNER-specific usage counters
-        this.monthlyRequestsUsed      = data.monthlyRequestsUsed ?? 0;
-        this.monthlyRequestsLimit     = data.monthlyRequestsLimit ?? 2;
-
-        // COMPANY-specific device billing
-        this.activeDeviceCount        = data.activeDeviceCount ?? 0;
-        this.pricePerDevice           = data.pricePerDevice ?? 0;
-        this.projectedNextMonthAmount = data.projectedNextMonthAmount ?? 0;
-        this.iotInstallationStatus    = data.iotInstallationStatus ?? null;
+        this.subscriptionId        = data.subscriptionId ?? null;
+        this.planType              = data.planType ?? 'BASIC';
+        this.status                = data.status ?? 'ACTIVE';
+        this.billingCycle          = data.billingCycle ?? null;
+        this.periodEnd             = data.periodEnd ?? null;
+        this.cancelAtPeriodEnd     = data.cancelAtPeriodEnd ?? false;
+        this.monthlyRequestsUsed   = data.monthlyRequestsUsed ?? 0;
+        this.monthlyRequestsLimit  = data.monthlyRequestsLimit ?? 2;
+        this.gracePeriodEndsAt     = data.gracePeriodEndsAt ?? null;
     }
 
     /** Whether the subscription is fully active */
@@ -59,15 +33,24 @@ export class SubscriptionEntity {
         return this.status === 'ACTIVE';
     }
 
+    /** Whether the subscription is in a grace period after payment failure */
+    get isInGracePeriod() {
+        return this.status === 'GRACE_PERIOD';
+    }
+
+    /** Whether the plan is a free tier (monthlyRequestsLimit === 0 indicates unlimited for paid plans) */
+    get isFreeTier() {
+        return this.planType === 'BASIC' && !this.billingCycle;
+    }
+
     /** Whether the HOMEOWNER is approaching or at the monthly request quota */
     get isNearQuota() {
-        if (this.businessRole !== 'HOMEOWNER' || this.monthlyRequestsLimit === 0) return false;
+        if (this.monthlyRequestsLimit === 0) return false;
         return this.monthlyRequestsUsed >= 1;
     }
 
     /** Whether the HOMEOWNER has exhausted their monthly quota */
     get isQuotaExhausted() {
-        if (this.businessRole !== 'HOMEOWNER') return false;
         return this.monthlyRequestsUsed >= this.monthlyRequestsLimit;
     }
 
@@ -77,29 +60,12 @@ export class SubscriptionEntity {
         return Math.min(100, Math.round((this.monthlyRequestsUsed / this.monthlyRequestsLimit) * 100));
     }
 
-    /** Whether the COMPANY subscription is pending IoT hardware installation */
-    get isPendingInstallation() {
-        return this.status === 'PENDING_INSTALLATION' || this.iotInstallationStatus === 'PENDING';
-    }
-
-    /** Whether the subscription is in a grace period after payment failure */
-    get isInGracePeriod() {
-        return this.status === 'GRACE_PERIOD';
-    }
-
-    /** Whether the plan is a free tier */
-    get isFreeTier() {
-        return this.pricePerMonth === 0;
-    }
-
     /** Display label for subscription status badge */
     get statusLabel() {
         const labels = {
-            ACTIVE:               'Active',
-            PENDING_INSTALLATION: 'Pending Installation',
-            GRACE_PERIOD:         'Grace Period',
-            CANCELLED:            'Cancelled',
-            TRIALING:             'Trial',
+            ACTIVE:       'Active',
+            GRACE_PERIOD: 'Grace Period',
+            CANCELLED:    'Cancelled',
         };
         return labels[this.status] ?? this.status;
     }
@@ -107,11 +73,9 @@ export class SubscriptionEntity {
     /** Severity for PrimeVue Tag component */
     get statusSeverity() {
         const map = {
-            ACTIVE:               'success',
-            PENDING_INSTALLATION: 'info',
-            GRACE_PERIOD:         'warn',
-            CANCELLED:            'danger',
-            TRIALING:             'secondary',
+            ACTIVE:       'success',
+            GRACE_PERIOD: 'warn',
+            CANCELLED:    'danger',
         };
         return map[this.status] ?? 'secondary';
     }
