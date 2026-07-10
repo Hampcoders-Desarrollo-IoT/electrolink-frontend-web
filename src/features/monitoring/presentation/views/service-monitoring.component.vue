@@ -34,8 +34,8 @@ const businessRole  = computed(() => profile.value?.businessRole ?? null);
 // roleSubjectId is the technician/homeowner/company domain ID from the JWT
 const roleSubjectId = computed(() => iamStore.roleSubjectId ?? null);
 
-const isTechnician  = computed(() => businessRole.value === 'TECHNICIAN');
-const isHomeOwner   = computed(() => businessRole.value === 'HOMEOWNER');
+const isTechnician  = computed(() => businessRole.value === 'TECHNICIAN' || roleSubjectId.value?.startsWith('tech-'));
+const isHomeOwner   = computed(() => businessRole.value === 'HOMEOWNER' || roleSubjectId.value?.startsWith('home-'));
 const isCompany     = computed(() => businessRole.value === 'COMPANY');
 const isClientRole  = computed(() => isHomeOwner.value || isCompany.value);
 
@@ -73,69 +73,83 @@ const mapContainer    = ref(null);
 let   leafletMap      = null;
 let   routePolyline   = null;
 const mapReady        = ref(false);
+let   mapInitPromise  = null;
 
 async function initLeafletMap() {
     if (!mapContainer.value || leafletMap) return;
-    const L = (await import('leaflet')).default;
-    await import('leaflet/dist/leaflet.css');
+    if (mapInitPromise) return mapInitPromise;
 
-    // Fix default marker icon paths broken by Vite
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
-        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-        iconUrl:       'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    });
+    mapInitPromise = (async () => {
+        const container = mapContainer.value;
+        container.innerHTML = '';
 
-    leafletMap = L.map(mapContainer.value, {
-        center: [-12.0464, -77.0428], // Lima, Perú (default)
-        zoom: 13,
-        zoomControl: true,
-    });
+        const L = (await import('leaflet')).default;
+        await import('leaflet/dist/leaflet.css');
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 19,
-    }).addTo(leafletMap);
-
-    // Plot each service on the map
-    const markers = [];
-    technicianDayList.value.forEach((svc, idx) => {
-        if (!svc.latitude && !svc.longitude) return;
-        const color = svc.isInProgress ? '#1978e5' : svc.isCompleted ? '#10b981' : '#ffe492';
-        const icon = L.divIcon({
-            html: `<div style="
-                width:32px;height:32px;border-radius:50% 50% 50% 0;
-                background:${color};border:2px solid white;
-                box-shadow:0 2px 6px rgba(0,0,0,0.3);
-                display:flex;align-items:center;justify-content:center;
-                color:white;font-weight:700;font-size:12px;
-                transform:rotate(-45deg)">
-                    <span style="transform:rotate(45deg)">${idx + 1}</span>
-                </div>`,
-            className: '',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+            iconUrl:       'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
         });
-        const marker = L.marker([svc.latitude, svc.longitude], { icon })
-            .bindPopup(`<b>${svc.propertyAddress || 'Propiedad'}</b><br>${svc.clientName || ''}<br><em>${svc.status}</em>`)
-            .addTo(leafletMap);
-        markers.push(marker);
-    });
 
-    if (markers.length > 0) {
-        const group = L.featureGroup(markers);
-        leafletMap.fitBounds(group.getBounds().pad(0.2));
-    }
+        leafletMap = L.map(container, {
+            center: [-12.0464, -77.0428],
+            zoom: 13,
+            zoomControl: true,
+        });
 
-    mapReady.value = true;
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            maxZoom: 19,
+        }).addTo(leafletMap);
+
+        const markers = [];
+        technicianDayList.value.forEach((svc, idx) => {
+            if (!svc.latitude && !svc.longitude) return;
+            const color = svc.isInProgress ? '#1978e5' : svc.isCompleted ? '#10b981' : '#ffe492';
+            const icon = L.divIcon({
+                html: `<div style="
+                    width:32px;height:32px;border-radius:50% 50% 50% 0;
+                    background:${color};border:2px solid white;
+                    box-shadow:0 2px 6px rgba(0,0,0,0.3);
+                    display:flex;align-items:center;justify-content:center;
+                    color:white;font-weight:700;font-size:12px;
+                    transform:rotate(-45deg)">
+                        <span style="transform:rotate(45deg)">${idx + 1}</span>
+                    </div>`,
+                className: '',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+            });
+            const marker = L.marker([svc.latitude, svc.longitude], { icon })
+                .bindPopup(`<b>${svc.propertyAddress || 'Propiedad'}</b><br>${svc.clientName || ''}<br><em>${svc.status}</em>`)
+                .addTo(leafletMap);
+            markers.push(marker);
+        });
+
+        if (markers.length > 0) {
+            const group = L.featureGroup(markers);
+            leafletMap.fitBounds(group.getBounds().pad(0.2));
+        }
+
+        mapReady.value = true;
+        mapInitPromise = null;
+    })();
+
+    return mapInitPromise;
 }
 
 function destroyMap() {
+    mapInitPromise = null;
     if (leafletMap) {
         leafletMap.remove();
         leafletMap = null;
     }
+    if (mapContainer.value) {
+        mapContainer.value.innerHTML = '';
+    }
+    mapReady.value = false;
 }
 
 // ─── Event handlers ───────────────────────────────────────────────────────────
@@ -164,11 +178,13 @@ async function handleExtendWait({ executionId, minutes }) {
 
 async function handleCompleteService() {
     if (!activeService.value) return;
-    const ok = await monitoringStore.completeService(activeService.value.executionId, completeForm.value);
-    if (ok) {
+    const id = activeService.value.executionId;
+    const ok = await monitoringStore.updateReport(id, completeForm.value);
+    if (!ok) return;
+    const done = await monitoringStore.completeService(id);
+    if (done) {
         showCompleteDialog.value = false;
         completeForm.value = { reportContent: '', findings: '', recommendations: '', iotFindings: '' };
-        // Refresh history
         if (isTechnician.value && roleSubjectId.value) {
             await monitoringStore.loadServiceHistory('technician', roleSubjectId.value);
         }
@@ -184,12 +200,14 @@ onMounted(async () => {
         return;
     }
 
-    // Ensure profile is loaded
-    if (!profile.value && iamStore.currentUserId) {
+    // Ensure profile is loaded (always reload if businessRole is missing)
+    if (iamStore.currentUserId && (!profile.value || !profile.value.businessRole)) {
         await profilesStore.loadProfile(iamStore.currentUserId);
     }
 
     if (!roleSubjectId.value) return;
+
+    console.log('[MonitoringView] roleSubjectId:', roleSubjectId.value, 'businessRole:', businessRole.value, 'isTechnician:', isTechnician.value, 'profile:', profile.value);
 
     if (isTechnician.value) {
         await Promise.all([
@@ -201,7 +219,7 @@ onMounted(async () => {
     } else {
         // HomeOwner or Company
         await monitoringStore.loadClientActiveService(roleSubjectId.value);
-        await monitoringStore.loadServiceHistory('client', roleSubjectId.value);
+        await monitoringStore.loadServiceHistory('homeowner', roleSubjectId.value);
 
         if (activeService.value?.executionId) {
             await monitoringStore.loadIotContext(activeService.value.executionId);

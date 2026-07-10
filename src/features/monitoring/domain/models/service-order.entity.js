@@ -1,10 +1,7 @@
-/**
- * ServiceOrder — Domain Entity
- * Represents a service execution order in the monitoring bounded context.
- */
 export class ServiceOrder {
     constructor({
         executionId = '',
+        assignmentId = '',
         serviceRequestId = '',
         technicianId = '',
         technicianName = '',
@@ -12,8 +9,7 @@ export class ServiceOrder {
         clientName = '',
         propertyId = '',
         propertyAddress = '',
-        status = 'Scheduled',           // Scheduled | InProgress | Completed | Cancelled
-        currentStep = 0,                // 0-4 steps for the p-stepper
+        status = 'Notified',
         scheduledDate = null,
         scheduledTime = '',
         startedAt = null,
@@ -22,6 +18,8 @@ export class ServiceOrder {
         cancelReason = '',
         estimatedDurationMinutes = 60,
         serviceType = '',
+        serviceName = '',
+        serviceCategory = '',
         specialties = [],
         reportContent = '',
         findings = '',
@@ -30,12 +28,21 @@ export class ServiceOrder {
         photosCount = 0,
         componentsUsed = [],
         totalCost = 0,
+        totalPrice = 0,
         currency = 'USD',
+        isPriority = false,
+        hasIoTContext = false,
+        deviceId = null,
+        requiresIoTCertifiedTechnician = false,
         technicianRating = null,
         clientRating = null,
         waitExtensionMinutes = 0,
+        workLog = null,
+        latitude = null,
+        longitude = null,
     } = {}) {
         this.executionId = executionId;
+        this.assignmentId = assignmentId;
         this.serviceRequestId = serviceRequestId;
         this.technicianId = technicianId;
         this.technicianName = technicianName;
@@ -44,7 +51,6 @@ export class ServiceOrder {
         this.propertyId = propertyId;
         this.propertyAddress = propertyAddress;
         this.status = status;
-        this.currentStep = currentStep;
         this.scheduledDate = scheduledDate ? new Date(scheduledDate) : null;
         this.scheduledTime = scheduledTime;
         this.startedAt = startedAt ? new Date(startedAt) : null;
@@ -53,6 +59,8 @@ export class ServiceOrder {
         this.cancelReason = cancelReason;
         this.estimatedDurationMinutes = estimatedDurationMinutes;
         this.serviceType = serviceType;
+        this.serviceName = serviceName;
+        this.serviceCategory = serviceCategory;
         this.specialties = specialties;
         this.reportContent = reportContent;
         this.findings = findings;
@@ -60,24 +68,51 @@ export class ServiceOrder {
         this.iotFindings = iotFindings;
         this.photosCount = photosCount;
         this.componentsUsed = componentsUsed;
-        this.totalCost = totalCost;
+        this.totalCost = totalCost || totalPrice;
+        this.totalPrice = totalPrice || totalCost;
         this.currency = currency;
+        this.isPriority = isPriority;
+        this.hasIoTContext = hasIoTContext;
+        this.deviceId = deviceId;
+        this.requiresIoTCertifiedTechnician = requiresIoTCertifiedTechnician;
         this.technicianRating = technicianRating;
         this.clientRating = clientRating;
         this.waitExtensionMinutes = waitExtensionMinutes;
+        this.workLog = workLog;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    get isScheduled()   { return this.status === 'Scheduled'; }
+    get currentStep() {
+        const stepMap = {
+            'Notified': 0,
+            'EnRoute': 1,
+            'Arrived': 2,
+            'InProgress': 2,
+            'PendingReview': 3,
+            'Completed': 4,
+            'Cancelled': -1,
+        };
+        return stepMap[this.status] ?? 0;
+    }
+
+    get isScheduled()   { return this.status === 'Notified'; }
+    get isEnRoute()     { return this.status === 'EnRoute'; }
+    get isArrived()     { return this.status === 'Arrived'; }
     get isInProgress()  { return this.status === 'InProgress'; }
+    get isPendingReview() { return this.status === 'PendingReview'; }
     get isCompleted()   { return this.status === 'Completed'; }
     get isCancelled()   { return this.status === 'Cancelled'; }
 
     get statusSeverity() {
         const map = {
-            Scheduled:  'info',
-            InProgress: 'warn',
-            Completed:  'success',
-            Cancelled:  'danger',
+            Notified:       'info',
+            EnRoute:        'warn',
+            Arrived:        'warn',
+            InProgress:     'warn',
+            PendingReview:  'info',
+            Completed:      'success',
+            Cancelled:      'danger',
         };
         return map[this.status] ?? 'secondary';
     }
@@ -89,7 +124,7 @@ export class ServiceOrder {
         }).format(this.totalCost);
     }
 
-    get canStart()    { return this.isScheduled; }
-    get canComplete() { return this.isInProgress && this.photosCount > 0 && this.reportContent.length > 0; }
-    get canCancel()   { return this.isScheduled || this.isInProgress; }
+    get canStart()    { return this.status === 'Notified'; }
+    get canComplete() { return (this.status === 'Arrived' || this.status === 'InProgress') && this.photosCount > 0 && this.reportContent.length > 0; }
+    get canCancel()   { return !this.isCompleted && !this.isCancelled && !this.isPendingReview; }
 }
